@@ -1,25 +1,28 @@
 """HIKARI NEWS 的工具脚本。分成「研究端」和「发布端」两部分。
 
 研究端（Claude 定时任务，没有任何密钥，可以自由上网）:
-    python3 radar.py context               这次要研究什么：时段、任务、关键词、已推送过的链接
+  新闻（RESEARCH.md，每天 3 次）
+    python3 radar.py context               这一批的任务、技术关键词的领域、已推送过的内容
     python3 radar.py feeds                 优质网站 RSS 的最新文章（研究的第一手候选）
     python3 radar.py community             社区热门候选（研究线索）
-    python3 radar.py check out/results.json    检查结果格式
-    python3 radar.py submit out/results.json   检查后推送到 GitHub 的 claude/inbox-* 分支
-    python3 radar.py submit out/results.json --preview   交到 claude/preview-*（不发 Discord）
-
-管理员本地：
-    python radar.py preview claude/preview-…   把预览分支渲染成 out/preview-*.html
+    python3 radar.py check  out/results.json
+    python3 radar.py submit out/results.json [--preview]
+  学习内容（LEARN.md，每天 1 次）
+    python3 radar.py learn-context         题库现状、最近的关键词、被回报的题目
+    python3 radar.py learn-check  out/learn.json
+    python3 radar.py learn-submit out/learn.json [--preview]
 
 发布端（GitHub Actions，持有密钥，不读任何网页）:
     python3 radar.py publish-pending [--dry-run]
-        读取所有 claude/inbox-* 分支里的结果（只当作数据读取，不执行里面的任何代码）
-        → 检查 → 发 Discord 论坛帖子 → 写入 Firebase → 更新 state/published.json → 删除分支
+        读取 claude/inbox-* 和 claude/learn-* 分支（只当作数据读取，不执行其中的代码）
+        → 检查 → Discord 论坛帖子（只有新闻批次）→ Firebase → 更新 state/published.json → 删除分支
+
+管理员本地：
+    python radar.py preview <分支或 JSON>        新闻批次的预览 HTML
+    python radar.py preview-learn <分支或 JSON>  学习内容的预览 HTML
 
 发布端需要的环境变量（GitHub Secrets）:
-    DISCORD_FORUM_WEBHOOK          论坛频道的 Webhook URL
-    DISCORD_LOG_WEBHOOK            管理员日志频道的 Webhook URL（可选）
-    FIREBASE_SERVICE_ACCOUNT_B64   Firebase 服务账号密钥 JSON 的 base64
+    DISCORD_FORUM_WEBHOOK / DISCORD_LOG_WEBHOOK（可选）/ FIREBASE_SERVICE_ACCOUNT_B64
 """
 
 from __future__ import annotations
@@ -32,6 +35,7 @@ import re
 import subprocess
 import sys
 import time
+import unicodedata
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
@@ -41,11 +45,20 @@ CONFIG = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
 STATE_PATH = ROOT / "state" / "published.json"
 JST = timezone(timedelta(hours=CONFIG["timezone_offset_hours"]))
 LEVELS = ("入門", "中級", "上級")
+KW_LEVELS = ("基礎", "発展", "応用")
 JA_CHARS = re.compile(r"[぀-ヿ一-鿿]")
 WEEKDAYS_JA = "月火水木金土日"
 INBOX_PREFIX = "claude/inbox-"
+LEARN_PREFIX = "claude/learn-"
 PREVIEW_PREFIX = "claude/preview-"
 TASKS = {t["id"]: t for t in CONFIG["tasks"]}
+SECTIONS = {t["id"] for t in CONFIG["tasks"] if t.get("section")}
+KW_TRACKS = CONFIG.get("keyword_tracks", {})
+KW_AREAS = {v["area"]: v for v in KW_TRACKS.values()}
+LEARN = CONFIG.get("learn", {})
+QUIZ_TOPICS = {track: [t["id"] for t in topics] for track, topics in LEARN.get("quiz_topics", {}).items()}
+TOPIC_NAMES = {t["id"]: t["name"] for topics in LEARN.get("quiz_topics", {}).values() for t in topics}
+IDEA_POOLS = LEARN.get("idea_pools", [])
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -83,21 +96,37 @@ def item_id(url: str) -> str:
     return hashlib.sha1(normalize_url(url).encode()).hexdigest()[:16]
 
 
+def norm_text(s: str) -> str:
+    return re.sub(r"\s+", " ", unicodedata.normalize("NFKC", str(s)).lower()).strip()
+
+
+def quiz_id(q: str, answer: str) -> str:
+    return hashlib.sha1(f"{norm_text(q)}|{norm_text(answer)}".encode()).hexdigest()[:12]
+
+
 def match_keywords(item: dict) -> list[str]:
     text = " ".join([item["title"], item["summary"], item["note"], *item["tags"]]).lower()
     return [k for k in CONFIG.get("keywords", []) if k.lower() in text]
 
 
+STATE_DEFAULT = {"items": [], "batches": [], "last_weekly": None, "warned": [],
+                 "keywords": [], "quiz": [], "themes": [], "reports": [], "idea_counts": {}}
+
+
 def load_state() -> dict:
-    if STATE_PATH.exists():
-        return json.loads(STATE_PATH.read_text(encoding="utf-8"))
-    return {"items": [], "batches": [], "last_weekly": None, "warned": []}
+    state = json.loads(STATE_PATH.read_text(encoding="utf-8")) if STATE_PATH.exists() else {}
+    for k, v in STATE_DEFAULT.items():
+        state.setdefault(k, json.loads(json.dumps(v)))
+    return state
 
 
 def save_state(state: dict) -> None:
     state["items"] = state["items"][-800:]
-    state["batches"] = state["batches"][-120:]
-    state["warned"] = state["warned"][-60:]
+    state["batches"] = state["batches"][-150:]
+    state["warned"] = state["warned"][-80:]
+    state["keywords"] = state["keywords"][-2000:]
+    state["quiz"] = state["quiz"][-6000:]
+    state["themes"] = state["themes"][-400:]
     STATE_PATH.parent.mkdir(exist_ok=True)
     STATE_PATH.write_text(json.dumps(state, ensure_ascii=False, indent=1), encoding="utf-8")
 
@@ -109,6 +138,10 @@ def git(*args: str, check: bool = True) -> str:
     return r.stdout
 
 
+def is_url(u) -> bool:
+    return isinstance(u, str) and bool(re.match(r"^https?://[^\s<>\"']+$", u.strip()))
+
+
 # ======================================================================
 # 结果检查（研究端和发布端共用）
 # ======================================================================
@@ -117,63 +150,118 @@ class ResultError(Exception):
     pass
 
 
-def validate(data) -> list[dict]:
-    """检查结果数据。有问题就抛出 ResultError，并说明要怎么改。"""
+def clean_writeup(it: dict, where: str, errors: list, strict: bool) -> dict:
+    """网站用的详细整理：要点（points）、分段的详细解说（detail）、术语解析（terms）。
+    strict=True（研究端交稿时）必须写；strict=False（发布端）只做整理，不因为缺少而拒绝。"""
+    errs = errors if strict else []
+    pts = it.get("points")
+    if pts is None:
+        pts = []
+    if not isinstance(pts, list) or not all(isinstance(p, str) and p.strip() for p in pts):
+        errs.append(f"{where}：points 必须是字符串数组（3〜5 条要点）")
+        pts = [p for p in pts if isinstance(p, str) and p.strip()] if isinstance(pts, list) else []
+    pts = [p.strip() for p in pts]
+    if not 3 <= len(pts) <= 5:
+        errs.append(f"{where}：points（要点）要写 3〜5 条，现在是 {len(pts)} 条")
+    if any(len(p) > 90 for p in pts):
+        errs.append(f"{where}：每条要点最多 90 字，写成一句话")
+
+    detail = str(it.get("detail") or "").replace("\r\n", "\n").strip()
+    paras = [re.sub(r"[ \t]+\n", "\n", p).strip() for p in re.split(r"\n[ \t]*\n", detail) if p.strip()]
+    if not detail:
+        errs.append(f"{where}：detail（详细解说）不能为空")
+    else:
+        if not 200 <= len(detail) <= 1400:
+            errs.append(f"{where}：detail 要 200〜1400 字，现在是 {len(detail)} 字")
+        if not 2 <= len(paras) <= 6:
+            errs.append(f"{where}：detail 要分成 2〜6 段，段与段之间空一行（JSON 里写 \\n\\n）")
+        if any(len(p) > 340 for p in paras):
+            errs.append(f"{where}：detail 每段最多 340 字，太长的段落请拆开")
+        if not JA_CHARS.search(detail):
+            errs.append(f"{where}：detail 必须用日文写")
+
+    terms = it.get("terms") or []
+    if not isinstance(terms, list):
+        errs.append(f"{where}：terms 必须是数组")
+        terms = []
+    if len(terms) > 3:
+        errs.append(f"{where}：terms 最多 3 个")
+    clean_terms = []
+    for k, t in enumerate(terms[:3], 1):
+        term = str(t.get("term") or "").strip() if isinstance(t, dict) else ""
+        explain = str(t.get("explain") or "").strip() if isinstance(t, dict) else ""
+        if not term or not explain:
+            errs.append(f"{where}：terms 第 {k} 个需要 term 和 explain")
+            continue
+        if len(term) > 40 or len(explain) > 160:
+            errs.append(f"{where}：terms 第 {k} 个：term 最多 40 字、explain 最多 160 字")
+        clean_terms.append({"term": term[:40], "explain": explain[:160]})
+    return {"points": [p[:120] for p in pts[:5]], "detail": "\n\n".join(paras)[:2000] or None, "terms": clean_terms}
+
+
+def clean_item(it, where: str, errors: list, force_category: str | None = None, strict: bool = True) -> dict | None:
+    if not isinstance(it, dict):
+        errors.append(f"{where}：不是对象")
+        return None
+    cat = force_category or it.get("category")
+    url = str(it.get("url") or "").strip()
+    title = str(it.get("title") or "").strip()
+    summary = str(it.get("summary") or "").strip()
+    if cat not in TASKS:
+        errors.append(f"{where}：category 必须是 {list(TASKS)} 之一")
+    if not is_url(url):
+        errors.append(f"{where}：url 必须是 http(s) 链接，且不能有空格")
+    if not title or not summary:
+        errors.append(f"{where}：title 和 summary 不能为空")
+    if title and not JA_CHARS.search(title + summary):
+        errors.append(f"{where}：title / summary 必须用日文写（英文内容请翻译）")
+    deadline = it.get("deadline")
+    if deadline:
+        try:
+            date.fromisoformat(str(deadline))
+        except ValueError:
+            errors.append(f"{where}：deadline 必须是 YYYY-MM-DD 或 null")
+    try:
+        importance = int(it.get("importance", 3))
+        if not 1 <= importance <= 5:
+            raise ValueError
+    except (TypeError, ValueError):
+        errors.append(f"{where}：importance 必须是 1〜5 的整数")
+        importance = 3
+    tags = it.get("tags") or []
+    if not isinstance(tags, list):
+        errors.append(f"{where}：tags 必须是数组")
+        tags = []
+    minutes = it.get("read_minutes")
+    return {
+        "category": cat,
+        "title": title[:150],
+        "summary": summary[:500],
+        "url": url,
+        "source": str(it.get("source") or urlsplit(url).netloc)[:60],
+        "tags": [str(t)[:30] for t in tags][:5],
+        "note": str(it.get("note") or "").strip()[:200],
+        "importance": importance,
+        "level": it.get("level") if it.get("level") in LEVELS else None,
+        "deadline": str(deadline) if deadline else None,
+        "lang": it.get("lang") if it.get("lang") in ("ja", "en", "other") else None,
+        "read_minutes": minutes if isinstance(minutes, int) and 0 < minutes < 300 else None,
+        **clean_writeup(it, where, errors, strict),
+    }
+
+
+def validate(data, strict: bool = True) -> list[dict]:
+    """检查新闻条目。有问题就抛出 ResultError，并说明要怎么改。"""
     items = data.get("items") if isinstance(data, dict) else None
     if not isinstance(items, list):
         raise ResultError('最外层必须是 {"items": [...]}')
-
     errors, clean = [], []
     for n, it in enumerate(items, 1):
-        where = f"第 {n} 条"
-        if not isinstance(it, dict):
-            errors.append(f"{where}：不是对象")
-            continue
-        cat = it.get("category")
-        url = str(it.get("url") or "").strip()
-        title = str(it.get("title") or "").strip()
-        summary = str(it.get("summary") or "").strip()
-        if cat not in TASKS:
-            errors.append(f"{where}：category 必须是 {list(TASKS)} 之一")
-        if not re.match(r"^https?://[^\s<>\"']+$", url):
-            errors.append(f"{where}：url 必须是 http(s) 链接，且不能有空格")
-        if not title or not summary:
-            errors.append(f"{where}：title 和 summary 不能为空")
-        if title and not JA_CHARS.search(title + summary):
-            errors.append(f"{where}：title / summary 必须用日文写（英文内容请翻译）")
-        deadline = it.get("deadline")
-        if deadline:
-            try:
-                date.fromisoformat(str(deadline))
-            except ValueError:
-                errors.append(f"{where}：deadline 必须是 YYYY-MM-DD 或 null")
-        try:
-            importance = int(it.get("importance", 3))
-            if not 1 <= importance <= 5:
-                raise ValueError
-        except (TypeError, ValueError):
-            errors.append(f"{where}：importance 必须是 1〜5 的整数")
-            importance = 3
-        tags = it.get("tags") or []
-        if not isinstance(tags, list):
-            errors.append(f"{where}：tags 必须是数组")
-            tags = []
-        minutes = it.get("read_minutes")
-        clean.append({
-            "category": cat,
-            "title": title[:150],
-            "summary": summary[:500],
-            "url": url,
-            "source": str(it.get("source") or urlsplit(url).netloc)[:60],
-            "tags": [str(t)[:30] for t in tags][:5],
-            "note": str(it.get("note") or "").strip()[:200],
-            "importance": importance,
-            "level": it.get("level") if it.get("level") in LEVELS else None,
-            "deadline": str(deadline) if deadline else None,
-            "lang": it.get("lang") if it.get("lang") in ("ja", "en", "other") else None,
-            "read_minutes": minutes if isinstance(minutes, int) and 0 < minutes < 300 else None,
-        })
-
+        c = clean_item(it, f"第 {n} 条", errors, strict=strict)
+        if c:
+            if c["category"] in SECTIONS:
+                errors.append(f"第 {n} 条：{c['category']} 是网站分区专用的分类，只能在 learn.json 里提交")
+            clean.append(c)
     for cat, task in TASKS.items():
         count = sum(1 for c in clean if c["category"] == cat)
         if count > task["max_items"]:
@@ -183,31 +271,86 @@ def validate(data) -> list[dict]:
     return clean
 
 
-def read_results(path: str) -> list[dict]:
+def clean_keyword(k, where: str, errors: list, expect_level: str | None) -> dict | None:
+    if not isinstance(k, dict):
+        errors.append(f"{where}：不是对象")
+        return None
+    level = k.get("level")
+    if expect_level and level != expect_level:
+        errors.append(f"{where}：level 必须是「{expect_level}」（顺序：基礎 → 発展 → 応用）")
+    if level not in KW_LEVELS:
+        errors.append(f"{where}：level 必须是 基礎 / 発展 / 応用 之一")
+    term = str(k.get("term") or "").strip()
+    explain = str(k.get("explain") or "").strip()
+    use = str(k.get("use") or "").strip()
+    if not term or not explain or not use:
+        errors.append(f"{where}：term、explain、use 都不能为空")
+    if explain and not JA_CHARS.search(explain + use):
+        errors.append(f"{where}：explain / use 必须用日文写")
+    if len(explain) > 260 or len(use) > 180:
+        errors.append(f"{where}：explain 最多 260 字、use 最多 180 字（Discord 里要简洁）")
+    link = k.get("link")
+    if link and not is_url(link):
+        errors.append(f"{where}：link 必须是 http(s) 链接或 null")
+    example = str(k.get("example") or "").replace("```", "'''")
+    if len(example) > 600:
+        errors.append(f"{where}：example 最多 600 字（大约 12 行以内）")
+    lang = k.get("example_lang") if k.get("example_lang") in ("cpp", "hlsl", "text") else ("cpp" if example else None)
+    return {"level": level, "term": term[:60], "en": str(k.get("en") or "").strip()[:60] or None,
+            "explain": explain, "use": use, "example": example or None, "example_lang": lang,
+            "link": link.strip() if link else None}
+
+
+def validate_keywords(data, required: bool) -> dict | None:
+    """检查技术关键词（每批 3 个：基礎 → 発展 → 応用）。"""
+    kws = data.get("keywords") if isinstance(data, dict) else None
+    if not kws:
+        if required:
+            raise ResultError('缺少技术关键词：需要 "keyword_theme" 和 3 个 "keywords"（基礎 → 発展 → 応用）')
+        return None
+    errors = []
+    theme = str(data.get("keyword_theme") or "").strip()
+    if not theme:
+        errors.append("keyword_theme（这 3 个关键词的共同主题）不能为空")
+    if not isinstance(kws, list) or len(kws) != 3:
+        raise ResultError("keywords 必须正好 3 个（基礎 → 発展 → 応用）")
+    clean = [clean_keyword(k, f"第 {n} 个关键词", errors, lv) for n, (k, lv) in enumerate(zip(kws, KW_LEVELS), 1)]
+    if len({norm_text(c["term"]) for c in clean if c}) < 3:
+        errors.append("3 个关键词不能重复")
+    if errors:
+        raise ResultError("\n".join(errors))
+    return {"theme": theme[:60], "items": clean}
+
+
+def read_json(path: str) -> dict:
     try:
-        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        return json.loads(Path(path).read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as e:
         raise ResultError(f"无法读取 JSON：{e}")
-    return validate(data)
 
 
 # ======================================================================
-# 研究端
+# 研究端：新闻
 # ======================================================================
+
+def used_keywords(state: dict, area: str | None = None) -> list[dict]:
+    return [k for k in state["keywords"] if area is None or k.get("area") == area]
+
 
 def cmd_context(args) -> int:
     now = now_jst()
     slot = args.slot or slot_for(now)
     tasks = tasks_for(now.date(), slot)
     state = load_state()
-    recent = [f"- {it.get('title', '')}\n  {it['url']}" for it in state["items"][-200:]]
+    recent = [f"- {it.get('title', '')}\n  {it['url']}" for it in state["items"][-200:]
+              if it.get("category") not in SECTIONS]
 
     print(f"# 本次运行：{now:%Y-%m-%d %H:%M} JST ／ {CONFIG['slots'][slot]['label']} 这一批（slot={slot}）\n")
     print(f"读者：{CONFIG['reader']}\n")
     print(f"关注关键词（找到相关内容时优先）：{'、'.join(CONFIG.get('keywords', [])) or '无'}\n")
     print("## 这一批要做的任务")
     if not tasks:
-        print("（这个时段没有任务，直接结束即可。）")
+        print("（这个时段没有新闻任务。）")
     for t in tasks:
         print(f"\n### category = \"{t['id']}\"  {t['emoji']} {t['name']}（最多 {t['max_items']} 条）")
         print(t["brief"])
@@ -221,6 +364,18 @@ def cmd_context(args) -> int:
         classics = [it for it in state["items"] if it.get("category") == "classic"]
         print("\n## 「定番の一本」以前介绍过的（不要重复）")
         print("\n".join(f"- {it['title']}" for it in classics) or "（无）")
+
+    track = KW_TRACKS.get(slot)
+    if track:
+        used = used_keywords(state, track["area"])
+        print(f"\n## 技术关键词（这一批必须附上 3 个）：领域 = {track['name']}")
+        print(f"范围：{track['focus']}")
+        print("已经讲过的关键词（不要重复，主题也尽量换一个方向）：")
+        print("、".join(f"{k['term']}（{k['level']}）" for k in used[-150:]) or "（无）")
+        themes = list(dict.fromkeys(k.get("theme") for k in used if k.get("theme")))
+        if themes:
+            print("讲过的主题：" + " / ".join(themes[-40:]))
+
     print("\n## 已经推送过的内容（不要再选，同一件事的其他文章也不要选）")
     print("\n".join(recent) if recent else "（无）")
     return 0
@@ -232,17 +387,18 @@ def cmd_feeds(args) -> int:
 
     now = now_jst()
     slot = args.slot or slot_for(now)
-    ids = {t["id"] for t in tasks_for(now.date(), slot)}
-    feeds = [f for f in CONFIG.get("feeds", []) if ids & set(f["for"])]
+    ids = {t["id"] for t in tasks_for(now.date(), slot)} | ({"programmer", "planner"} if args.learn else set())
+    feeds = [f for f in CONFIG.get("feeds", []) if ids & set(f["for"])] if not args.learn else \
+        [f for f in CONFIG.get("feeds", []) if {"tech", "industry", "community"} & set(f["for"])]
     known = {item_id(it["url"]) for it in load_state()["items"]}
     result = collect_feeds(feeds)
     total = 0
-    print(f"# 优质网站的最新文章（slot={slot}，已推送过的不显示）")
+    print(f"# 优质网站的最新文章（{'学习内容用' if args.learn else 'slot=' + slot}，已推送过的不显示）")
     for feed in feeds:
         entries = [e for e in result.get(feed["name"], []) if item_id(e["url"]) not in known]
         if not entries:
             continue
-        print(f"\n## {feed['name']}（对应任务：{'、'.join(sorted(ids & set(feed['for'])))}）")
+        print(f"\n## {feed['name']}")
         for e in entries:
             total += 1
             when = e["published"].astimezone(JST).strftime("%m/%d %H:%M")
@@ -266,47 +422,268 @@ def cmd_community(args) -> int:
     return 0
 
 
+def check_batch_file(path: str, slot: str) -> tuple[list, dict | None]:
+    data = read_json(path)
+    items = validate(data)
+    kw = validate_keywords(data, required=slot in KW_TRACKS)
+    return items, kw
+
+
 def cmd_check(args) -> int:
+    slot = args.slot or slot_for(now_jst())
     try:
-        items = read_results(args.file)
+        items, kw = check_batch_file(args.file, slot)
     except ResultError as e:
         print("❌ 格式有问题，请修改后再检查：\n" + str(e))
         return 1
-    print(f"✅ 格式正确，共 {len(items)} 条")
+    print(f"✅ 格式正确：新闻 {len(items)} 条" + (f"，技术关键词 3 个（{kw['theme']}）" if kw else ""))
     return 0
 
 
+def push_branch(prefix: str, slot_tag: str, filename: str, payload: dict, message: str) -> str:
+    now = now_jst()
+    branch = f"{prefix}{now:%Y%m%d}-{slot_tag}-{now:%H%M%S}"
+    target = ROOT / "inbox" / filename
+    target.parent.mkdir(exist_ok=True)
+    target.write_text(json.dumps(payload, ensure_ascii=False, indent=1), encoding="utf-8")
+    ident = ["-c", "user.name=HIKARI NEWS researcher", "-c", "user.email=researcher@hikari-news.invalid"]
+    git("checkout", "-B", branch)
+    git("add", "-f", f"inbox/{filename}")
+    git(*ident, "commit", "-m", message)
+    git("push", "origin", f"HEAD:refs/heads/{branch}")
+    return branch
+
+
 def cmd_submit(args) -> int:
-    """检查结果，然后把它作为一个新分支推送到 GitHub。
-    正式：claude/inbox-日期-时段-时刻（发布端会发到 Discord）
-    预览（--preview）：claude/preview-…（发布端不会处理，只给管理员看效果）
-    """
+    """检查结果，然后推送到 GitHub。正式：claude/inbox-…（会发到 Discord）。预览：claude/preview-…（不会发布）。"""
+    slot = args.slot or slot_for(now_jst())
     try:
-        items = read_results(args.file)
+        items, kw = check_batch_file(args.file, slot)
     except ResultError as e:
         print("❌ 格式有问题，没有提交。请修改后再执行 submit：\n" + str(e))
         return 1
-    raw = json.loads(Path(args.file).read_text(encoding="utf-8"))
+    raw = read_json(args.file)
     now = now_jst()
-    slot = args.slot or slot_for(now)
-    prefix = PREVIEW_PREFIX if args.preview else INBOX_PREFIX
-    branch = f"{prefix}{now:%Y%m%d}-{slot}-{now:%H%M%S}"
-    batch = {"slot": slot, "date": now.strftime("%Y-%m-%d"),
-             "created_at": now.isoformat(timespec="seconds"), "items": items,
+    batch = {"slot": slot, "date": now.strftime("%Y-%m-%d"), "created_at": now.isoformat(timespec="seconds"),
+             "items": items, "keyword_theme": kw["theme"] if kw else None, "keywords": kw["items"] if kw else None,
              "report": str(raw.get("report") or "")[:3000]}
+    prefix = PREVIEW_PREFIX if args.preview else INBOX_PREFIX
+    branch = push_branch(prefix, slot, "batch.json", batch, f"inbox: {batch['date']} {slot} ({len(items)} items)")
+    where = "预览分支（不会发到 Discord）" if args.preview else "分支（GitHub Actions 会自动发布）"
+    print(f"✅ 已提交 {len(items)} 条新闻 + 技术关键词到{where} {branch}")
+    return 0
 
-    inbox = ROOT / "inbox" / "batch.json"
-    inbox.parent.mkdir(exist_ok=True)
-    inbox.write_text(json.dumps(batch, ensure_ascii=False, indent=1), encoding="utf-8")
-    ident = ["-c", "user.name=HIKARI NEWS researcher", "-c", "user.email=researcher@hikari-news.invalid"]
-    git("checkout", "-B", branch)
-    git("add", "-f", "inbox/batch.json")
-    git(*ident, "commit", "-m", f"inbox: {batch['date']} {slot} ({len(items)} items)")
-    git("push", "origin", f"HEAD:refs/heads/{branch}")
-    if args.preview:
-        print(f"✅ 已提交 {len(items)} 条到预览分支 {branch}（不会发到 Discord）。")
+
+# ======================================================================
+# 研究端：学习内容（夜间任务）
+# ======================================================================
+
+def clean_quiz(q, where: str, errors: list) -> dict | None:
+    if not isinstance(q, dict):
+        errors.append(f"{where}：不是对象")
+        return None
+    track, topic, level = q.get("track"), q.get("topic"), q.get("level")
+    if track not in QUIZ_TOPICS:
+        errors.append(f"{where}：track 必须是 {list(QUIZ_TOPICS)} 之一")
+    elif topic not in QUIZ_TOPICS[track]:
+        errors.append(f"{where}：track={track} 的 topic 必须是 {QUIZ_TOPICS[track]} 之一")
+    if level not in KW_LEVELS:
+        errors.append(f"{where}：level 必须是 基礎 / 発展 / 応用 之一")
+    text = str(q.get("q") or "").strip()
+    if not text or not JA_CHARS.search(text):
+        errors.append(f"{where}：q（问题）不能为空，并且要用日文写")
+    choices = q.get("choices")
+    if not isinstance(choices, list) or len(choices) != 4 or not all(isinstance(c, str) and c.strip() for c in choices):
+        errors.append(f"{where}：choices 必须是 4 个非空字符串")
+        choices = ["", "", "", ""]
+    elif len({norm_text(c) for c in choices}) < 4:
+        errors.append(f"{where}：4 个选项不能重复")
+    if any(len(c) > 160 for c in choices):
+        errors.append(f"{where}：每个选项最多 160 字")
+    answer = q.get("answer")
+    if not isinstance(answer, int) or not 0 <= answer <= 3:
+        errors.append(f"{where}：answer 必须是 0〜3 的整数（正确选项的位置）")
+        answer = 0
+    explain = str(q.get("explain") or "").strip()
+    if len(explain) < 15 or not JA_CHARS.search(explain):
+        errors.append(f"{where}：explain（解析）至少 15 字，用日文写：为什么这个是对的、其他为什么不对")
+    if len(explain) > 700:
+        errors.append(f"{where}：explain 最多 700 字")
+    link = q.get("link")
+    if link and not is_url(link):
+        errors.append(f"{where}：link 必须是 http(s) 链接或 null")
+    code = str(q.get("code") or "").replace("```", "'''")
+    if len(code) > 900:
+        errors.append(f"{where}：code 最多 900 字（大约 15 行以内）")
+    return {"id": quiz_id(text, choices[answer]), "track": track, "topic": topic, "level": level,
+            "q": text[:400], "code": code or None,
+            "code_lang": q.get("code_lang") if q.get("code_lang") in ("cpp", "hlsl", "text") else ("cpp" if code else None),
+            "choices": [c.strip() for c in choices], "answer": answer, "explain": explain,
+            "link": link.strip() if link else None}
+
+
+def validate_learn(data, strict: bool = True) -> dict:
+    if not isinstance(data, dict):
+        raise ResultError("最外层必须是对象")
+    errors = []
+    out = {"news": [], "quiz": [], "theme": None, "ideas": {}, "fixes": [], "keywords": [],
+           "reviewed_reports": [], "report": str(data.get("report") or "")[:3000]}
+
+    for n, it in enumerate(data.get("news") or [], 1):
+        sec = it.get("section") if isinstance(it, dict) else None
+        if sec not in SECTIONS:
+            errors.append(f"news 第 {n} 条：section 必须是 {sorted(SECTIONS)} 之一")
+            continue
+        c = clean_item(it, f"news 第 {n} 条", errors, force_category=sec, strict=strict)
+        if c:
+            out["news"].append(c)
+    for sec in SECTIONS:
+        if sum(1 for c in out["news"] if c["category"] == sec) > TASKS[sec]["max_items"]:
+            errors.append(f"news：{sec} 最多 {TASKS[sec]['max_items']} 条")
+
+    quiz = data.get("quiz") or []
+    if len(quiz) > 40:
+        errors.append("quiz 一次最多 40 题")
+    seen = set()
+    for n, q in enumerate(quiz, 1):
+        c = clean_quiz(q, f"quiz 第 {n} 题", errors)
+        if c:
+            if c["id"] in seen:
+                errors.append(f"quiz 第 {n} 题：和前面的题重复")
+            seen.add(c["id"])
+            out["quiz"].append(c)
+
+    th = data.get("theme")
+    if th:
+        title = str(th.get("title") or "").strip() if isinstance(th, dict) else ""
+        angles = th.get("angles") if isinstance(th, dict) else None
+        if not title or len(title) > 40 or not JA_CHARS.search(title):
+            errors.append("theme.title：用日文，40 字以内")
+        if not isinstance(angles, list) or not 2 <= len(angles) <= 4 or not all(isinstance(a, str) and a.strip() for a in angles):
+            errors.append("theme.angles：2〜4 个切入角度（字符串）")
+            angles = []
+        out["theme"] = {"title": title, "angles": [a.strip()[:100] for a in angles],
+                        "note": str(th.get("note") or "").strip()[:240] or None} if isinstance(th, dict) else None
+
+    ideas = data.get("ideas") or {}
+    if not isinstance(ideas, dict):
+        errors.append("ideas 必须是对象：{池名: [词, ...]}")
+        ideas = {}
+    for pool, words in ideas.items():
+        if pool not in IDEA_POOLS:
+            errors.append(f"ideas：池名必须是 {IDEA_POOLS} 之一，不能是 {pool}")
+            continue
+        if not isinstance(words, list) or len(words) > 20:
+            errors.append(f"ideas.{pool}：最多 20 个词的数组")
+            continue
+        limit = 80 if pool == "prompt" else 30
+        clean = [w.strip() for w in words if isinstance(w, str) and w.strip()]
+        if any(len(w) > limit for w in clean):
+            errors.append(f"ideas.{pool}：每个词最多 {limit} 字")
+        out["ideas"][pool] = clean
+
+    for n, f in enumerate(data.get("fixes") or [], 1):
+        if not isinstance(f, dict) or not isinstance(f.get("id"), str) or f.get("action") not in ("delete", "replace"):
+            errors.append(f"fixes 第 {n} 条：需要 id 和 action（delete / replace）")
+            continue
+        rep = None
+        if f["action"] == "replace":
+            rep = clean_quiz(f.get("replacement"), f"fixes 第 {n} 条的 replacement", errors)
+        out["fixes"].append({"id": f["id"], "action": f["action"], "replacement": rep})
+
+    for n, k in enumerate(data.get("keywords") or [], 1):
+        area = k.get("area") if isinstance(k, dict) else None
+        if area not in KW_AREAS:
+            errors.append(f"keywords 第 {n} 个：area 必须是 {list(KW_AREAS)} 之一")
+            continue
+        c = clean_keyword(k, f"keywords 第 {n} 个", errors, None)
+        if c:
+            c.update(area=area, theme=str(k.get("theme") or "").strip()[:60])
+            out["keywords"].append(c)
+
+    rr = data.get("reviewed_reports") or []
+    out["reviewed_reports"] = [r for r in rr if isinstance(r, str)][:50]
+
+    if errors:
+        raise ResultError("\n".join(errors))
+    return out
+
+
+def cmd_learn_context(args) -> int:
+    now = now_jst()
+    state = load_state()
+    print(f"# 学习内容的生成：{now:%Y-%m-%d %H:%M} JST\n")
+    print(f"读者：{CONFIG['reader']}\n")
+
+    bank = {}
+    for q in state["quiz"]:
+        bank.setdefault(q["topic"], []).append(q)
+    total = sum(len(v) for v in bank.values())
+    small = total < LEARN.get("small_bank", 60)
+    quota = LEARN.get("daily_quiz", {})
+    print("## 今天要出的题")
+    for track, n in quota.items():
+        print(f"- {track}：{n * 2 if small else n} 题" + ("（题库还很少，今天加倍）" if small else ""))
+    print("\n## 题库现状（按 topic，难度 基礎/発展/応用）")
+    for track, topics in QUIZ_TOPICS.items():
+        for t in topics:
+            qs = bank.get(t, [])
+            lv = {l: sum(1 for q in qs if q.get("level") == l) for l in KW_LEVELS}
+            print(f"- [{track}] {t}（{TOPIC_NAMES.get(t, t)}）：{len(qs)} 题　基礎 {lv['基礎']} / 発展 {lv['発展']} / 応用 {lv['応用']}")
+    print("\n## 已有的题目（不要出意思相同的题）")
+    for t, qs in bank.items():
+        print(f"\n### {t}")
+        print("\n".join(f"- {q['q']}" for q in qs[-40:]))
+
+    print("\n## 最近推送的技术关键词（可以用来出题，帮助复习）")
+    print("、".join(f"{k['term']}（{KW_AREAS.get(k.get('area'), {}).get('name', '')}・{k['level']}）"
+                   for k in state["keywords"][-45:]) or "（无）")
+
+    print("\n## 以前的「今日のお題」（不要重复）")
+    print("、".join(t["title"] for t in state["themes"][-60:]) or "（无）")
+
+    print("\n## アイデアガチャ 词库的现状（每个池子今天补充约 5 个新词，不要和常见的重复）")
+    for p in IDEA_POOLS:
+        print(f"- {p}：{state['idea_counts'].get(p, 0)} 个")
+
+    print("\n## 被用户回报「题目有问题」的题（请逐一核实：有错就修正或删除，没问题也要写进 reviewed_reports）")
+    if state["reports"]:
+        for r in state["reports"]:
+            print(f"- report_id={r['id']} / quiz_id={r['qid']} / topic={r.get('topic')}\n  问题：{r.get('q')}\n  回报理由：{r.get('reason')}")
     else:
-        print(f"✅ 已提交 {len(items)} 条到分支 {branch}。发布会由 GitHub Actions 自动完成。")
+        print("（无）")
+
+    print("\n## 两个分区已经推送过的新闻（不要重复）")
+    sec_items = [it for it in state["items"] if it.get("category") in SECTIONS]
+    print("\n".join(f"- [{it['category']}] {it['title']}\n  {it['url']}" for it in sec_items[-60:]) or "（无）")
+    for sec in sorted(SECTIONS):
+        print(f"\n### section = \"{sec}\" 的选题方向\n{TASKS[sec]['brief']}")
+    return 0
+
+
+def cmd_learn_check(args) -> int:
+    try:
+        L = validate_learn(read_json(args.file))
+    except ResultError as e:
+        print("❌ 格式有问题，请修改后再检查：\n" + str(e))
+        return 1
+    print(f"✅ 格式正确：新闻 {len(L['news'])}、题目 {len(L['quiz'])}、お題 {'1' if L['theme'] else '0'}、"
+          f"词库 {sum(len(v) for v in L['ideas'].values())} 词、修正 {len(L['fixes'])}")
+    return 0
+
+
+def cmd_learn_submit(args) -> int:
+    try:
+        L = validate_learn(read_json(args.file))
+    except ResultError as e:
+        print("❌ 格式有问题，没有提交。请修改后再执行 learn-submit：\n" + str(e))
+        return 1
+    now = now_jst()
+    payload = {"date": now.strftime("%Y-%m-%d"), "created_at": now.isoformat(timespec="seconds"), **L}
+    prefix = PREVIEW_PREFIX + "learn-" if args.preview else LEARN_PREFIX
+    branch = push_branch(prefix, "learn", "learn.json", payload,
+                         f"learn: {payload['date']} ({len(L['quiz'])} quiz, {len(L['news'])} news)")
+    print(f"✅ 已提交学习内容到 {branch}" + ("（预览，不会发布）" if args.preview else "（GitHub Actions 会自动写入网站）"))
     return 0
 
 
@@ -343,12 +720,31 @@ def item_line(it: dict) -> str:
     return line
 
 
-def build_batch_embeds(items: list[dict], reminders: list[tuple[int, dict]]) -> list[dict]:
+def build_keyword_embed(kw: dict, area_name: str) -> dict:
+    nums = "①②③"
+    parts = []
+    for i, k in enumerate(kw["items"]):
+        head = f"**{nums[i]} {k['level']}｜{md(k['term'])}**" + (f"（{md(k['en'])}）" if k.get("en") else "")
+        body = f"{md(k['explain'])}\n🛠 {md(k['use'])}"
+        if k.get("example"):
+            body += f"\n```{k.get('example_lang') or ''}\n{k['example'][:420]}\n```"
+        if k.get("link"):
+            body += f"\n📖 [ドキュメント]({k['link']})"
+        parts.append(f"{head}\n{body}")
+    return {"title": f"🔑 今日の技術キーワード｜{area_name}"[:256],
+            "description": (f"テーマ：**{md(kw['theme'])}**\n\n" + "\n\n".join(parts))[:4000],
+            "color": 0xF2F56A}
+
+
+def build_batch_embeds(items: list[dict], reminders: list[tuple[int, dict]],
+                       kw: dict | None = None, area_name: str = "") -> list[dict]:
     embeds = []
     pick = max(items, key=lambda x: (x["importance"], bool(x.get("keywords")))) if items else None
     if pick:
         t = TASKS[pick["category"]]
         desc = md(pick["summary"])
+        if pick.get("points"):
+            desc += "\n\n" + "\n".join(f"▸ {md(p)}" for p in pick["points"])
         if pick["note"]:
             desc += f"\n\n💡 {md(pick['note'])}"
         embeds.append({
@@ -363,12 +759,13 @@ def build_batch_embeds(items: list[dict], reminders: list[tuple[int, dict]]) -> 
                        key=lambda x: -x["importance"])
         if not group:
             continue
-        desc = "\n\n".join(item_line(it) for it in group)
         embeds.append({
             "title": f"{task['emoji']} {task['name']}（{len(group)}）",
-            "description": desc[:4000],
+            "description": "\n\n".join(item_line(it) for it in group)[:4000],
             "color": int(task["color"], 16),
         })
+    if kw:
+        embeds.append(build_keyword_embed(kw, area_name))
     if reminders:
         lines = []
         for days, it in reminders:
@@ -376,7 +773,7 @@ def build_batch_embeds(items: list[dict], reminders: list[tuple[int, dict]]) -> 
             lines.append(f"{when}（{it['deadline'][5:].replace('-', '/')}）[{md(it['title'])}]({it['url']})")
         embeds.append({"title": "⏰ 締め切り間近", "description": "\n".join(lines)[:2000], "color": 0xE67E22})
     if CONFIG.get("site_url"):
-        embeds.append({"description": f"📖 [詳しい要約・過去の記事はサイトで]({CONFIG['site_url']})", "color": 0x2B2D31})
+        embeds.append({"description": f"📖 [詳しい要約・過去の記事・ドリルはサイトで]({CONFIG['site_url']})", "color": 0x2B2D31})
     return embeds
 
 
@@ -445,9 +842,9 @@ def log(text: str, dry_run: bool) -> None:
 # 发布端：主流程
 # ======================================================================
 
-def pending_branches() -> list[str]:
-    git("fetch", "--prune", "origin", f"+refs/heads/{INBOX_PREFIX}*:refs/remotes/origin/{INBOX_PREFIX}*")
-    out = git("for-each-ref", "--format=%(refname:short)", f"refs/remotes/origin/{INBOX_PREFIX}*")
+def pending_branches(prefix: str) -> list[str]:
+    git("fetch", "--prune", "origin", f"+refs/heads/{prefix}*:refs/remotes/origin/{prefix}*")
+    out = git("for-each-ref", "--format=%(refname:short)", f"refs/remotes/origin/{prefix}*")
     return sorted(line.split("origin/", 1)[1] for line in out.split() if line)
 
 
@@ -466,47 +863,144 @@ def due_reminders(state: dict, today: date) -> list[tuple[int, dict]]:
 
 
 def thread_title(day: date, slot: str, cats: list[str]) -> str:
-    names = "・".join(TASKS[c]["name"] for c in cats) or "お知らせ"
+    names = "・".join(TASKS[c]["name"] for c in cats) or "技術キーワード"
     return f"📰 {day.month}/{day.day}（{WEEKDAYS_JA[day.weekday()]}）{CONFIG['slots'][slot]['label']}｜{names}"
 
 
+def enrich(it: dict, day: date, slot: str) -> dict:
+    task = TASKS[it["category"]]
+    return {**it, "id": item_id(it["url"]), "date": day.isoformat(), "slot": slot,
+            "category_name": task["name"], "emoji": task["emoji"], "section": task.get("section"),
+            "keywords": match_keywords(it)}
+
+
+def remember_item(state: dict, it: dict) -> None:
+    state["items"].append({k: it.get(k) for k in ("id", "url", "title", "category", "importance",
+                                                   "date", "slot", "deadline", "source", "note")} | {"reminded": []})
+
+
+def batch_day(batch: dict) -> date:
+    d = str(batch.get("date"))
+    return date.fromisoformat(d) if re.fullmatch(r"\d{4}-\d{2}-\d{2}", d) else now_jst().date()
+
+
 def publish_batch(branch: str, state: dict, store, dry_run: bool) -> str:
-    raw = git("show", f"origin/{branch}:inbox/batch.json")  # 只当作数据读取
-    batch = json.loads(raw)
-    items = validate(batch)
+    batch = json.loads(git("show", f"origin/{branch}:inbox/batch.json"))  # 只当作数据读取
+    items = validate(batch, strict=False)
     slot = batch.get("slot") if batch.get("slot") in CONFIG["slots"] else slot_for(now_jst())
-    day = date.fromisoformat(batch["date"]) if re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(batch.get("date"))) \
-        else now_jst().date()
+    day = batch_day(batch)
+    note_kw = ""
+    try:
+        kw = validate_keywords(batch, required=False)
+    except ResultError as e:
+        kw, note_kw = None, f"（技术关键词格式有误，已跳过：{str(e)[:120]}）"
+    track = KW_TRACKS.get(slot)
+    if kw and track:
+        known_terms = {norm_text(k["term"]) for k in used_keywords(state, track["area"])}
+        if all(norm_text(k["term"]) in known_terms for k in kw["items"]):
+            kw, note_kw = None, "（技术关键词全部重复，已跳过）"
 
     known = {it["id"] for it in state["items"]}
     fresh = []
     for it in items:
-        iid = item_id(it["url"])
-        if iid in known:
+        e = enrich(it, day, slot)
+        if e["id"] in known:
             continue
-        known.add(iid)
-        task = TASKS[it["category"]]
-        fresh.append({**it, "id": iid, "date": day.isoformat(), "slot": slot,
-                      "category_name": task["name"], "emoji": task["emoji"],
-                      "keywords": match_keywords(it)})
+        known.add(e["id"])
+        fresh.append(e)
 
     reminders = due_reminders(state, day) if slot == "10" else []
-    if fresh or reminders:
+    if fresh or reminders or kw:
         cats = [t["id"] for t in CONFIG["tasks"] if any(it["category"] == t["id"] for it in fresh)]
-        post_forum_thread(thread_title(day, slot, cats), build_batch_embeds(fresh, reminders), dry_run)
+        post_forum_thread(thread_title(day, slot, cats),
+                          build_batch_embeds(fresh, reminders, kw, track["name"] if track else ""), dry_run)
 
     if not dry_run:
         store.add_items([{**it, "reminded": []} for it in fresh])
+        if kw and track:
+            store.add_keywords(track["area"], [{**k, "theme": kw["theme"], "date": day.isoformat(), "slot": slot}
+                                               for k in kw["items"]])
     for it in fresh:
-        state["items"].append({k: it[k] for k in ("id", "url", "title", "category", "importance",
-                                                   "date", "slot", "deadline", "source", "note")}
-                              | {"reminded": []})
+        remember_item(state, it)
+    if kw and track:
+        state["keywords"] += [{"term": k["term"], "level": k["level"], "area": track["area"],
+                               "theme": kw["theme"], "date": day.isoformat()} for k in kw["items"]]
     for days, it in reminders:
         it.setdefault("reminded", []).append(days)
     state["batches"].append({"branch": branch, "slot": slot, "date": day.isoformat(),
                              "count": len(fresh), "status": "ok"})
     return (f"✅ {day} {CONFIG['slots'][slot]['label']} 已发布：新内容 {len(fresh)} 条"
-            f"（重复跳过 {len(items) - len(fresh)} 条），截止提醒 {len(reminders)} 条")
+            f"（重复跳过 {len(items) - len(fresh)} 条），截止提醒 {len(reminders)} 条，"
+            f"技术关键词 {'3 个（' + kw['theme'] + '）' if kw else '无'}{note_kw}")
+
+
+def publish_learn(branch: str, state: dict, store, dry_run: bool) -> str:
+    data = json.loads(git("show", f"origin/{branch}:inbox/learn.json"))  # 只当作数据读取
+    L = validate_learn(data, strict=False)
+    day = batch_day(data)
+
+    known = {it["id"] for it in state["items"]}
+    news = []
+    for it in L["news"]:
+        e = enrich(it, day, "learn")
+        if e["id"] not in known:
+            known.add(e["id"])
+            news.append(e)
+
+    have = {q["id"] for q in state["quiz"]}
+    new_q = [q for q in L["quiz"] if q["id"] not in have]
+    by_topic: dict[str, list] = {}
+    for q in new_q:
+        by_topic.setdefault(q["topic"], []).append({**q, "date": day.isoformat()})
+
+    topic_of = {q["id"]: q["topic"] for q in state["quiz"]}
+    fixed = 0
+    for f in L["fixes"]:
+        topic = topic_of.get(f["id"])
+        if not topic:
+            continue
+        rep = {**f["replacement"], "date": day.isoformat()} if f["replacement"] else None
+        if not dry_run:
+            store.fix_quiz(topic, f["id"], rep)
+        state["quiz"] = [q for q in state["quiz"] if q["id"] != f["id"]]
+        if rep:
+            state["quiz"].append({"id": rep["id"], "topic": rep["topic"], "track": rep["track"],
+                                  "level": rep["level"], "q": rep["q"][:90]})
+        fixed += 1
+
+    if not dry_run:
+        store.add_items([{**it, "reminded": []} for it in news])
+        for topic, qs in by_topic.items():
+            store.add_quiz(topic, qs)
+        if L["theme"]:
+            store.set_theme(day.isoformat(), L["theme"])
+        if L["ideas"]:
+            store.add_ideas(L["ideas"])
+        by_area: dict[str, list] = {}
+        for k in L["keywords"]:
+            by_area.setdefault(k["area"], []).append({**k, "date": day.isoformat(), "slot": "learn"})
+        for area, ks in by_area.items():
+            store.add_keywords(area, ks)
+        if L["reviewed_reports"]:
+            store.mark_reports(L["reviewed_reports"], "done")
+
+    for it in news:
+        remember_item(state, it)
+    state["quiz"] += [{"id": q["id"], "topic": q["topic"], "track": q["track"], "level": q["level"],
+                       "q": q["q"][:90]} for q in new_q]
+    if L["theme"]:
+        state["themes"].append({"date": day.isoformat(), "title": L["theme"]["title"]})
+    for pool, words in L["ideas"].items():
+        state["idea_counts"][pool] = state["idea_counts"].get(pool, 0) + len(words)
+    state["keywords"] += [{"term": k["term"], "level": k["level"], "area": k["area"],
+                           "theme": k.get("theme"), "date": day.isoformat()} for k in L["keywords"]]
+    state["reports"] = [r for r in state["reports"] if r["id"] not in set(L["reviewed_reports"])]
+    state["batches"].append({"branch": branch, "slot": "learn", "date": day.isoformat(),
+                             "count": len(news) + len(new_q), "status": "ok"})
+    return (f"📚 {day} 学习内容已写入：分区新闻 {len(news)} 条、新题 {len(new_q)} 道"
+            f"（重复跳过 {len(L['quiz']) - len(new_q)}）、修正 {fixed} 道、"
+            f"お題 {'「' + L['theme']['title'] + '」' if L['theme'] else '无'}、"
+            f"词库 +{sum(len(v) for v in L['ideas'].values())}")
 
 
 def weekly_digest(state: dict, now: datetime, dry_run: bool) -> str | None:
@@ -515,7 +1009,8 @@ def weekly_digest(state: dict, now: datetime, dry_run: bool) -> str | None:
     if today.weekday() != conf["weekday"] or slot_for(now) != conf["slot"] or state.get("last_weekly") == today.isoformat():
         return None
     start = today - timedelta(days=6)
-    week = [it for it in state["items"] if start.isoformat() <= it["date"] <= today.isoformat()]
+    week = [it for it in state["items"] if start.isoformat() <= it["date"] <= today.isoformat()
+            and it.get("category") not in SECTIONS]
     top = sorted(week, key=lambda x: (-x["importance"], x["date"]))[:5]
     upcoming = sorted((it for it in state["items"] if it.get("deadline")
                        and today.isoformat() <= it["deadline"] <= (today + timedelta(days=14)).isoformat()),
@@ -527,19 +1022,22 @@ def weekly_digest(state: dict, now: datetime, dry_run: bool) -> str | None:
         lines = [f"{i}. {'★' * it['importance']} **[{md(it['title'])}]({it['url']})**\n└ {md((it.get('note') or '')[:80])}"
                  for i, it in enumerate(top, 1)]
         embeds.append({"title": "🏆 今週のベスト5", "description": "\n".join(lines)[:4000], "color": 0xF1C40F})
+    week_kw = [k for k in state["keywords"] if start.isoformat() <= k.get("date", "") <= today.isoformat()]
+    if week_kw:
+        terms = " / ".join(dict.fromkeys(k["term"] for k in week_kw))
+        embeds.append({"title": "🔑 今週の技術キーワード", "description": md(terms)[:1500], "color": 0xF2F56A})
     if upcoming:
         lines = [f"**{it['deadline'][5:].replace('-', '/')}**　[{md(it['title'])}]({it['url']})" for it in upcoming[:10]]
         embeds.append({"title": "📅 これからの締め切り（2週間）", "description": "\n".join(lines)[:2000], "color": 0xE67E22})
     if CONFIG.get("site_url"):
-        embeds.append({"description": f"📖 [今週の記事をサイトで見る]({CONFIG['site_url']})", "color": 0x2B2D31})
-    title = f"📅 今週のまとめ {start.month}/{start.day}〜{today.month}/{today.day}"
-    post_forum_thread(title, embeds, dry_run)
+        embeds.append({"description": f"📖 [今週の記事・ドリルをサイトで]({CONFIG['site_url']})", "color": 0x2B2D31})
+    post_forum_thread(f"📅 今週のまとめ {start.month}/{start.day}〜{today.month}/{today.day}", embeds, dry_run)
     state["last_weekly"] = today.isoformat()
     return f"📅 已发布每周汇总（精选 {len(top)} 条，截止日期 {len(upcoming)} 条）"
 
 
 def missing_batch_warnings(state: dict, now: datetime) -> list[str]:
-    """发布时间过了 40 分钟还没收到这一批的结果，就在日志频道提醒一次。"""
+    """发布时间过了 40 分钟还没收到研究结果，就在日志频道提醒一次。"""
     out = []
     today = now.date().isoformat()
     for slot, conf in CONFIG["slots"].items():
@@ -550,6 +1048,13 @@ def missing_batch_warnings(state: dict, now: datetime) -> list[str]:
             state["warned"].append(key)
             out.append(f"⚠️ {today} {conf['label']} 这一批还没收到研究结果，研究端可能失败了。"
                        f"请到 https://claude.ai/code/routines 查看运行记录。")
+    if LEARN.get("enabled"):
+        due = now.replace(hour=LEARN.get("hour", 7) + 2, minute=30, second=0, microsecond=0)
+        key = f"{today}-learn"
+        got = any(b["date"] == today and b["slot"] == "learn" for b in state["batches"])
+        if now >= due and not got and key not in state["warned"]:
+            state["warned"].append(key)
+            out.append(f"⚠️ {today} 的学习内容（题目・お題・分区新闻）还没收到，夜间任务可能失败了。")
     return out
 
 
@@ -561,16 +1066,17 @@ def cmd_publish_pending(args) -> int:
     store = None if args.dry_run else open_store()
     notes, failed = [], False
 
-    for branch in pending_branches():
-        try:
-            notes.append(publish_batch(branch, state, store, args.dry_run))
-        except Exception as e:
-            failed = True
-            state["batches"].append({"branch": branch, "slot": "?", "date": now.date().isoformat(),
-                                     "count": 0, "status": f"error: {str(e)[:200]}"})
-            notes.append(f"❌ {branch} 发布失败：{str(e)[:500]}")
-        if not args.dry_run:
-            git("push", "origin", "--delete", branch, check=False)
+    for prefix, fn in ((INBOX_PREFIX, publish_batch), (LEARN_PREFIX, publish_learn)):
+        for branch in pending_branches(prefix):
+            try:
+                notes.append(fn(branch, state, store, args.dry_run))
+            except Exception as e:
+                failed = True
+                state["batches"].append({"branch": branch, "slot": "?", "date": now.date().isoformat(),
+                                         "count": 0, "status": f"error: {str(e)[:200]}"})
+                notes.append(f"❌ {branch} 发布失败：{str(e)[:500]}")
+            if not args.dry_run:
+                git("push", "origin", "--delete", branch, check=False)
 
     digest = weekly_digest(state, now, args.dry_run)
     if digest:
@@ -584,11 +1090,17 @@ def cmd_publish_pending(args) -> int:
             notes.append(f"🙋 有 {len(requests_)} 个新的浏览申请\n{names}\n"
                          f"去网站的「⚙️ 管理」批准：{CONFIG.get('site_url', '')}")
             store.mark_requests_notified([u["uid"] for u in requests_])
+        reports = store.new_reports()
+        if reports:
+            have = {r["id"] for r in state["reports"]}
+            state["reports"] += [r for r in reports if r["id"] not in have]
+            store.mark_reports([r["id"] for r in reports], "queued")
+            notes.append(f"🚩 有 {len(reports)} 个题目被回报有问题，下次学习任务会核实修正")
         store.save_meta({
             "updated": now.isoformat(timespec="minutes"),
             "keywords": CONFIG.get("keywords", []),
-            "categories": [{"id": t["id"], "name": t["name"], "emoji": t["emoji"], "color": t["color"]}
-                           for t in CONFIG["tasks"]],
+            "categories": [{"id": t["id"], "name": t["name"], "emoji": t["emoji"], "color": t["color"],
+                            "section": t.get("section")} for t in CONFIG["tasks"]],
         })
         store.flush()
 
@@ -600,13 +1112,28 @@ def cmd_publish_pending(args) -> int:
 
 
 # ======================================================================
-# 预览：把一批结果渲染成「Discord 帖子 + 全文」的 HTML，给管理员确认效果
+# 预览：给管理员确认效果的 HTML
 # ======================================================================
+
+PAGE_CSS = """body{margin:0;background:#1e1f22;color:#dbdee1;font:15px/1.7 "Noto Sans JP","Yu Gothic UI",system-ui,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:16px} h1{font-size:18px} h2{font-size:16px;margin-top:32px;color:#fff}
+a{color:#00a8fc;text-decoration:none} .thread{background:#2b2d31;border-radius:8px;padding:16px}
+.tt{font-size:17px;font-weight:700;color:#fff;margin-bottom:12px}
+.embed{background:#232428;border-left:4px solid;border-radius:4px;padding:10px 14px;margin:8px 0}
+.et{font-weight:700;color:#fff;margin-bottom:4px} .ed{font-size:14px} .ef{font-size:12px;color:#949ba4;margin-top:6px}
+code,pre{background:#1e1f22;border-radius:4px;font-size:12px} pre{padding:8px;white-space:pre-wrap}
+.card{background:#2b2d31;border-radius:8px;padding:12px 16px;margin:10px 0} .card h3{margin:4px 0;font-size:16px}
+.meta{font-size:12px;color:#949ba4} .ok{color:#3ee08f;font-weight:700} pre.rep{white-space:pre-wrap}
+ol.pts{margin:10px 0;padding-left:1.4em;color:#f2f56a} ol.pts li span,ol.pts li{color:#dbdee1}
+p.para{line-height:1.9;margin:8px 0} dl.terms{background:#1e1f22;border-radius:6px;padding:8px 12px}
+dl.terms dt{font-weight:700;color:#ffb874} dl.terms dd{margin:2px 0 8px}"""
+
 
 def _md_to_html(text: str) -> str:
     import html as H
 
     s = H.escape(text, quote=False)
+    s = re.sub(r"```(\w*)\n(.*?)\n```", lambda m: f"<pre>{m.group(2)}</pre>", s, flags=re.S)
     s = re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+)\)", r'<a href="\2" target="_blank">\1</a>', s)
     s = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", s)
     s = re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
@@ -614,79 +1141,96 @@ def _md_to_html(text: str) -> str:
     return s.replace("\n", "<br>")
 
 
-def load_batch(source: str) -> dict:
+def load_branch_json(source: str, filename: str) -> dict:
     if Path(source).exists():
-        data = json.loads(Path(source).read_text(encoding="utf-8"))
-        return data if "slot" in data else {"slot": None, "date": None, "items": data.get("items", []),
-                                             "report": data.get("report", "")}
+        return json.loads(Path(source).read_text(encoding="utf-8"))
     branch = source.removeprefix("origin/")
     git("fetch", "origin", f"+refs/heads/{branch}:refs/remotes/origin/{branch}")
-    return json.loads(git("show", f"origin/{branch}:inbox/batch.json"))
+    return json.loads(git("show", f"origin/{branch}:inbox/{filename}"))
+
+
+def write_page(name: str, body: str) -> Path:
+    out = ROOT / "out" / name
+    out.parent.mkdir(exist_ok=True)
+    out.write_text(f'<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" '
+                   f'content="width=device-width, initial-scale=1"><title>HIKARI NEWS 预览</title><style>{PAGE_CSS}</style>'
+                   f'</head><body><div class="wrap">{body}</div></body></html>', encoding="utf-8")
+    print(f"✅ 预览已生成：{out}")
+    return out
+
+
+def _writeup_html(it: dict) -> str:
+    """预览页：要点・分段解说・术语（网站上的样子的简化版）。"""
+    import html as H
+
+    out = ""
+    if it.get("points"):
+        out += "<ol class='pts'>" + "".join(f"<li>{H.escape(p)}</li>" for p in it["points"]) + "</ol>"
+    for para in (it.get("detail") or "").split("\n\n"):
+        if para.strip():
+            out += "<p class='para'>" + H.escape(para).replace("\n", "<br>") + "</p>"
+    if it.get("terms"):
+        out += "<dl class='terms'>" + "".join(f"<dt>{H.escape(t['term'])}</dt><dd>{H.escape(t['explain'])}</dd>" for t in it["terms"]) + "</dl>"
+    return out
 
 
 def cmd_preview(args) -> int:
     import html as H
 
-    batch = load_batch(args.source)
-    items = validate(batch)
+    batch = load_branch_json(args.source, "batch.json")
+    items = validate(batch, strict=False)
     slot = batch.get("slot") or args.slot or slot_for(now_jst())
-    day = date.fromisoformat(batch["date"]) if batch.get("date") else now_jst().date()
+    day = batch_day(batch)
+    kw = validate_keywords(batch, required=False)
+    track = KW_TRACKS.get(slot)
     known = {it["id"] for it in load_state()["items"]}
-    rich = []
-    for it in items:
-        task = TASKS[it["category"]]
-        rich.append({**it, "id": item_id(it["url"]), "category_name": task["name"], "emoji": task["emoji"],
-                     "keywords": match_keywords(it), "dup": item_id(it["url"]) in known})
+    rich = [{**enrich(it, day, slot), "dup": item_id(it["url"]) in known} for it in items]
     cats = [t["id"] for t in CONFIG["tasks"] if any(it["category"] == t["id"] for it in rich)]
-    title = thread_title(day, slot, cats)
-    embeds = build_batch_embeds([it for it in rich if not it["dup"]], [])
-
+    embeds = build_batch_embeds([it for it in rich if not it["dup"]], [], kw, track["name"] if track else "")
     emb_html = "".join(
         f'<div class="embed" style="border-color:#{e.get("color", 0x2B2D31):06x}">'
-        + (f'<div class="et">{"<a href=" + chr(34) + H.escape(e["url"]) + chr(34) + ">" if e.get("url") else ""}'
-           f'{H.escape(e["title"])}{"</a>" if e.get("url") else ""}</div>' if e.get("title") else "")
+        + (f'<div class="et">{H.escape(e["title"])}</div>' if e.get("title") else "")
         + f'<div class="ed">{_md_to_html(e.get("description", ""))}</div>'
-        + (f'<div class="ef">{H.escape(e["footer"]["text"])}</div>' if e.get("footer") else "")
-        + "</div>" for e in embeds)
+        + (f'<div class="ef">{H.escape(e["footer"]["text"])}</div>' if e.get("footer") else "") + "</div>"
+        for e in embeds)
+    rows = "".join(
+        f'<div class="card"><div class="meta">{H.escape(it["category_name"])} ・ {"★" * it["importance"]} ・ '
+        f'{H.escape(it["source"])}{" ・ ⚠️ 已推送过" if it["dup"] else ""}</div>'
+        f'<h3><a href="{H.escape(it["url"])}" target="_blank">{H.escape(it["title"])}</a></h3>'
+        f'<p>{H.escape(it["summary"])}</p><p class="meta">💡 {H.escape(it["note"])}</p>{_writeup_html(it)}</div>' for it in rich)
+    body = (f"<h1>HIKARI NEWS 预览（没有发送到 Discord）</h1><p>{day} ／ slot {H.escape(str(slot))} ／ {len(rich)} 条</p>"
+            f"<h2>① Discord 论坛帖子的样子</h2><div class='thread'><div class='tt'>{H.escape(thread_title(day, slot, cats))}</div>{emb_html}</div>"
+            f"<h2>② 全文</h2>{rows}<h2>③ AI 的研究报告</h2><pre class='rep'>{H.escape(batch.get('report') or '（なし）')}</pre>")
+    write_page(f"preview-{day}-{slot}.html", body)
+    return 0
 
-    rows = []
-    for it in sorted(rich, key=lambda x: (x["category"], -x["importance"])):
-        meta = " ・ ".join(filter(None, [
-            f"{it['emoji']} {it['category_name']}", "★" * it["importance"], it["level"],
-            {"en": "英語", "ja": "日本語", "other": "その他"}.get(it["lang"] or "", ""),
-            f"⏱{it['read_minutes']}分" if it["read_minutes"] else "", it["source"],
-            f"⏰ {it['deadline']}" if it["deadline"] else "", "⚠️ 已推送过（正式发布时会跳过）" if it["dup"] else ""]))
-        rows.append(
-            f'<div class="card"><div class="meta">{H.escape(meta)}</div>'
-            f'<h3><a href="{H.escape(it["url"])}" target="_blank">{H.escape(it["title"])}</a></h3>'
-            f'<p>{H.escape(it["summary"])}</p><p class="note">💡 {H.escape(it["note"])}</p>'
-            f'<div class="tags">{" ".join("#" + H.escape(t) for t in it["tags"])}</div></div>')
 
-    report = batch.get("report") or "（なし）"
-    page = f"""<!doctype html><html lang="ja"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"><title>HIKARI NEWS 预览</title>
-<style>
-body{{margin:0;background:#1e1f22;color:#dbdee1;font:15px/1.6 "Noto Sans JP","Yu Gothic UI",system-ui,sans-serif}}
-.wrap{{max-width:860px;margin:0 auto;padding:16px}} h1{{font-size:18px}} h2{{font-size:16px;margin-top:32px;color:#fff}}
-a{{color:#00a8fc;text-decoration:none}} a:hover{{text-decoration:underline}}
-.thread{{background:#2b2d31;border-radius:8px;padding:16px}} .tt{{font-size:17px;font-weight:700;color:#fff;margin-bottom:12px}}
-.embed{{background:#232428;border-left:4px solid;border-radius:4px;padding:10px 14px;margin:8px 0}}
-.et{{font-weight:700;color:#fff;margin-bottom:4px}} .ed{{font-size:14px}} .ef{{font-size:12px;color:#949ba4;margin-top:6px}}
-code{{background:#1e1f22;border-radius:3px;padding:0 4px;font-size:12px}}
-.card{{background:#2b2d31;border-radius:8px;padding:12px 16px;margin:10px 0}} .card h3{{margin:4px 0;font-size:16px}}
-.meta,.tags{{font-size:12px;color:#949ba4}} .note{{color:#b5bac1}} pre{{white-space:pre-wrap;background:#2b2d31;padding:12px;border-radius:8px}}
-</style></head><body><div class="wrap">
-<h1>HIKARI NEWS 预览（没有发送到 Discord）</h1>
-<p>{H.escape(str(day))} ／ slot {H.escape(str(slot))} ／ {len(rich)} 条</p>
-<h2>① Discord 论坛帖子的样子</h2>
-<div class="thread"><div class="tt">{H.escape(title)}</div>{emb_html}</div>
-<h2>② 全文（网站上显示的内容）</h2>{"".join(rows)}
-<h2>③ AI 的研究报告</h2><pre>{H.escape(report)}</pre>
-</div></body></html>"""
-    out = ROOT / "out" / f"preview-{day}-{slot}.html"
-    out.parent.mkdir(exist_ok=True)
-    out.write_text(page, encoding="utf-8")
-    print(f"✅ 预览已生成：{out}")
+def cmd_preview_learn(args) -> int:
+    import html as H
+
+    data = load_branch_json(args.source, "learn.json")
+    L = validate_learn(data, strict=False)
+    parts = [f"<h1>学习内容预览（没有写入网站）</h1><p>{H.escape(str(data.get('date', '')))}</p>"]
+    if L["theme"]:
+        t = L["theme"]
+        parts.append(f"<h2>今日のお題</h2><div class='card'><h3>{H.escape(t['title'])}</h3><ul>"
+                     + "".join(f"<li>{H.escape(a)}</li>" for a in t["angles"]) + f"</ul><p class='meta'>{H.escape(t['note'] or '')}</p></div>")
+    if L["news"]:
+        parts.append("<h2>分区新闻</h2>" + "".join(
+            f"<div class='card'><div class='meta'>{H.escape(it['category'])}</div><h3><a href='{H.escape(it['url'])}'>{H.escape(it['title'])}</a></h3>"
+            f"<p>{H.escape(it['summary'])}</p><p class='meta'>💡 {H.escape(it['note'])}</p>{_writeup_html(it)}</div>" for it in L["news"]))
+    if L["quiz"]:
+        parts.append(f"<h2>题目（{len(L['quiz'])}）</h2>" + "".join(
+            f"<div class='card'><div class='meta'>{q['track']} / {q['topic']} / {q['level']}</div><h3>{H.escape(q['q'])}</h3>"
+            + (f"<pre>{H.escape(q['code'])}</pre>" if q["code"] else "")
+            + "<ol>" + "".join(f"<li class='{'ok' if i == q['answer'] else ''}'>{H.escape(c)}</li>" for i, c in enumerate(q["choices"])) + "</ol>"
+            + f"<p>{H.escape(q['explain'])}</p>" + (f"<a href='{H.escape(q['link'])}'>📖</a>" if q["link"] else "") + "</div>" for q in L["quiz"]))
+    if L["ideas"]:
+        parts.append("<h2>词库追加</h2>" + "".join(f"<p><b>{p}</b>：{H.escape('、'.join(w))}</p>" for p, w in L["ideas"].items()))
+    if L["fixes"]:
+        parts.append("<h2>修正</h2>" + "".join(f"<p>{f['id']}：{f['action']}</p>" for f in L["fixes"]))
+    parts.append(f"<h2>AI 的报告</h2><pre class='rep'>{H.escape(L['report'] or '（なし）')}</pre>")
+    write_page(f"preview-learn-{data.get('date', 'x')}.html", "".join(parts))
     return 0
 
 
@@ -697,17 +1241,25 @@ def main() -> int:
     parser.add_argument("--slot", choices=list(CONFIG["slots"]), help="默认按日本时间自动判断")
     sub = parser.add_subparsers(dest="cmd", required=True)
     sub.add_parser("context")
-    sub.add_parser("feeds")
+    sub.add_parser("feeds").add_argument("--learn", action="store_true", help="学习任务用（分区新闻的候选）")
     sub.add_parser("community")
     sub.add_parser("check").add_argument("file")
     p = sub.add_parser("submit")
     p.add_argument("file")
     p.add_argument("--preview", action="store_true", help="交到预览分支，不发到 Discord")
+    sub.add_parser("learn-context")
+    sub.add_parser("learn-check").add_argument("file")
+    p = sub.add_parser("learn-submit")
+    p.add_argument("file")
+    p.add_argument("--preview", action="store_true", help="交到预览分支，不写入网站")
     sub.add_parser("publish-pending").add_argument("--dry-run", action="store_true")
     sub.add_parser("preview").add_argument("source", help="预览分支名（claude/preview-…）或结果 JSON 文件")
+    sub.add_parser("preview-learn").add_argument("source", help="学习内容的预览分支或 JSON 文件")
     args = parser.parse_args()
     return {"context": cmd_context, "feeds": cmd_feeds, "community": cmd_community, "check": cmd_check,
-            "submit": cmd_submit, "publish-pending": cmd_publish_pending, "preview": cmd_preview}[args.cmd](args)
+            "submit": cmd_submit, "learn-context": cmd_learn_context, "learn-check": cmd_learn_check,
+            "learn-submit": cmd_learn_submit, "publish-pending": cmd_publish_pending,
+            "preview": cmd_preview, "preview-learn": cmd_preview_learn}[args.cmd](args)
 
 
 if __name__ == "__main__":

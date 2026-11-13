@@ -1,152 +1,34 @@
 import { firebaseConfig } from "./firebase-config.js";
 import { logoSVG } from "./logo.js";
+import { SDK, REDUCED, $, $$, esc, safeUrl, todayStr, daysUntil, norm, ic, hash, AREAS, CAT_ICON, SLOT_LABEL, WEEK,
+         P, S, setData, setLearn, catOf, catColor, catIc, isSection, byId, itemText, kwOf, sortNew, level, dlBadge, hl,
+         metaLine, bmBtn, rowHTML, heroHTML, emptyHTML, pageHead, toast, burst, countUp, copyText, paraHTML } from "./core.js";
+import { initStarfield, showDrawer, closeDrawer } from "./fx.js";
+import { viewProg, viewPlan, afterLearn, todayLearnSide, ladders, ladderHTML, kwHits, openKw, rankBox } from "./learn.js";
 
 /* =========================================================================
-   HIKARI NEWS — front-end v2
-   ・アイコン中心の UI（ボタンはアイコン＋ツールチップ、文字は最小限）
-   ・ロゴのイントロ、斜めワイプ転換、スクロールで現れるカード、保存時の星のはじけ
+   HIKARI NEWS — front-end v3
+   ・アイコン中心の UI、斜めワイプ転換、カード → 詳細パネルの変形、星屑の背景
+   ・今日／さがす／プログラマー／プランナー／チャンス／マイページ／管理
    ・Firebase（本番）/ ローカルのデモデータ（localhost?demo）
    ========================================================================= */
 
-const SDK = "https://www.gstatic.com/firebasejs/10.12.2";
 const PAGE_SIZE = 300;
-const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-const DEFAULT_CATS = [
-  { id: "ai", name: "AIトレンド", color: "7B8CFF" },
-  { id: "industry", name: "ゲーム業界", color: "FF6B6B" },
-  { id: "tech", name: "技術・学習", color: "5EE6A0" },
-  { id: "ai_howto", name: "AI活用", color: "F2F56A" },
-  { id: "classic", name: "定番の一本", color: "C59BFF" },
-  { id: "community", name: "SNS・コミュニティ", color: "FF8FC8" },
-  { id: "chance", name: "チャンス情報", color: "FFB874" },
-];
-const CAT_ICON = { ai: "ti-robot", industry: "ti-device-gamepad-2", tech: "ti-code", ai_howto: "ti-wand",
-                   classic: "ti-pin", community: "ti-messages", chance: "ti-trophy" };
-const SLOT_LABEL = { "10": "10:00", "17": "17:00", "22": "22:00" };
-const WEEK = "日月火水木金土";
-
-const $ = (s, el = document) => el.querySelector(s);
-const $$ = (s, el = document) => [...el.querySelectorAll(s)];
-const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const safeUrl = u => /^https?:\/\//.test(u || "") ? u : "#";
-const todayStr = () => new Date().toLocaleDateString("sv-SE");
-const daysUntil = d => Math.round((new Date(d + "T00:00:00") - new Date(todayStr() + "T00:00:00")) / 864e5);
-const norm = s => String(s || "").normalize("NFKC").toLowerCase()
-  .replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60));
-const ic = (name, extra = "") => `<i class="ti ${name}" ${extra}></i>`;
-
-/* ------------------------------------------------------------------ prefs */
-const store = {
-  get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
-  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
-};
-const P = {
-  bookmarks: new Set(store.get("bookmarks", [])),
-  read: new Map(Object.entries(store.get("readAt", {}))),
-  chance: store.get("chance", {}),
-  myKw: store.get("myKw", []),
-  open: new Set(store.get("openBatches", [])),
-  save() {
-    store.set("bookmarks", [...this.bookmarks]); store.set("readAt", Object.fromEntries(this.read));
-    store.set("chance", this.chance); store.set("myKw", this.myKw); store.set("openBatches", [...this.open].slice(-30));
-  },
-};
-
-/* ------------------------------------------------------------------ state */
-const S = { items: [], cats: DEFAULT_CATS, keywords: [], updated: null, isAdmin: false, ready: false,
-            loadMore: null, adminApi: null, route: null, params: {} };
-const catOf = id => S.cats.find(c => c.id === id) || { id, name: id, color: "F2F56A" };
-const catColor = id => "#" + (catOf(id).color || "F2F56A");
-const catIc = (id, tip = true) => `<span class="cat-ic" style="--cat:${catColor(id)}" ${tip ? `data-tip="${esc(catOf(id).name)}"` : ""}>${ic(CAT_ICON[id] || "ti-point")}</span>`;
-const byId = id => S.items.find(it => it.id === id);
-const itemText = it => norm([it.title, it.summary, it.note, it.source, it.category_name, ...(it.tags || [])].join(" "));
-const kwOf = it => { const t = itemText(it); return [...new Set([...S.keywords, ...P.myKw])].filter(k => t.includes(norm(k))); };
-const sortNew = (a, b) => b.date.localeCompare(a.date) || String(b.slot).localeCompare(String(a.slot)) || b.importance - a.importance;
-
-/* ============================================================== components */
-const stars = n => `<span class="stars" data-tip="おすすめ度 ${n}/5">${[1, 2, 3, 4, 5].map(i =>
-  i <= n ? `<i class="ti ti-star-filled"></i>` : `<i class="ti ti-star off"></i>`).join("")}</span>`;
-const LV = { "入門": 1, "中級": 2, "上級": 3 };
-const level = l => l ? `<span class="lv" data-tip="難易度：${esc(l)}">${[1, 2, 3].map(i => `<i class="${i <= LV[l] ? "on" : ""}"></i>`).join("")}</span>` : "";
-
-function dlBadge(it) {
-  if (!it.deadline) return "";
-  const d = daysUntil(it.deadline);
-  const cls = d < 0 ? "past" : d <= 3 ? "hot" : d <= 7 ? "warm" : "";
-  const txt = d < 0 ? "終了" : d === 0 ? "今日" : `${d}日`;
-  return `<span class="dl ${cls}" data-tip="締め切り ${esc(it.deadline.replace(/-/g, "/"))}">${ic("ti-hourglass")}${txt}</span>`;
-}
-
-function hl(text, terms) {
-  let s = esc(text);
-  for (const t of terms) {
-    if (!t) continue;
-    s = s.replace(new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), m => `<mark>${m}</mark>`);
-  }
-  return s;
-}
-
-function metaLine(it) {
-  const kws = kwOf(it);
-  return [
-    stars(it.importance), level(it.level),
-    it.read_minutes ? `<span data-tip="読む時間の目安">${ic("ti-clock")} ${it.read_minutes}分</span>` : "",
-    it.lang === "en" ? `<span data-tip="原文は英語">${ic("ti-language")} EN</span>` : "",
-    `<span>${esc(it.source)}</span>`,
-    kws.length ? `<span class="kw" data-tip="キーワード：${esc(kws.join("・"))}">${ic("ti-bell-ringing")}</span>` : "",
-  ].join("");
-}
-
-const bmBtn = (id, cls = "ib sm ghost") => `<button class="${cls} bm ${P.bookmarks.has(id) ? "on" : ""}" data-bm="${esc(id)}" data-tip="${P.bookmarks.has(id) ? "保存済み" : "あとで読む"}">${ic(P.bookmarks.has(id) ? "ti-bookmark-filled" : "ti-bookmark")}</button>`;
-
-function rowHTML(it, i = 0, terms = [], extra = "") {
-  return `<article class="row rv ${P.read.has(it.id) ? "read" : ""}" style="--cat:${catColor(it.category)};--i:${i}" data-open="${esc(it.id)}">
-    ${catIc(it.category)}
-    <div class="body">
-      <h3>${hl(it.title, terms)}</h3>
-      <p class="sub">${hl(it.note || it.summary, terms)}</p>
-      <div class="meta" style="margin-top:6px"><span class="m-cat">${catIc(it.category, false)}</span>${metaLine(it)}</div>
-      ${extra}
-    </div>
-    <div class="acts">
-      ${dlBadge(it)}
-      ${bmBtn(it.id)}
-      <span class="ib sm ghost go" aria-hidden="true">${ic("ti-arrow-right")}</span>
-    </div>
-  </article>`;
-}
-
-function heroHTML(it) {
-  return `<section class="hero rv" style="--i:0;--cat:${catColor(it.category)}" data-open="${esc(it.id)}">
-    <span class="glow"></span>
-    <span class="deco">${logoSVG({ full: false })}</span>
-    <span class="rib">${ic("ti-star-filled")} PICK</span>
-    <div class="meta">${catIc(it.category)}${metaLine(it)}</div>
-    <h2>${esc(it.title)}</h2>
-    <p>${esc(it.note || it.summary)}</p>
-    <div class="acts">
-      <a class="btn" href="${esc(safeUrl(it.url))}" target="_blank" rel="noopener noreferrer" data-read="${esc(it.id)}">${ic("ti-external-link")}読む</a>
-      ${bmBtn(it.id, "ib")}
-      <button class="ib" data-open-btn="${esc(it.id)}" data-tip="くわしく">${ic("ti-info-circle")}</button>
-    </div>
-  </section>`;
-}
-
-const emptyHTML = (title, body = "") => `<div class="empty rv in">${logoSVG({ full: false })}<b>${esc(title)}</b>${esc(body)}</div>`;
-const pageHead = (icon, title, right = "") => `<div class="ph rv" style="--i:0"><span class="pi">${ic(icon)}</span><h1>${title}</h1>${right}</div>`;
 
 /* ================================================================== views */
 function viewToday() {
-  if (!S.items.length) return `<div class="page">${emptyHTML("まだ記事がありません", "次の便（10:00 / 17:00 / 22:00）をお待ちください")}</div>`;
-  const dates = [...new Set(S.items.map(it => it.date))].sort().reverse().slice(0, 4);
-  const latest = S.items.filter(it => it.date === dates[0]);
-  const pick = [...latest].sort((a, b) => b.importance - a.importance || kwOf(b).length - kwOf(a).length)[0];
+  const items = S.items.filter(it => !isSection(it));          // 分区のニュースは各分区に表示
+  const lads = ladders().filter(g => ["10", "17", "22"].includes(g.slot));
+  if (!items.length && !lads.length) return `<div class="page">${emptyHTML("まだ記事がありません", "次の便（10:00 / 17:00 / 22:00）をお待ちください")}</div>`;
+  const dates = [...new Set([...items.map(it => it.date), ...lads.map(g => g.date)])].sort().reverse().slice(0, 4);
+  const latest = items.filter(it => it.date === dates[0]);
+  const top = [...(latest.length ? latest : items)].sort((a, b) => b.importance - a.importance || kwOf(b).length - kwOf(a).length)[0];
 
   const groups = [];
   for (const d of dates) for (const slot of ["22", "17", "10"]) {
-    const its = S.items.filter(it => it.date === d && String(it.slot) === slot && it !== pick).sort((a, b) => b.importance - a.importance);
-    if (its.length) groups.push({ key: `${d}-${slot}`, d, slot, its });
+    const its = items.filter(it => it.date === d && String(it.slot) === slot && it !== top).sort((a, b) => b.importance - a.importance);
+    const kws = lads.filter(g => g.date === d && g.slot === slot);
+    if (its.length || kws.length) groups.push({ key: `${d}-${slot}`, d, slot, its, kws });
   }
   const batches = groups.map((g, gi) => {
     const open = P.open.has(g.key) || (gi === 0 && !P.open.has("closed:" + g.key));
@@ -154,12 +36,15 @@ function viewToday() {
     const dayLbl = g.d === todayStr() ? "今日" : `${day.getMonth() + 1}/${day.getDate()}（${WEEK[day.getDay()]}）`;
     const cats = [...new Set(g.its.map(it => it.category))];
     return `<section class="batch rv" style="--i:${gi + 1}">
-      <div class="batch-h ${open ? "open" : ""}" data-batch="${g.key}" role="button" aria-expanded="${open}">
+      <div class="batch-h ${open ? "open" : ""}" data-batch="${g.key}" role="button" tabindex="0" aria-expanded="${open}">
         <span class="time">${SLOT_LABEL[g.slot]}</span>
-        <span class="day"><b>${dayLbl}</b><span class="cats">${cats.map(c => catIc(c)).join("")}</span></span>
+        <span class="day"><b>${dayLbl}</b><span class="cats">${cats.map(c => catIc(c)).join("")}${g.kws.length ? `<span class="cat-ic" style="--cat:var(--lemon)" data-tip="技術キーワード">${ic("ti-key")}</span>` : ""}</span></span>
         <span class="rule"></span><span class="cnt">${g.its.length}</span>${ic("ti-chevron-down chev")}
       </div>
-      <div class="batch-body"><div><div class="rows">${g.its.map((it, i) => rowHTML(it, i)).join("")}</div></div></div>
+      <div class="batch-body"><div>
+        ${g.its.length ? `<div class="rows">${g.its.map((it, i) => rowHTML(it, i)).join("")}</div>` : ""}
+        ${g.kws.map((k, i) => ladderHTML(k, g.its.length + i)).join("")}
+      </div></div>
     </section>`;
   }).join("");
 
@@ -167,21 +52,22 @@ function viewToday() {
   return `<div class="page">
     ${pageHead("ti-sun", "今日のヒカリ", `<span class="when">${ic("ti-calendar")}${d0.getMonth() + 1}/${d0.getDate()} ${WEEK[d0.getDay()]}${S.updated ? ` ・ ${ic("ti-refresh")}${esc(String(S.updated).slice(11, 16))}` : ""}</span>`)}
     <div class="grid2">
-      <div>${heroHTML(pick)}${batches}${S.loadMore ? `<p style="text-align:center;margin-top:48px"><button class="btn plain" id="older">${ic("ti-history")}もっと前</button></p>` : ""}</div>
-      ${sideHTML()}
+      <div>${top ? heroHTML(top) : ""}${batches}${S.loadMore ? `<p style="text-align:center;margin-top:48px"><button class="btn plain" id="older">${ic("ti-history")}もっと前</button></p>` : ""}</div>
+      ${sideHTML(items)}
     </div>
   </div>`;
 }
 
-function sideHTML() {
-  const up = S.items.filter(it => it.deadline && daysUntil(it.deadline) >= 0).sort((a, b) => a.deadline.localeCompare(b.deadline)).slice(0, 4);
+function sideHTML(items) {
+  const up = items.filter(it => it.deadline && daysUntil(it.deadline) >= 0).sort((a, b) => a.deadline.localeCompare(b.deadline)).slice(0, 4);
   const weekAgo = new Date(Date.now() - 7 * 864e5).toLocaleDateString("sv-SE");
-  const top = S.items.filter(it => it.date >= weekAgo).sort((a, b) => b.importance - a.importance || sortNew(a, b)).slice(0, 5);
+  const top = items.filter(it => it.date >= weekAgo).sort((a, b) => b.importance - a.importance || sortNew(a, b)).slice(0, 5);
   const allKw = [...new Set([...S.keywords, ...P.myKw])];
   const st = readStats();
   return `<aside class="side-col">
+    ${todayLearnSide(1)}
     <div class="box rv" style="--i:2"><div class="box-h"><span class="hi h">${ic("ti-hourglass")}</span>締め切り<a class="ib sm ghost more" href="#/chance" data-tip="チャンス一覧">${ic("ti-arrow-right")}</a></div>
-      ${up.length ? up.map(it => `<a class="mini" data-open="${esc(it.id)}">${dlBadge(it)}<span class="t">${esc(it.title)}</span></a>`).join("") : `<p style="color:var(--muted);margin:0;font-size:13px">なし</p>`}</div>
+      ${up.length ? up.map(it => `<a class="mini" data-open="${esc(it.id)}">${dlBadge(it)}<span class="t">${esc(it.title)}</span></a>`).join("") : `<p class="muted-s">なし</p>`}</div>
     <div class="box rv" style="--i:3"><div class="box-h"><span class="hi">${ic("ti-flame")}</span>今週の人気</div>
       ${top.map((it, i) => `<a class="mini" data-open="${esc(it.id)}"><span class="rank">${i + 1}</span><span class="t">${esc(it.title)}</span></a>`).join("")}</div>
     <div class="box rv" style="--i:4"><div class="box-h"><span class="hi p">${ic("ti-bell-ringing")}</span>キーワード</div>
@@ -191,7 +77,7 @@ function sideHTML() {
         return `<span class="chip" style="--cat:var(--peach)" data-kw="${esc(k)}">${esc(k)}<span class="n">${n}</span>${mine ? `<i class="ti ti-x" data-rmkw="${esc(k)}" data-tip="削除"></i>` : ""}</span>`;
       }).join("")}</div>
       <form class="kwin" id="kwform"><input type="text" id="kwinput" maxlength="20" placeholder="追加…"><button class="ib sm" data-tip="追加">${ic("ti-plus")}</button></form></div>
-    <div class="box rv" style="--i:5"><div class="box-h"><span class="hi">${ic("ti-chart-bar")}</span>学習ログ<a class="ib sm ghost more" href="#/saved" data-tip="マイページ">${ic("ti-arrow-right")}</a></div>
+    <div class="box rv" style="--i:5"><div class="box-h"><span class="hi">${ic("ti-chart-bar")}</span>読書ログ<a class="ib sm ghost more" href="#/saved" data-tip="マイページ">${ic("ti-arrow-right")}</a></div>
       <div class="stat">
         <div data-tip="今週読んだ記事">${ic("ti-book")}<b data-count="${st.week}">0</b></div>
         <div data-tip="連続日数">${ic("ti-flame")}<b data-count="${st.streak}">0</b></div>
@@ -316,9 +202,10 @@ function viewSaved() {
           : emptyHTML(tab === "read" ? "まだありません" : "保存した記事はありません", tab === "read" ? "記事を開くと記録されます" : "しおりのアイコンで保存できます")}
       </div>
       <aside class="side-col">
-        <div class="box rv" style="--i:2"><div class="box-h"><span class="hi">${ic("ti-chart-bar")}</span>学習ログ</div>
+        ${rankBox(2)}
+        <div class="box rv" style="--i:3"><div class="box-h"><span class="hi">${ic("ti-chart-bar")}</span>読書ログ</div>
           <div class="stat"><div data-tip="累計">${ic("ti-books")}<b data-count="${st.total}">0</b></div><div data-tip="今週">${ic("ti-book")}<b data-count="${st.week}">0</b></div><div data-tip="連続日数">${ic("ti-flame")}<b data-count="${st.streak}">0</b></div></div></div>
-        <div class="box rv" style="--i:3"><div class="box-h"><span class="hi p">${ic("ti-chart-pie")}</span>ジャンル</div>
+        <div class="box rv" style="--i:4"><div class="box-h"><span class="hi p">${ic("ti-chart-pie")}</span>ジャンル</div>
           ${byCat.map(({ c, n }) => `<div style="display:flex;align-items:center;gap:10px;margin:10px 0">${catIc(c.id)}
             <div style="flex:1;height:10px;background:var(--ink-4);border-radius:5px;overflow:hidden"><div class="bar" style="height:100%;width:0;background:#${c.color};border-radius:5px;transition:width .9s var(--out)" data-w="${(n / max) * 100}"></div></div>
             <b style="font:700 14px var(--f-num);width:20px;text-align:right">${n}</b></div>`).join("")}</div>
@@ -332,16 +219,24 @@ function viewAdmin() {
   if (!S.adminApi) return `<div class="page">${emptyHTML("管理", "デモモードでは使えません")}</div>`;
   return `<div class="page">${pageHead("ti-shield-check", "管理")}<div id="admin-list" class="loader">${logoSVG({ full: false })}</div></div>`;
 }
+const REP_ST = { new: "未確認", queued: "確認待ち", done: "対応済み" };
 async function renderAdminList() {
   const g = await S.adminApi.list();
+  let reps = [];
+  try { reps = await S.adminApi.reports(); } catch (err) { console.warn("reports", err); }
   const row = (u, acts) => `<div class="user rv in"><div class="who"><b>${esc(u.name)}</b><small>${esc(u.email)}</small><small>${esc(u.note)}</small></div>
     ${acts.map(([a, icon, tip, cls]) => `<button class="ib ${cls}" data-act="${a}" data-uid="${esc(u.uid)}" data-tip="${tip}">${ic(icon)}</button>`).join("")}</div>`;
   const sec = (icon, title, list, acts) => `<div class="adm-h">${ic(icon)}${title}<span class="n" style="color:var(--muted)">${list.length}</span></div>` +
-    (list.map(u => row(u, acts)).join("") || `<p style="color:var(--muted)">なし</p>`);
-  const el = $("#admin-list"); el.className = "";
+    (list.map(u => row(u, acts)).join("") || `<p class="muted-s">なし</p>`);
+  const repHTML = `<div class="adm-h">${ic("ti-flag")}問題の報告<span class="n" style="color:var(--muted)">${reps.length}</span></div>` +
+    (reps.map(r => `<div class="user rv in"><div class="who"><b>${esc(r.q)}</b><small>${esc(r.reason)}</small><small>${esc(r.track)} / ${esc(r.topic)} ・ ${esc(REP_ST[r.status] || r.status)}</small></div>
+      <button class="ib" data-rep-del="${esc(r.id)}" data-tip="削除">${ic("ti-trash")}</button></div>`).join("") || `<p class="muted-s">なし</p>`);
+  const el = $("#admin-list");
+  if (!el) return;
+  el.className = "";
   el.innerHTML = sec("ti-user-question", "承認待ち", g.pending, [["approved", "ti-check", "承認", "on"], ["rejected", "ti-x", "拒否", ""]]) +
     sec("ti-user-check", "承認済み", g.approved, [["rejected", "ti-user-off", "承認を取り消す", ""]]) +
-    sec("ti-user-x", "拒否", g.rejected, [["approved", "ti-check", "承認", "on"], ["delete", "ti-trash", "削除（再申請可能に）", ""]]);
+    sec("ti-user-x", "拒否", g.rejected, [["approved", "ti-check", "承認", "on"], ["delete", "ti-trash", "削除（再申請可能に）", ""]]) + repHTML;
   updateAdminBadge(g.pending.length);
 }
 function updateAdminBadge(n) { const b = $("#admin-badge"); b.hidden = !n; b.textContent = n; }
@@ -370,7 +265,7 @@ function showGate(name, arg) {
 }
 
 /* ================================================================ router */
-const VIEWS = { today: viewToday, search: viewSearch, chance: viewChance, saved: viewSaved, admin: viewAdmin };
+const VIEWS = { today: viewToday, search: viewSearch, prog: viewProg, plan: viewPlan, chance: viewChance, saved: viewSaved, admin: viewAdmin };
 function parseHash() {
   const [path, qs] = location.hash.replace(/^#\/?/, "").split("?");
   return { route: VIEWS[path] ? path : "today", params: Object.fromEntries(new URLSearchParams(qs || "")) };
@@ -382,6 +277,7 @@ function render() {
   const { route, params } = parseHash();
   if (route === "admin" && !S.isAdmin) { location.hash = "#/today"; return; }
   const changed = route !== S.route;
+  const moved = changed || params.t !== S.params.t || params.run !== S.params.run || params.id !== S.params.id;
   S.route = route; S.params = params;
   const draw = () => {
     $("#view").innerHTML = VIEWS[route]();
@@ -389,11 +285,12 @@ function render() {
     if (route === "admin" && S.adminApi) renderAdminList();
     afterDraw();
     moveIndicator();
-    if (changed) window.scrollTo({ top: 0, behavior: "instant" });
+    if (moved) window.scrollTo({ top: 0, behavior: "instant" });
   };
   if (first || !changed || REDUCED) { first = false; draw(); } else wipe(draw);
 }
 const redraw = () => { $("#view").innerHTML = VIEWS[S.route](); if (S.route === "search") runSearch(); afterDraw(); };
+S.api.redraw = redraw;
 
 /* --------------------------------------------------- scroll-in & counters */
 // 画面に入った要素から順に表示（IntersectionObserver に頼らず、スクロール時に自前で判定）
@@ -407,18 +304,17 @@ function checkReveal() {
   });
 }
 function revealIn(root = document) { pending.push(...$$(".rv:not(.in)", root)); checkReveal(); }
-setInterval(() => pending.length && checkReveal(), 700);   // スクロール以外（リサイズ・展開など）でも取りこぼさない
+setInterval(() => {
+  if (pending.length) checkReveal();   // スクロール以外（リサイズ・展開など）でも取りこぼさない
+  // アニメーションが進まない環境（裏のタブ・非表示のプレビューなど）でも、時間がたてば必ず表示する
+  const now = Date.now();
+  $$(".rv.in:not(.done)").forEach(el => { if (!el._seen) el._seen = now; else if (now - el._seen > 1500) el.classList.add("done"); });
+}, 700);
 function afterDraw() {
   revealIn($("#view"));
-  $$("[data-count]").forEach(el => countUp(el, Number(el.dataset.count)));
+  $$("#view [data-count]").forEach(el => countUp(el, Number(el.dataset.count)));
   setTimeout(() => $$(".bar[data-w]").forEach(b => { b.style.width = b.dataset.w + "%"; }), 40);
-}
-function countUp(el, to) {
-  if (REDUCED || !to) { el.textContent = to; return; }
-  const t0 = performance.now(), dur = 700;
-  const step = t => { const p = Math.min(1, (t - t0) / dur); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(step); };
-  requestAnimationFrame(step);
-  setTimeout(() => { el.textContent = to; }, dur + 400);   // rAF が止まっていても最終値は必ず表示
+  afterLearn();
 }
 
 /* ----------------------------------------------------------------- wipe */
@@ -447,36 +343,42 @@ function moveIndicator() {
 }
 
 /* ================================================================ drawer */
-function openDetail(id) {
+function openDetail(id, fromEl, point) {
   const it = byId(id);
   if (!it) return;
   const shared = x => (x.tags || []).filter(t => (it.tags || []).includes(t)).length;
   const related = S.items.filter(x => x.id !== id && (x.category === it.category || shared(x)))
     .sort((a, b) => shared(b) - shared(a) || sortNew(a, b)).slice(0, 4);
-  const d = $("#drawer");
-  d.style.setProperty("--cat", catColor(it.category));
-  d.innerHTML = `<div class="band">
-      ${catIc(it.category)}
-      <div class="tb">${bmBtn(it.id, "ib")}
+  const pts = it.points || [], terms = it.terms || [];
+  const html = `<div class="band">
+      <div class="tb dz" style="--d:1">${bmBtn(it.id, "ib")}
         <button class="ib ${P.read.has(it.id) ? "on" : ""}" data-toggle-read="${esc(it.id)}" data-tip="${P.read.has(it.id) ? "読了" : "読了にする"}">${ic("ti-circle-check")}</button>
         <button class="ib" data-copy="${esc(it.url)}" data-tip="リンクをコピー">${ic("ti-link")}</button>
         <button class="ib" data-close data-tip="閉じる">${ic("ti-x")}</button></div>
-      <h2>${esc(it.title)}</h2>
-      <div class="meta" style="margin-top:12px">${metaLine(it)}${dlBadge(it)}</div>
+      <div class="b-top dz" style="--d:0">${catIc(it.category, false)}<span class="b-cat">${esc(catOf(it.category).name)}</span>
+        <span class="b-date">${ic("ti-calendar")}${esc(it.date)} ${esc(SLOT_LABEL[it.slot] || "")}</span></div>
+      <h2 class="dz" style="--d:1">${esc(it.title)}</h2>
+      <div class="meta dz" style="--d:2">${metaLine(it)}${dlBadge(it)}</div>
     </div>
-    <div class="in">
-      <p class="sum">${esc(it.summary)}</p>
-      ${it.note ? `<div class="learn">${ic("ti-bulb")}<span>${esc(it.note)}</span></div>` : ""}
-      <div style="display:flex;flex-wrap:wrap;gap:6px">${(it.tags || []).map(t => `<a class="chip" href="#/search?q=${encodeURIComponent(t)}" data-close>${ic("ti-hash")}${esc(t)}</a>`).join("")}</div>
-      <div class="dact"><a class="btn" href="${esc(safeUrl(it.url))}" target="_blank" rel="noopener noreferrer" data-read="${esc(it.id)}">${ic("ti-external-link")}原文を読む</a>
-        <span style="color:var(--dim);font-size:12px">${ic("ti-calendar")} ${esc(it.date)} ${esc(SLOT_LABEL[it.slot] || "")}</span></div>
-      ${related.length ? `<div class="dh">${ic("ti-sparkles")}関連</div>${related.map(x => `<a class="mini" data-open="${esc(x.id)}">${catIc(x.category, false)}<span class="t">${esc(x.title)}</span></a>`).join("")}` : ""}
+    <div class="dgrid">
+      <div class="dmain">
+        <p class="lead dz" style="--d:3">${esc(it.summary)}</p>
+        ${pts.length ? `<section class="dsec dz" style="--d:4"><h3 class="sh">${ic("ti-list-check")}要点</h3>
+          <ol class="pts">${pts.map((p, k) => `<li style="--k:${k}">${esc(p)}</li>`).join("")}</ol></section>` : ""}
+        ${it.detail ? `<section class="dsec"><h3 class="sh dz" style="--d:5">${ic("ti-file-description")}解説</h3>${paraHTML(it.detail, 6)}</section>` : ""}
+        ${it.note ? `<div class="learn dz" style="--d:9">${ic("ti-bulb")}<span>${esc(it.note)}</span></div>` : ""}
+      </div>
+      <aside class="dside">
+        <a class="btn big wide dz" style="--d:3" href="${esc(safeUrl(it.url))}" target="_blank" rel="noopener noreferrer" data-read="${esc(it.id)}">${ic("ti-external-link")}原文を読む${it.lang === "en" ? `<small>英語</small>` : ""}</a>
+        ${terms.length ? `<section class="dsec dz" style="--d:4"><h3 class="sh">${ic("ti-abc")}用語</h3>
+          <dl class="terms">${terms.map(t => `<div><dt>${esc(t.term)}</dt><dd>${esc(t.explain)}</dd></div>`).join("")}</dl></section>` : ""}
+        ${(it.tags || []).length ? `<div class="dtags dz" style="--d:5">${it.tags.map(t => `<a class="chip" href="#/search?q=${encodeURIComponent(t)}" data-close>${ic("ti-hash")}${esc(t)}</a>`).join("")}</div>` : ""}
+        ${related.length ? `<section class="dsec dz" style="--d:6"><h3 class="sh">${ic("ti-sparkles")}関連</h3>${related.map(x => `<a class="mini" data-open="${esc(x.id)}">${catIc(x.category, false)}<span class="t">${esc(x.title)}</span></a>`).join("")}</section>` : ""}
+      </aside>
     </div>`;
-  d.scrollTop = 0;
-  d.classList.add("on"); d.setAttribute("aria-hidden", "false");
-  $("#scrim").classList.add("on");
+  showDrawer(html, catColor(it.category), fromEl, point);
 }
-function closeDetail() { $("#drawer").classList.remove("on"); $("#drawer").setAttribute("aria-hidden", "true"); $("#scrim").classList.remove("on"); }
+const closeDetail = () => closeDrawer();
 
 /* =============================================================== palette */
 let palSel = 0, palHits = [];
@@ -484,13 +386,17 @@ function openPal() { if (!S.ready) return; $("#pal").hidden = false; const q = $
 function closePal() { $("#pal").hidden = true; }
 function palQuery(q) {
   const terms = norm(q).split(/\s+/).filter(Boolean);
-  palHits = (terms.length ? S.items.filter(it => { const t = itemText(it); return terms.every(w => t.includes(w)); })
+  const its = (terms.length ? S.items.filter(it => { const t = itemText(it); return terms.every(w => t.includes(w)); })
     .sort((a, b) => (norm(b.title).includes(terms[0]) - norm(a.title).includes(terms[0])) || sortNew(a, b))
     : [...S.items].sort(sortNew)).slice(0, 8);
+  palHits = [...kwHits(terms).map(k => ({ k })), ...its.map(it => ({ it }))];
   palSel = 0;
   const raw = q.split(/\s+/).filter(Boolean);
-  $("#pal-list").innerHTML = palHits.map((it, i) => `<li class="${i === 0 ? "sel" : ""}" data-i="${i}">${catIc(it.category, false)}
-    <span class="t">${hl(it.title, raw)}<small>${esc(it.source)} ・ ${esc(it.date)}</small></span>${ic("ti-corner-down-left")}</li>`).join("")
+  $("#pal-list").innerHTML = palHits.map((h, i) => h.k
+    ? `<li class="${i === 0 ? "sel" : ""}" data-i="${i}"><span class="cat-ic" style="--cat:${AREAS[h.k.area]?.color || "#F2F56A"}">${ic("ti-key")}</span>
+        <span class="t">${hl(h.k.term, raw)}<small>技術キーワード ・ ${esc(h.k.theme || AREAS[h.k.area]?.name || "")}</small></span>${ic("ti-corner-down-left")}</li>`
+    : `<li class="${i === 0 ? "sel" : ""}" data-i="${i}">${catIc(h.it.category, false)}
+        <span class="t">${hl(h.it.title, raw)}<small>${esc(h.it.source)} ・ ${esc(h.it.date)}</small></span>${ic("ti-corner-down-left")}</li>`).join("")
     || `<li><span class="t" style="color:var(--muted)">見つかりませんでした</span></li>`;
 }
 function palMove(d) {
@@ -499,29 +405,9 @@ function palMove(d) {
   $$("#pal-list li").forEach((li, i) => li.classList.toggle("sel", i === palSel));
   $$("#pal-list li")[palSel]?.scrollIntoView({ block: "nearest" });
 }
+function palGo(h) { closePal(); if (!h) return; if (h.k) openKw(h.k.key); else openDetail(h.it.id); }
 
 /* ================================================================ effects */
-function toast(icon, msg) {
-  $$(".toast").forEach(t => t.remove());
-  const t = document.createElement("div"); t.className = "toast"; t.innerHTML = `${ic(icon)}${esc(msg)}`;
-  document.body.appendChild(t); setTimeout(() => t.remove(), 2300);
-}
-function burst(el) {
-  if (REDUCED) return;
-  const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-  for (let i = 0; i < 8; i++) {
-    const s = document.createElement("i");
-    s.className = "ti ti-star-filled burst";
-    s.style.left = cx - 7 + "px"; s.style.top = cy - 7 + "px";
-    if (i % 2) s.style.color = "var(--peach)";
-    document.body.appendChild(s);
-    const a = (i / 8) * Math.PI * 2 + Math.random() * .4, dist = 28 + Math.random() * 22;
-    s.animate([{ transform: "translate(0,0) scale(.4) rotate(0)", opacity: 1 },
-               { transform: `translate(${Math.cos(a) * dist}px,${Math.sin(a) * dist}px) scale(1) rotate(${(Math.random() - .5) * 180}deg)`, opacity: 0 }],
-              { duration: 600, easing: "cubic-bezier(.16,1,.3,1)" }).finished.then(() => s.remove());
-  }
-  el.animate([{ transform: "scale(1)" }, { transform: "scale(1.35) rotate(-12deg)" }, { transform: "scale(1)" }], { duration: 420, easing: "cubic-bezier(.34,1.56,.64,1)" });
-}
 function markRead(id) {
   if (!P.read.has(id)) { P.read.set(id, Date.now()); P.save(); }
   $$(`.row[data-open="${CSS.escape(id)}"]`).forEach(r => r.classList.add("read"));
@@ -529,8 +415,9 @@ function markRead(id) {
 
 /* ================================================================ events */
 document.addEventListener("click", async e => {
-  const t = e.target.closest("[data-bm],[data-read],[data-toggle-read],[data-copy],[data-rmkw],[data-kw],[data-chance],[data-open-btn],[data-open],[data-close],[data-close-pal],[data-batch],[data-f],[data-act],#freset,#older,#pal-list li,#pal-all,#totop");
+  const t = e.target.closest("[data-bm],[data-read],[data-toggle-read],[data-copy],[data-rmkw],[data-kw],[data-chance],[data-open-btn],[data-open],[data-close],[data-close-pal],[data-batch],[data-f],[data-act],[data-rep-del],#freset,#older,#pal-list li,#pal-all,#totop");
   if (!t) return;
+  const point = { x: e.clientX, y: e.clientY };
   if (t.dataset.bm) {
     e.preventDefault();
     const id = t.dataset.bm, on = !P.bookmarks.has(id);
@@ -546,7 +433,7 @@ document.addEventListener("click", async e => {
     openDetail(id); toast("ti-circle-check", P.read.has(id) ? "読了にしました" : "未読に戻しました");
     $$(`.row[data-open="${CSS.escape(id)}"]`).forEach(r => r.classList.toggle("read", P.read.has(id)));
   } else if (t.dataset.copy) {
-    try { await navigator.clipboard.writeText(t.dataset.copy); toast("ti-link", "リンクをコピーしました"); } catch { toast("ti-alert-triangle", "コピーできませんでした"); }
+    copyText(t.dataset.copy, "リンクをコピーしました");
   } else if (t.dataset.rmkw) {
     e.stopPropagation(); P.myKw = P.myKw.filter(k => k !== t.dataset.rmkw); P.save(); redraw();
   } else if (t.dataset.kw) {
@@ -557,9 +444,9 @@ document.addEventListener("click", async e => {
     if (P.chance[id]) burst(t);
     redraw(); toast(st === "done" ? "ti-send" : "ti-heart-filled", !P.chance[id] ? "解除しました" : st === "done" ? "応募済みにしました" : "気になるに追加");
   } else if (t.dataset.openBtn) {
-    openDetail(t.dataset.openBtn);
+    openDetail(t.dataset.openBtn, t.closest(".hero"), point);
   } else if (t.dataset.open) {
-    openDetail(t.dataset.open);
+    openDetail(t.dataset.open, t, point);
   } else if (t.matches("[data-close]")) {
     closeDetail();
   } else if (t.matches("[data-close-pal]")) {
@@ -567,9 +454,10 @@ document.addEventListener("click", async e => {
   } else if (t.dataset.batch) {
     const key = t.dataset.batch, open = !t.classList.contains("open");
     t.classList.toggle("open", open); t.setAttribute("aria-expanded", open);
-    if (open) { P.open.add(key); P.open.delete("closed:" + key);
-      $$(".row", t.nextElementSibling).forEach((r, i) => { r.style.setProperty("--i", i); r.classList.remove("in"); void r.offsetWidth; r.classList.add("in"); }); }
-    else { P.open.delete(key); P.open.add("closed:" + key); }
+    if (open) {
+      P.open.add(key); P.open.delete("closed:" + key);
+      $$(".row, .ladder", t.nextElementSibling).forEach((r, i) => { r.style.setProperty("--i", i); r.classList.remove("in", "done"); r._seen = 0; void r.offsetWidth; r.classList.add("in"); });
+    } else { P.open.delete(key); P.open.add("closed:" + key); }
     P.save();
   } else if (t.dataset.f) {
     const k = t.dataset.f, v = t.dataset.v, cur = { ...F_DEF, ...S.params };
@@ -582,13 +470,15 @@ document.addEventListener("click", async e => {
   } else if (t.id === "older" && S.loadMore) {
     t.disabled = true; await S.loadMore(); redraw();
   } else if (t.matches("#pal-list li") && palHits[t.dataset.i]) {
-    closePal(); openDetail(palHits[t.dataset.i].id);
+    palGo(palHits[t.dataset.i]);
   } else if (t.id === "pal-all") {
     const q = $("#pal-q").value; closePal(); location.hash = `#/search${q ? "?q=" + encodeURIComponent(q) : ""}`;
   } else if (t.id === "totop") {
     window.scrollTo({ top: 0, behavior: REDUCED ? "auto" : "smooth" });
   } else if (t.dataset.act && S.adminApi) {
     t.disabled = true; await S.adminApi.setStatus(t.dataset.uid, t.dataset.act); await renderAdminList(); toast("ti-check", "更新しました");
+  } else if (t.dataset.repDel && S.adminApi) {
+    t.disabled = true; await S.adminApi.delReport(t.dataset.repDel); await renderAdminList(); toast("ti-trash", "削除しました");
   }
 });
 
@@ -614,7 +504,7 @@ document.addEventListener("keydown", e => {
   if (!$("#pal").hidden) {
     if (e.key === "ArrowDown") { e.preventDefault(); palMove(1); }
     if (e.key === "ArrowUp") { e.preventDefault(); palMove(-1); }
-    if (e.key === "Enter" && palHits[palSel]) { e.preventDefault(); const id = palHits[palSel].id; closePal(); openDetail(id); }
+    if (e.key === "Enter" && palHits[palSel]) { e.preventDefault(); palGo(palHits[palSel]); }
   }
   if (e.key === "Enter" && e.target.dataset?.batch) e.target.click();
 });
@@ -625,7 +515,7 @@ document.addEventListener("pointermove", e => {
   if (!h) return;
   const r = h.getBoundingClientRect();
   h.style.setProperty("--mx", `${e.clientX - r.left}px`); h.style.setProperty("--my", `${e.clientY - r.top}px`);
-});
+}, { passive: true });
 
 // スクロール：ヘッダーの縮小・進捗バー・トップへ戻るボタン
 let ticking = false;
@@ -671,20 +561,29 @@ function enterApp() {
   $("#nav-admin").hidden = !S.isAdmin;
   render();
   requestAnimationFrame(moveIndicator);
+  setTimeout(moveIndicator, 300);
   document.fonts?.ready.then(moveIndicator);
 }
 
-function setData(items, meta = {}) {
-  S.items = items.map(it => ({ ...it, slot: String(it.slot || "") }));
-  if (meta.categories?.length) S.cats = meta.categories.map(c => ({ ...DEFAULT_CATS.find(d => d.id === c.id), ...c, color: DEFAULT_CATS.find(d => d.id === c.id)?.color || c.color || "F2F56A" }));
-  S.keywords = meta.keywords || []; S.updated = meta.updated || null;
+// デモ：分区の学習データ（題・キーワード・お題・ガチャの言葉）を Firestore と同じ形にする
+function demoLearn(seed, sec) {
+  const docs = {}, day = todayStr();
+  const add = (id, x) => { (docs[id] ||= { items: [] }).items.push(x); };
+  (seed.quiz || []).forEach(q => add("quiz_" + q.topic, { ...q, id: "d" + hash(q.q + "|" + q.choices[q.answer]), date: day }));
+  [...(sec.keywords || []), ...(seed.keywords || []).map(k => ({ date: day, slot: "learn", ...k }))].forEach(k => add("kw_" + k.area, k));
+  docs.ideas = seed.ideas || {};
+  if (seed.theme) docs.daily = { date: day, theme: seed.theme };
+  docs.themes = { items: [...(sec.themes || []), ...(seed.theme ? [{ date: day, ...seed.theme }] : [])] };
+  return docs;
 }
 
 async function startDemo() {
   const tag = document.createElement("div"); tag.className = "demo"; tag.textContent = "DEMO"; document.body.appendChild(tag);
   showGate("loading");
-  const [d] = await Promise.all([fetch("../samples/demo_site.json", { cache: "no-store" }).then(r => r.ok ? r.json() : {}).catch(() => ({})), intro()]);
-  setData(d.items || [], d.meta || {});
+  const get = u => fetch(u, { cache: "no-store" }).then(r => r.ok ? r.json() : {}).catch(() => ({}));
+  const [d, seed, sec] = await Promise.all([get("../samples/demo_site.json"), get("../samples/seed_learn.json"), get("../samples/demo_sections.json"), intro()]);
+  setData([...(d.items || []), ...(sec.items || [])], d.meta || {});
+  setLearn(demoLearn(seed, sec));
   enterApp();
 }
 
@@ -710,6 +609,11 @@ async function startFirebase() {
       const ref = F.doc(db, "users", uid);
       if (act === "delete") await F.deleteDoc(ref); else await F.updateDoc(ref, { status: act, reviewedAt: F.serverTimestamp() });
     },
+    async reports() {
+      const snap = await F.getDocs(F.query(F.collection(db, "reports"), F.orderBy("createdAt", "desc"), F.limit(50)));
+      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    },
+    delReport: id => F.deleteDoc(F.doc(db, "reports", id)),
   };
 
   async function loadItems() {
@@ -724,6 +628,26 @@ async function startFirebase() {
       setData(items, meta.exists() ? meta.data() : {});
     }
     await page();
+  }
+
+  async function loadLearn() {   // 分区の学習データ（learn コレクションの数個の文書）
+    try {
+      const snap = await F.getDocs(F.collection(db, "learn"));
+      const docs = {};
+      snap.forEach(d => { docs[d.id] = d.data(); });
+      setLearn(docs);
+    } catch (err) { console.warn("learn", err); }
+  }
+
+  async function syncProgress(uid) {   // ドリルの記録・ノートなどを端末間で同期
+    const ref = F.doc(db, "users", uid, "progress", "main");
+    try { const s = await F.getDoc(ref); if (s.exists()) P.merge(s.data()); } catch (err) { console.warn("progress", err); }
+    let t = 0;
+    P.onSave = () => {
+      clearTimeout(t);
+      t = setTimeout(() => F.setDoc(ref, JSON.parse(JSON.stringify(P.snapshot()))).catch(err => console.warn("progress save", err)), 1500);
+    };
+    P.save();
   }
 
   A.onAuthStateChanged(auth, async user => {
@@ -745,8 +669,9 @@ async function startFirebase() {
       const me = await F.getDoc(F.doc(db, "users", user.uid));
       const status = me.exists() ? me.data().status : null;
       if (S.isAdmin || status === "approved") {
-        await loadItems();
+        await Promise.all([loadItems(), loadLearn(), syncProgress(user.uid)]);
         S.adminApi = S.isAdmin ? adminApi : null;
+        S.api.report = r => F.addDoc(F.collection(db, "reports"), { ...r, uid: user.uid, status: "new", createdAt: F.serverTimestamp() });
         enterApp();
         if (S.isAdmin) adminApi.list().then(g => updateAdminBadge(g.pending.length)).catch(() => {});
       } else if (status === "pending") showGate("pending");
@@ -770,6 +695,7 @@ $("#brand-logo").innerHTML = logoSVG({ full: false });
 $("#open-pal kbd").textContent = /Mac|iPhone|iPad/.test(navigator.platform) ? "⌘K" : "Ctrl K";
 $("#wipe-mark").innerHTML = logoSVG({ full: false });
 $("#theme").innerHTML = ic(document.documentElement.dataset.theme === "light" ? "ti-sun" : "ti-moon-stars");
+initStarfield();
 const isLocal = ["localhost", "127.0.0.1"].includes(location.hostname);
 if (isLocal && (new URLSearchParams(location.search).has("demo") || !firebaseConfig.apiKey)) startDemo();
 else if (firebaseConfig.apiKey) startFirebase();

@@ -12,6 +12,37 @@
   "reminder_days": [7, 3, 0],
   "weekly_digest": { "weekday": 6, "slot": "22" },
 
+  "keyword_tracks": {
+    "10": { "area": "cpp", "name": "C++", "focus": "ゲーム・エンジン開発で使う C++：値と参照、所有権とスマートポインタ、ムーブ、RAII、テンプレート、STL コンテナとアロケータ、並行処理、メモリレイアウト、設計パターンなど" },
+    "17": { "area": "dx12", "name": "DX12・自作エンジン", "focus": "DirectX 12 と自作ゲームエンジン：デバイスとコマンド、同期（フェンス・バリア）、リソースとヒープ、ディスクリプタ、ルートシグネチャ、PSO、スワップチェーン、フレーム管理、エンジンのアーキテクチャなど" },
+    "22": { "area": "shader", "name": "シェーダー・HLSL", "focus": "シェーダーと HLSL：シェーダーステージ、セマンティクス、定数バッファ、テクスチャとサンプラー、座標変換、ライティング、PBR、ポストエフェクト、コンピュートシェーダー、最適化など" }
+  },
+
+  "learn": {
+    "enabled": true,
+    "hour": 7,
+    "daily_quiz": { "programmer": 9, "planner": 3 },
+    "small_bank": 60,
+    "quiz_topics": {
+      "programmer": [
+        { "id": "cpp", "name": "C++" },
+        { "id": "dx12", "name": "DX12" },
+        { "id": "hlsl", "name": "HLSL・シェーダー" },
+        { "id": "engine", "name": "エンジン設計" },
+        { "id": "math", "name": "数学" },
+        { "id": "opt", "name": "最適化" }
+      ],
+      "planner": [
+        { "id": "design", "name": "ゲームデザイン" },
+        { "id": "level", "name": "レベルデザイン" },
+        { "id": "ux", "name": "UX・UI" },
+        { "id": "narrative", "name": "シナリオ" },
+        { "id": "biz", "name": "ビジネス・運営" }
+      ]
+    },
+    "idea_pools": ["genre", "mechanic", "theme", "constraint", "feeling", "prompt"]
+  },
+
   "feeds": [
     { "name": "Game Developer", "url": "https://www.gamedeveloper.com/rss.xml", "for": ["industry", "tech"], "max_age_hours": 72 },
     { "name": "GamesIndustry.biz", "url": "https://www.gamesindustry.biz/feed", "for": ["industry"], "max_age_hours": 48 },
@@ -119,6 +150,28 @@
       "max_items": 5,
       "when": { "22": [0, 3] },
       "brief": "ゲーム制作を学ぶ学生が参加・応募できる機会：ゲームジャム、学生作品コンテスト、展示会の出展募集、ゲーム会社のインターンや新卒採用（特に日本）。deadline には締め切り日を必ず調べて入れる。note には参加条件。締め切りを過ぎたものは除外。"
+    },
+    {
+      "id": "programmer",
+      "name": "プログラマー",
+      "emoji": "💻",
+      "color": "43D6FF",
+      "max_items": 1,
+      "when": {},
+      "section": "programmer",
+      "push": false,
+      "brief": "ゲームプログラマー向けの最新ニュース1本（Discord には流さず、サイトのプログラマー分区にだけ載る）：グラフィックス API（DirectX 12 / Vulkan）、シェーダー技術、C++ の新機能やツール、エンジンのアーキテクチャ、最適化、GPU の新機能など。具体的な技術内容があるものを優先。note には「プログラマーとして押さえておきたい点」。"
+    },
+    {
+      "id": "planner",
+      "name": "プランナー",
+      "emoji": "📝",
+      "color": "FFB874",
+      "max_items": 1,
+      "when": {},
+      "section": "planner",
+      "push": false,
+      "brief": "ゲームプランナー向けの最新ニュース1本（Discord には流さず、サイトのプランナー分区にだけ載る）：ゲームデザイン、レベルデザイン、UX、シナリオ、マネタイズや運営、市場動向、話題作の設計分析など。企画の考え方が学べるものを優先。note には「企画に活かせる視点」。"
     }
   ]
 }

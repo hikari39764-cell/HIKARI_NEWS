@@ -28,6 +28,32 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // 学習コンテンツ（キーワード図鑑・問題集・アイデア辞書・お題）：読むだけ
+    match /learn/{id} {
+      allow read: if isAdmin() || isApproved();
+      allow write: if false;
+    }
+
+    // 「この問題おかしいかも」の報告：承認済みユーザーが作るだけ。読むのは管理者
+    match /reports/{id} {
+      allow create: if (isApproved() || isAdmin())
+        && request.resource.data.keys().hasOnly(['qid', 'topic', 'track', 'q', 'reason', 'uid', 'status', 'createdAt'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.status == 'new'
+        && request.resource.data.qid is string && request.resource.data.qid.size() <= 40
+        && request.resource.data.topic is string && request.resource.data.topic.size() <= 20
+        && request.resource.data.track is string && request.resource.data.track.size() <= 20
+        && request.resource.data.q is string && request.resource.data.q.size() <= 300
+        && request.resource.data.reason is string && request.resource.data.reason.size() <= 300
+        && request.resource.data.createdAt == request.time;
+      allow read, delete: if isAdmin();
+    }
+
+    // 学習の進み具合（自分のものだけ読み書き）
+    match /users/{uid}/progress/{doc} {
+      allow read, write: if signedIn() && request.auth.uid == uid && (isApproved() || isAdmin());
+    }
+
     match /admins/{uid} {
       allow read: if signedIn() && request.auth.uid == uid;
       allow write: if false;

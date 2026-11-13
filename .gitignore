@@ -10,6 +10,7 @@ local_data.json
 
 # 本地预览设置
 .claude/launch.json
+.claude/serve_nocache.py
 
 # Python / Firebase CLI
 __pycache__/

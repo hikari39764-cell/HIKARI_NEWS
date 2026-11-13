@@ -1,0 +1,124 @@
+{
+  "_note": "ローカルのデモ表示（localhost/?demo）専用。分区ニュースはすべて架空の（デモ）記事で、URL は example.com。",
+  "items": [
+    {
+      "id": "demo-sec-p1", "category": "programmer", "section": "programmer", "category_name": "プログラマー",
+      "title": "（デモ）GPU ドリブンレンダリング入門：描画するものを GPU に選ばせる",
+      "summary": "動作確認用のデモ記事です。見えない物を省く処理（カリング）をコンピュートシェーダーで行い、ExecuteIndirect で描画命令までまとめて発行する流れを解説した記事、という想定です。",
+      "url": "https://example.com/demo-gpu-driven", "source": "Demo Tech Blog", "tags": ["DX12", "GPUドリブン", "ExecuteIndirect"],
+      "note": "CPU の負荷を減らす最近の定番テクニック。自作エンジンの次の一歩に", "importance": 4, "level": "上級",
+      "points": [
+        "（デモ）見えない物体を省くカリングを、CPU ではなくコンピュートシェーダーで行う",
+        "（デモ）残った物体の描画命令も GPU が組み立て、ExecuteIndirect でまとめて実行する",
+        "（デモ）CPU は「何を描くか」を毎フレーム判断しなくてよくなり、負荷が大きく下がる",
+        "（デモ）まずは視錐台カリングだけを GPU に移すのが入門におすすめ"
+      ],
+      "detail": "【どんな内容？】\nこれは動作確認用のデモ解説です。物体が数万個あるシーンでは、CPU が1つずつ「描くかどうか」を判断するだけで時間がかかります。この記事は、その判断ごと GPU に任せる「GPU ドリブンレンダリング」を紹介している、という想定です。\n\n【仕組み】\nまずコンピュートシェーダーで、カメラに映らない物体を取り除きます。残った物体については、描画に必要な引数を GPU 側のバッファに書き出します。最後に ExecuteIndirect を呼ぶと、そのバッファの内容どおりに描画がまとめて実行されます。\n\n【どう活かす？】\nいきなり全部を作る必要はありません。自作エンジンなら、まずは「視錐台カリングをコンピュートシェーダーで行う」ところから試してみましょう。描画数が多いシーンほど効果がわかりやすいです。",
+      "terms": [
+        { "term": "カリング", "explain": "画面に映らない物体を、描画する前に取り除く処理。ムダな描画を減らす、最も基本的な最適化。" },
+        { "term": "ExecuteIndirect", "explain": "DX12 の命令。描画の引数を GPU 上のバッファから読み取り、複数の描画をまとめて実行できる。" }
+      ],
+      "deadline": null, "lang": "en", "read_minutes": 12, "date": "2026-11-14", "slot": "learn"
+    },
+    {
+      "id": "demo-sec-p2", "category": "programmer", "section": "programmer", "category_name": "プログラマー",
+      "title": "（デモ）C++20 の concepts でテンプレートのエラーを読みやすくする",
+      "summary": "動作確認用のデモ記事です。テンプレート引数に条件を付けられる concepts を使い、長くて読めないコンパイルエラーを短くする方法を紹介した記事、という想定です。",
+      "url": "https://example.com/demo-cpp-concepts", "source": "Demo Qiita", "tags": ["C++", "C++20", "テンプレート"],
+      "note": "エンジンの数学ライブラリを書くときに役立つ", "importance": 3, "level": "中級",
+      "deadline": null, "lang": "ja", "read_minutes": 8, "date": "2026-11-13", "slot": "learn"
+    },
+    {
+      "id": "demo-sec-p3", "category": "programmer", "section": "programmer", "category_name": "プログラマー",
+      "title": "（デモ）HLSL のウェーブ命令で並列リダクションを速くする",
+      "summary": "動作確認用のデモ記事です。WaveActiveSum などのウェーブ命令で、グループ共有メモリを使わずに合計や最大値を求める方法をまとめた記事、という想定です。",
+      "url": "https://example.com/demo-wave-intrinsics", "source": "Demo GPU Notes", "tags": ["HLSL", "シェーダー", "最適化"],
+      "note": "コンピュートシェーダーの高速化に", "importance": 4, "level": "上級",
+      "deadline": null, "lang": "en", "read_minutes": 10, "date": "2026-11-12", "slot": "learn"
+    },
+    {
+      "id": "demo-sec-l1", "category": "planner", "section": "planner", "category_name": "プランナー",
+      "title": "（デモ）チュートリアルを「遊び」に溶け込ませる 5 つの方法",
+      "summary": "動作確認用のデモ記事です。説明の文章を読ませるのではなく、最初のステージの形や敵の配置で操作を自然に覚えさせる工夫を、具体例とともに紹介した記事、という想定です。",
+      "url": "https://example.com/demo-tutorial-design", "source": "Demo Game Design", "tags": ["ゲームデザイン", "チュートリアル", "UX"],
+      "note": "最初の 5 分の作り方がわかる", "importance": 4, "level": "入門",
+      "points": [
+        "（デモ）説明の文章より、ステージの形で操作を覚えさせる方が記憶に残る",
+        "（デモ）新しい操作は「安全な場所で1回だけ試させる」のが基本",
+        "（デモ）失敗しても戻れる配置にすると、プレイヤーが自分から試すようになる"
+      ],
+      "detail": "【どんな内容？】\nこれは動作確認用のデモ解説です。チュートリアルを「説明を読む時間」ではなく「遊びの一部」にするための工夫を、5つの例で紹介した記事、という想定です。\n\n【ここがポイント】\nジャンプを教えたいなら、文字で説明する前に、低い段差を1つ置くだけで十分です。プレイヤーは自然にボタンを押して、自分で発見したと感じます。\n\n大事なのは、失敗しても痛くない場所で試させることです。穴の下に戻り道があれば、プレイヤーは安心していろいろな操作を試せます。\n\n【どう活かす？】\n自分のゲームの最初のステージを見直して、テキストで説明している操作を1つ選び、地形やアイテムの置き方だけで伝えられないか考えてみましょう。",
+      "terms": [
+        { "term": "オンボーディング", "explain": "初めて遊ぶ人がルールや操作に慣れるまでの流れ全体のこと。チュートリアルより広い意味で使われる。" }
+      ],
+      "deadline": null, "lang": "ja", "read_minutes": 7, "date": "2026-11-14", "slot": "learn"
+    },
+    {
+      "id": "demo-sec-l2", "category": "planner", "section": "planner", "category_name": "プランナー",
+      "title": "（デモ）レベルデザインの「導線」を光と形で作る",
+      "summary": "動作確認用のデモ記事です。矢印や文字を使わずに、明るさ・色・地形の形でプレイヤーを行き先へ導く手法を、図解で説明した記事、という想定です。",
+      "url": "https://example.com/demo-level-guidance", "source": "Demo Level Design", "tags": ["レベルデザイン", "導線"],
+      "note": "マップを作るときの基本の考え方", "importance": 3, "level": "中級",
+      "deadline": null, "lang": "en", "read_minutes": 9, "date": "2026-11-13", "slot": "learn"
+    },
+    {
+      "id": "demo-sec-l3", "category": "planner", "section": "planner", "category_name": "プランナー",
+      "title": "（デモ）インディーゲームの価格はどう決める？ 開発者アンケートから",
+      "summary": "動作確認用のデモ記事です。プレイ時間・ジャンル・セールの頻度と価格の関係を、開発者へのアンケート結果をもとに考えた記事、という想定です。",
+      "url": "https://example.com/demo-indie-pricing", "source": "Demo Biz", "tags": ["ビジネス", "インディー", "価格"],
+      "note": "企画書の「売り方」を考えるヒントに", "importance": 3, "level": "入門",
+      "deadline": null, "lang": "ja", "read_minutes": 6, "date": "2026-11-12", "slot": "learn"
+    }
+  ],
+  "themes": [
+    { "date": "2026-11-13", "title": "裏返し", "angles": ["表と裏の世界を行き来する", "敵と味方の立場が入れ替わる", "勝利条件が途中でひっくり返る"], "note": "見た目だけでなく、ルールを裏返すと発想が広がります。" },
+    { "date": "2026-11-12", "title": "小さな巨人", "angles": ["小さいからこそできること", "体の大きさが変わるしくみ", "弱いはずの存在が世界を動かす"], "note": null },
+    { "date": "2026-11-11", "title": "最後の一回", "angles": ["一度きりしか使えない能力", "終わりが見えている世界", "最後の一手ですべてが決まる"], "note": "制限があると、選択に重みが生まれます。" },
+    { "date": "2026-11-10", "title": "音でわかる", "angles": ["見えないものを音で探す", "リズムが操作になる", "音が手がかりの謎解き"], "note": null }
+  ],
+  "keywords": [
+    { "area": "cpp", "theme": "RAII とリソース管理", "date": "2026-11-14", "slot": "10", "level": "基礎", "term": "RAII", "en": "Resource Acquisition Is Initialization",
+      "explain": "リソースの確保をオブジェクトの生成（コンストラクタ）で、解放を破棄（デストラクタ）で行う C++ の基本的な考え方。",
+      "use": "ファイルやロック、GPU リソースの解放忘れを、スコープを抜けるだけで防げる。",
+      "example": null, "example_lang": null, "link": "https://en.cppreference.com/w/cpp/language/raii" },
+    { "area": "cpp", "theme": "RAII とリソース管理", "date": "2026-11-14", "slot": "10", "level": "発展", "term": "カスタムデリータ", "en": "custom deleter",
+      "explain": "std::unique_ptr の2つ目のテンプレート引数に、解放の方法（関数オブジェクト）を指定できる。",
+      "use": "delete 以外の方法で解放する C の API のハンドルなども、RAII で安全に管理できる。",
+      "example": "struct FileCloser { void operator()(FILE* f) const { std::fclose(f); } };\nstd::unique_ptr<FILE, FileCloser> fp(std::fopen(\"a.txt\", \"r\"));", "example_lang": "cpp",
+      "link": "https://en.cppreference.com/w/cpp/memory/unique_ptr" },
+    { "area": "cpp", "theme": "RAII とリソース管理", "date": "2026-11-14", "slot": "10", "level": "応用", "term": "ComPtr", "en": "Microsoft::WRL::ComPtr",
+      "explain": "COM オブジェクトの参照カウント（AddRef / Release）を自動で管理するスマートポインタ。",
+      "use": "ID3D12Device などの DirectX のオブジェクトを、Release の呼び忘れなく扱える。",
+      "example": "Microsoft::WRL::ComPtr<ID3D12Device> device;\nD3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&device));", "example_lang": "cpp",
+      "link": "https://learn.microsoft.com/en-us/cpp/cppcx/wrl/comptr-class" },
+
+    { "area": "dx12", "theme": "コマンドの記録と実行", "date": "2026-11-14", "slot": "17", "level": "基礎", "term": "コマンドリスト", "en": "ID3D12GraphicsCommandList",
+      "explain": "GPU に実行させたい命令（描画・コピー・リソースの状態遷移など）を記録しておくオブジェクト。記録が終わったら Close し、コマンドキューの ExecuteCommandLists で GPU に送る。",
+      "use": "描画命令をまとめて記録できる。複数のスレッドで別々のコマンドリストを並行して記録できるのが DX11 との大きな違い。",
+      "example": null, "example_lang": null, "link": "https://learn.microsoft.com/en-us/windows/win32/direct3d12/recording-command-lists-and-bundles" },
+    { "area": "dx12", "theme": "コマンドの記録と実行", "date": "2026-11-14", "slot": "17", "level": "発展", "term": "コマンドアロケータ", "en": "ID3D12CommandAllocator",
+      "explain": "コマンドリストに記録された命令が実際に保存されるメモリ。GPU がそのアロケータの命令を実行し終わるまで Reset してはいけない。",
+      "use": "フレームごとにアロケータを用意し、GPU が使い終わったものから順に Reset して再利用する。",
+      "example": null, "example_lang": null, "link": "https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nn-d3d12-id3d12commandallocator" },
+    { "area": "dx12", "theme": "コマンドの記録と実行", "date": "2026-11-14", "slot": "17", "level": "応用", "term": "フェンス", "en": "ID3D12Fence",
+      "explain": "GPU の進み具合を CPU に知らせる同期オブジェクト。コマンドキューの Signal で値を書き込み、CPU は GetCompletedValue で確認したり、SetEventOnCompletion で完了を待ったりできる。",
+      "use": "GPU が使い終わったリソースやアロケータだけを再利用するための仕組み。CPU と GPU を安全に並行して動かせる。",
+      "example": "const UINT64 value = ++fenceValue;\nqueue->Signal(fence.Get(), value);\nif (fence->GetCompletedValue() < value) {\n    fence->SetEventOnCompletion(value, fenceEvent);\n    WaitForSingleObject(fenceEvent, INFINITE);\n}", "example_lang": "cpp",
+      "link": "https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nn-d3d12-id3d12fence" },
+
+    { "area": "shader", "theme": "定数バッファ", "date": "2026-11-14", "slot": "22", "level": "基礎", "term": "定数バッファ", "en": "constant buffer (cbuffer)",
+      "explain": "CPU から送った値（行列・色・時間など）をシェーダーで読むための入れ物。HLSL では cbuffer で宣言し、register(b0) のようにスロットを指定する。",
+      "use": "カメラの行列やマテリアルの色など、描画ごとに変わる値をシェーダーに渡す。",
+      "example": "cbuffer SceneCB : register(b0)\n{\n    float4x4 viewProj;\n    float3   lightDir;\n    float    time;\n};", "example_lang": "hlsl",
+      "link": "https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-constants" },
+    { "area": "shader", "theme": "定数バッファ", "date": "2026-11-14", "slot": "22", "level": "発展", "term": "パッキング規則", "en": "packing rules",
+      "explain": "定数バッファの中身は 16 バイト（float4 1つ分）ごとの区切りに沿って並ぶ。変数がこの区切りをまたぐときは、次の区切りの先頭に送られる。",
+      "use": "C++ 側の構造体と並びがずれるバグを防げる。float3 の直後に float を1つ置くと、ちょうど 16 バイトに詰められる。",
+      "example": null, "example_lang": null, "link": "https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-packing-rules" },
+    { "area": "shader", "theme": "定数バッファ", "date": "2026-11-14", "slot": "22", "level": "応用", "term": "ルート定数", "en": "root constants",
+      "explain": "ルートシグネチャに 32 ビットの値を直接置き、定数バッファを用意せずにシェーダーへ渡す方法。コマンドリストの SetGraphicsRoot32BitConstants で値を設定する。",
+      "use": "オブジェクト番号のような小さな値を、描画ごとに安く切り替えられる。ルートシグネチャは全体で 64 DWORD までなので使いすぎに注意。",
+      "example": "// ルートパラメータ 0 番に 32 ビット値を 1 つ設定\ncmdList->SetGraphicsRoot32BitConstants(0, 1, &objectIndex, 0);", "example_lang": "cpp",
+      "link": "https://learn.microsoft.com/en-us/windows/win32/direct3d12/using-constants-directly-in-the-root-signature" }
+  ]
+}

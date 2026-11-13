@@ -4,6 +4,9 @@
       "category": "tech",
       "title": "（サンプル）Godot のシェーダー入門ガイド",
       "summary": "これは動作確認用のサンプルです。Godot のビジュアルシェーダーの基本をまとめた記事、という想定です。",
+      "points": ["（サンプル）ノードをつなぐだけでシェーダーが作れる", "（サンプル）色・UV・時間の3つのノードから始めるのがおすすめ", "（サンプル）完成したら GLSL 風のコードに変換して中身を確認できる"],
+      "detail": "【どんな内容？】\n動作確認用のサンプル解説です。Godot のビジュアルシェーダーで、コードを書かずに見た目を作る方法を紹介した記事、という想定です。\n\n【ここがポイント】\nノードを線でつなぐと、その場で結果がプレビューされます。まずは色と UV、時間の3つのノードだけで、流れる模様を作ってみるのがおすすめです。\n\n【どう活かす？】\n自分のゲームのアイテムや背景に、光る・揺れるといった小さな演出を1つ足してみましょう。",
+      "terms": [{ "term": "UV", "explain": "テクスチャのどの位置を使うかを表す座標。0〜1 の範囲で、模様を動かしたり繰り返したりするときに使う。" }],
       "url": "https://example.com/sample-godot-shader",
       "source": "Example Blog",
       "tags": ["Godot", "シェーダー"],
@@ -13,9 +16,12 @@
       "deadline": null
     },
     {
-      "category": "community",
+      "category": "ai",
       "title": "（サンプル）AI エージェントでゲームのテストを自動化した話",
       "summary": "動作確認用のサンプルです。Hacker News で話題になった、という想定の英語記事を日本語で要約した例です。",
+      "points": ["（サンプル）AI エージェントにゲームを自動で遊ばせてバグを探す", "（サンプル）人が見つけにくい操作の組み合わせを試せる", "（サンプル）判定の基準づくりが一番むずかしい"],
+      "detail": "【どんな内容？】\n動作確認用のサンプル解説です。AI エージェントにゲームを自動プレイさせ、テストを効率化した話、という想定です。\n\n【ここがポイント】\n人が思いつかない操作の順番も試せるため、進行不能バグが見つかりやすくなります。一方で「何が正しい状態か」を決める判定づくりに一番時間がかかった、と書かれている想定です。\n\n【どう活かす？】\nまずは自分のゲームで「必ず確認したい操作」を3つ書き出し、自動化できるかを考えてみましょう。",
+      "terms": [],
       "url": "https://example.com/sample-ai-testing",
       "source": "Hacker News",
       "tags": ["AI", "テスト"],
@@ -24,5 +30,24 @@
       "level": null,
       "deadline": null
     }
-  ]
+  ],
+  "keyword_theme": "RAII とリソース管理",
+  "keywords": [
+    { "level": "基礎", "term": "RAII", "en": "Resource Acquisition Is Initialization",
+      "explain": "リソースの確保をオブジェクトの生成（コンストラクタ）で、解放を破棄（デストラクタ）で行う C++ の基本的な考え方。",
+      "use": "ファイルやロック、GPU リソースの解放忘れを、スコープを抜けるだけで防げる。",
+      "example": null, "example_lang": null,
+      "link": "https://en.cppreference.com/w/cpp/language/raii" },
+    { "level": "発展", "term": "カスタムデリータ", "en": "custom deleter",
+      "explain": "std::unique_ptr の2つ目のテンプレート引数に、解放の方法（関数オブジェクト）を指定できる。",
+      "use": "delete 以外の方法で解放する C の API のハンドルなども、RAII で安全に管理できる。",
+      "example": "struct FileCloser { void operator()(FILE* f) const { std::fclose(f); } };\nstd::unique_ptr<FILE, FileCloser> fp(std::fopen(\"a.txt\", \"r\"));", "example_lang": "cpp",
+      "link": "https://en.cppreference.com/w/cpp/memory/unique_ptr" },
+    { "level": "応用", "term": "ComPtr", "en": "Microsoft::WRL::ComPtr",
+      "explain": "COM オブジェクトの参照カウント（AddRef / Release）を自動で管理するスマートポインタ。",
+      "use": "ID3D12Device などの DirectX のオブジェクトを、Release の呼び忘れなく扱える。",
+      "example": "Microsoft::WRL::ComPtr<ID3D12Device> device;\nD3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&device));", "example_lang": "cpp",
+      "link": "https://learn.microsoft.com/en-us/cpp/cppcx/wrl/comptr-class" }
+  ],
+  "report": "サンプル：動作確認用"
 }
