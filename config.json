@@ -12,6 +12,36 @@
   "reminder_days": [7, 3, 0],
   "weekly_digest": { "weekday": 6, "slot": "22" },
 
+  "feeds": [
+    { "name": "Game Developer", "url": "https://www.gamedeveloper.com/rss.xml", "for": ["industry", "tech"], "max_age_hours": 72 },
+    { "name": "GamesIndustry.biz", "url": "https://www.gamesindustry.biz/feed", "for": ["industry"], "max_age_hours": 48 },
+    { "name": "Gematsu", "url": "https://www.gematsu.com/feed", "for": ["industry"], "max_age_hours": 36 },
+    { "name": "4Gamer", "url": "https://www.4gamer.net/rss/index.xml", "for": ["industry"], "max_age_hours": 36 },
+    { "name": "AUTOMATON", "url": "https://automaton-media.com/feed/", "for": ["industry", "community"], "max_age_hours": 48 },
+    { "name": "GAME Watch", "url": "https://game.watch.impress.co.jp/data/rss/1.0/gmw/feed.rdf", "for": ["industry", "tech"], "max_age_hours": 48 },
+    { "name": "80.lv", "url": "https://80.lv/feed/", "for": ["tech"], "max_age_hours": 336 },
+    { "name": "Unity Blog", "url": "https://unity.com/blog/rss", "for": ["tech"], "max_age_hours": 336 },
+    { "name": "Godot", "url": "https://godotengine.org/rss.xml", "for": ["tech"], "max_age_hours": 336 },
+    { "name": "Graphics Programming weekly", "url": "https://www.jendrikillner.com/tags/weekly/index.xml", "for": ["tech"], "max_age_hours": 336, "max_items": 3 },
+    { "name": "GDC (YouTube)", "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UC0JB7TSe49lg56u6qH8y_MQ", "for": ["tech", "classic"], "max_age_hours": 336 },
+    { "name": "OpenAI", "url": "https://openai.com/news/rss.xml", "for": ["ai"], "max_age_hours": 72 },
+    { "name": "Google AI", "url": "https://blog.google/technology/ai/rss/", "for": ["ai"], "max_age_hours": 72 },
+    { "name": "Google DeepMind", "url": "https://deepmind.google/blog/rss.xml", "for": ["ai"], "max_age_hours": 72 },
+    { "name": "Hugging Face", "url": "https://huggingface.co/blog/feed.xml", "for": ["ai", "ai_howto"], "max_age_hours": 120 },
+    { "name": "Simon Willison", "url": "https://simonwillison.net/atom/everything/", "for": ["ai", "ai_howto"], "max_age_hours": 120 },
+    { "name": "ITmedia AI+", "url": "https://rss.itmedia.co.jp/rss/2.0/aiplus.xml", "for": ["ai"], "max_age_hours": 48 },
+    { "name": "Zenn トレンド", "url": "https://zenn.dev/feed", "for": ["ai_howto", "tech", "community"], "max_age_hours": 336 },
+    { "name": "Qiita 人気記事", "url": "https://qiita.com/popular-items/feed", "for": ["ai_howto", "tech", "community"], "max_age_hours": 336 },
+    { "name": "Hacker News（100pt 以上）", "url": "https://hnrss.org/frontpage?points=100", "for": ["ai", "community"], "max_age_hours": 36 }
+  ],
+  "check_pages": [
+    { "name": "Anthropic News", "url": "https://www.anthropic.com/news", "for": ["ai"] },
+    { "name": "Unreal Engine News", "url": "https://www.unrealengine.com/en-US/news", "for": ["tech"] },
+    { "name": "ファミ通", "url": "https://www.famitsu.com/", "for": ["industry"] },
+    { "name": "CGWORLD", "url": "https://cgworld.jp/", "for": ["tech"] },
+    { "name": "GDC Vault（無料講演）", "url": "https://gdcvault.com/free", "for": ["classic", "tech"] }
+  ],
+
   "community": {
     "hackernews": { "queries": ["game", "gamedev", "LLM", "AI agent", "Claude"], "min_points": 50 },
     "reddit": { "subreddits": ["gamedev", "LocalLLaMA", "ClaudeAI"] },
@@ -46,7 +76,7 @@
       "color": "57F287",
       "max_items": 4,
       "when": { "17": [0, 1, 2, 3, 4, 5, 6] },
-      "brief": "直近数日に公開されたゲーム開発の技術コンテンツ：GDC / CEDEC / SIGGRAPH などの講演・資料、開発者の技術ブログ、ポストモーテム、Unity / Unreal / Godot などエンジンの重要なアップデート。note には「ここから学べること」、level には難易度。"
+      "brief": "直近2週間に公開されたゲーム開発の技術・学習コンテンツ：GDC / CEDEC / SIGGRAPH などの講演・資料や動画、開発者の技術ブログ、ポストモーテム、グラフィックス・ゲームAI・物理などの解説、Unity / Unreal / Godot などエンジンの重要なアップデート。具体的な手法・コード・図解があるものを優先。note には「ここから学べること」、level には難易度。"
     },
     {
       "id": "ai_howto",
@@ -55,7 +85,16 @@
       "color": "FEE75C",
       "max_items": 4,
       "when": { "17": [0, 1, 2, 3, 4, 5, 6] },
-      "brief": "AIの具体的な使い方・活用テクニックの新しい記事・動画・スレッド：プロンプトのコツ、開発ワークフローへの組み込み、AIエージェント、ゲーム制作でのAI活用（コード、アセット、テスト、企画）。学生がすぐ試せるもの優先。note には「試すならこうする」、level には難易度。"
+      "brief": "直近2週間に出た、AIの具体的な使い方・活用テクニックの記事・動画・スレッド：プロンプトのコツ、開発ワークフローへの組み込み、AIエージェント、ゲーム制作でのAI活用（コード、アセット、テスト、企画）。手順や実例があり、学生がすぐ試せるもの優先。note には「試すならこうする」、level には難易度。"
+    },
+    {
+      "id": "classic",
+      "name": "定番の一本",
+      "emoji": "📌",
+      "color": "9B59B6",
+      "max_items": 1,
+      "when": { "17": [0, 1, 2, 3, 4, 5, 6] },
+      "brief": "発表時期を問わず、ゲーム制作を学ぶ学生に一度は見て（読んで）ほしい定番・名作の教材を1本：GDC の名講演、名著の無料公開章、定番チュートリアル、伝説的なポストモーテム、有名なグラフィックス解説など。過去に紹介済みのものは避け、ジャンル（設計・プログラミング・アート・ビジネス）が偏らないようにする。summary で内容、note で「なぜ今でも価値があるか」。"
     },
     {
       "id": "community",

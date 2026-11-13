@@ -5,6 +5,8 @@
 某个来源失败（网络错误、被限流）时只打印警告，不影响其他来源。
 """
 
+from __future__ import annotations
+
 import os
 import re
 import sys
@@ -172,3 +174,94 @@ def collect_candidates(sources_cfg: dict, per_source: int = 15) -> list[dict]:
                 seen.add(c["url"])
                 out.append(c)
     return out
+
+
+# ======================================================================
+# 优质网站的 RSS / Atom（研究的第一手候选）
+# ======================================================================
+
+NS = {
+    "atom": "http://www.w3.org/2005/Atom",
+    "rss1": "http://purl.org/rss/1.0/",
+    "dc": "http://purl.org/dc/elements/1.1/",
+    "media": "http://search.yahoo.com/mrss/",
+}
+
+
+def _parse_date(text: str | None):
+    from email.utils import parsedate_to_datetime
+
+    if not text:
+        return None
+    text = text.strip()
+    try:
+        d = parsedate_to_datetime(text)
+    except (TypeError, ValueError):
+        try:
+            d = datetime.fromisoformat(text.replace("Z", "+00:00"))
+        except ValueError:
+            return None
+    return d if d.tzinfo else d.replace(tzinfo=timezone.utc)
+
+
+def _parse_feed(xml: bytes) -> list[dict]:
+    """支持 RSS 2.0、RSS 1.0 (RDF)、Atom。返回 [{title, url, published, text}]。"""
+    root = ET.fromstring(xml)
+    out = []
+    for it in root.iter("item"):  # RSS 2.0
+        out.append({
+            "title": it.findtext("title") or "",
+            "url": (it.findtext("link") or "").strip(),
+            "published": _parse_date(it.findtext("pubDate") or it.findtext("dc:date", namespaces=NS)),
+            "text": it.findtext("description") or "",
+        })
+    for it in root.iter(f"{{{NS['rss1']}}}item"):  # RSS 1.0
+        out.append({
+            "title": it.findtext("rss1:title", "", NS),
+            "url": it.findtext("rss1:link", "", NS).strip(),
+            "published": _parse_date(it.findtext("dc:date", namespaces=NS)),
+            "text": it.findtext("rss1:description", "", NS),
+        })
+    for it in root.iter(f"{{{NS['atom']}}}entry"):  # Atom（含 YouTube）
+        link = ""
+        for ln in it.findall("atom:link", NS):
+            if ln.get("rel", "alternate") == "alternate":
+                link = ln.get("href", "")
+                break
+        text = it.findtext("atom:summary", "", NS) or it.findtext("media:group/media:description", "", NS)
+        out.append({
+            "title": it.findtext("atom:title", "", NS),
+            "url": link,
+            "published": _parse_date(it.findtext("atom:published", None, NS) or it.findtext("atom:updated", None, NS)),
+            "text": text,
+        })
+    return out
+
+
+def fetch_feed(feed: dict) -> list[dict]:
+    xml = _get(feed["url"]).content
+    since = datetime.now(timezone.utc) - timedelta(hours=feed.get("max_age_hours", 48))
+    items = [e for e in _parse_feed(xml) if e["url"] and e["published"] and e["published"] >= since]
+    items.sort(key=lambda e: e["published"], reverse=True)
+    return [{
+        "source": feed["name"],
+        "title": _clip(e["title"], 150),
+        "url": e["url"],
+        "published": e["published"],
+        "text": _clip(e["text"], 220),
+    } for e in items[: feed.get("max_items", 12)]]
+
+
+def collect_feeds(feeds: list[dict]) -> dict[str, list[dict]]:
+    """并行读取多个 RSS。返回 {来源名: [条目…]}，失败的来源返回空列表并打印警告。"""
+    from concurrent.futures import ThreadPoolExecutor
+
+    def one(feed):
+        try:
+            return feed["name"], fetch_feed(feed)
+        except Exception as e:
+            print(f"  警告：{feed['name']} 读取失败（跳过）：{e}", file=sys.stderr)
+            return feed["name"], []
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        return dict(pool.map(one, feeds))

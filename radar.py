@@ -2,9 +2,14 @@
 
 研究端（Claude 定时任务，没有任何密钥，可以自由上网）:
     python3 radar.py context               这次要研究什么：时段、任务、关键词、已推送过的链接
+    python3 radar.py feeds                 优质网站 RSS 的最新文章（研究的第一手候选）
     python3 radar.py community             社区热门候选（研究线索）
     python3 radar.py check out/results.json    检查结果格式
     python3 radar.py submit out/results.json   检查后推送到 GitHub 的 claude/inbox-* 分支
+    python3 radar.py submit out/results.json --preview   交到 claude/preview-*（不发 Discord）
+
+管理员本地：
+    python radar.py preview claude/preview-…   把预览分支渲染成 out/preview-*.html
 
 发布端（GitHub Actions，持有密钥，不读任何网页）:
     python3 radar.py publish-pending [--dry-run]
@@ -39,6 +44,7 @@ LEVELS = ("入門", "中級", "上級")
 JA_CHARS = re.compile(r"[぀-ヿ一-鿿]")
 WEEKDAYS_JA = "月火水木金土日"
 INBOX_PREFIX = "claude/inbox-"
+PREVIEW_PREFIX = "claude/preview-"
 TASKS = {t["id"]: t for t in CONFIG["tasks"]}
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -205,8 +211,45 @@ def cmd_context(args) -> int:
     for t in tasks:
         print(f"\n### category = \"{t['id']}\"  {t['emoji']} {t['name']}（最多 {t['max_items']} 条）")
         print(t["brief"])
+    ids = {t["id"] for t in tasks}
+    pages = [p for p in CONFIG.get("check_pages", []) if ids & set(p["for"])]
+    if pages:
+        print("\n## 没有 RSS、需要直接用 WebFetch 打开看最新内容的官方页面")
+        for p in pages:
+            print(f"- {p['name']}：{p['url']}（{'、'.join(p['for'])}）")
+    if "classic" in ids:
+        classics = [it for it in state["items"] if it.get("category") == "classic"]
+        print("\n## 「定番の一本」以前介绍过的（不要重复）")
+        print("\n".join(f"- {it['title']}" for it in classics) or "（无）")
     print("\n## 已经推送过的链接（不要再选，也不要选同一件事的其他报道）")
     print("\n".join(recent) if recent else "（无）")
+    return 0
+
+
+def cmd_feeds(args) -> int:
+    """读取这一批相关的优质网站 RSS，列出最近的新文章，作为研究的第一手候选。"""
+    from collectors import collect_feeds
+
+    now = now_jst()
+    slot = args.slot or slot_for(now)
+    ids = {t["id"] for t in tasks_for(now.date(), slot)}
+    feeds = [f for f in CONFIG.get("feeds", []) if ids & set(f["for"])]
+    known = {item_id(it["url"]) for it in load_state()["items"]}
+    result = collect_feeds(feeds)
+    total = 0
+    print(f"# 优质网站的最新文章（slot={slot}，已推送过的不显示）")
+    for feed in feeds:
+        entries = [e for e in result.get(feed["name"], []) if item_id(e["url"]) not in known]
+        if not entries:
+            continue
+        print(f"\n## {feed['name']}（对应任务：{'、'.join(sorted(ids & set(feed['for'])))}）")
+        for e in entries:
+            total += 1
+            when = e["published"].astimezone(JST).strftime("%m/%d %H:%M")
+            print(f"- [{when}] {e['title']}\n  {e['url']}")
+            if e["text"]:
+                print(f"  {e['text'][:180]}")
+    print(f"\n（共 {total} 条候选）")
     return 0
 
 
@@ -234,17 +277,23 @@ def cmd_check(args) -> int:
 
 
 def cmd_submit(args) -> int:
-    """检查结果，然后把它作为一个新分支 claude/inbox-日期-时段-时刻 推送到 GitHub。"""
+    """检查结果，然后把它作为一个新分支推送到 GitHub。
+    正式：claude/inbox-日期-时段-时刻（发布端会发到 Discord）
+    预览（--preview）：claude/preview-…（发布端不会处理，只给管理员看效果）
+    """
     try:
         items = read_results(args.file)
     except ResultError as e:
         print("❌ 格式有问题，没有提交。请修改后再执行 submit：\n" + str(e))
         return 1
+    raw = json.loads(Path(args.file).read_text(encoding="utf-8"))
     now = now_jst()
     slot = args.slot or slot_for(now)
-    branch = f"{INBOX_PREFIX}{now:%Y%m%d}-{slot}-{now:%H%M%S}"
+    prefix = PREVIEW_PREFIX if args.preview else INBOX_PREFIX
+    branch = f"{prefix}{now:%Y%m%d}-{slot}-{now:%H%M%S}"
     batch = {"slot": slot, "date": now.strftime("%Y-%m-%d"),
-             "created_at": now.isoformat(timespec="seconds"), "items": items}
+             "created_at": now.isoformat(timespec="seconds"), "items": items,
+             "report": str(raw.get("report") or "")[:3000]}
 
     inbox = ROOT / "inbox" / "batch.json"
     inbox.parent.mkdir(exist_ok=True)
@@ -254,7 +303,10 @@ def cmd_submit(args) -> int:
     git("add", "-f", "inbox/batch.json")
     git(*ident, "commit", "-m", f"inbox: {batch['date']} {slot} ({len(items)} items)")
     git("push", "origin", f"HEAD:refs/heads/{branch}")
-    print(f"✅ 已提交 {len(items)} 条到分支 {branch}。发布会由 GitHub Actions 自动完成。")
+    if args.preview:
+        print(f"✅ 已提交 {len(items)} 条到预览分支 {branch}（不会发到 Discord）。")
+    else:
+        print(f"✅ 已提交 {len(items)} 条到分支 {branch}。发布会由 GitHub Actions 自动完成。")
     return 0
 
 
@@ -547,19 +599,114 @@ def cmd_publish_pending(args) -> int:
 
 
 # ======================================================================
+# 预览：把一批结果渲染成「Discord 帖子 + 全文」的 HTML，给管理员确认效果
+# ======================================================================
+
+def _md_to_html(text: str) -> str:
+    import html as H
+
+    s = H.escape(text, quote=False)
+    s = re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+)\)", r'<a href="\2" target="_blank">\1</a>', s)
+    s = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", s)
+    s = re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
+    s = re.sub(r"\\([*_~`|>\\])", r"\1", s)
+    return s.replace("\n", "<br>")
+
+
+def load_batch(source: str) -> dict:
+    if Path(source).exists():
+        data = json.loads(Path(source).read_text(encoding="utf-8"))
+        return data if "slot" in data else {"slot": None, "date": None, "items": data.get("items", []),
+                                             "report": data.get("report", "")}
+    branch = source.removeprefix("origin/")
+    git("fetch", "origin", f"+refs/heads/{branch}:refs/remotes/origin/{branch}")
+    return json.loads(git("show", f"origin/{branch}:inbox/batch.json"))
+
+
+def cmd_preview(args) -> int:
+    import html as H
+
+    batch = load_batch(args.source)
+    items = validate(batch)
+    slot = batch.get("slot") or args.slot or slot_for(now_jst())
+    day = date.fromisoformat(batch["date"]) if batch.get("date") else now_jst().date()
+    known = {it["id"] for it in load_state()["items"]}
+    rich = []
+    for it in items:
+        task = TASKS[it["category"]]
+        rich.append({**it, "id": item_id(it["url"]), "category_name": task["name"], "emoji": task["emoji"],
+                     "keywords": match_keywords(it), "dup": item_id(it["url"]) in known})
+    cats = [t["id"] for t in CONFIG["tasks"] if any(it["category"] == t["id"] for it in rich)]
+    title = thread_title(day, slot, cats)
+    embeds = build_batch_embeds([it for it in rich if not it["dup"]], [])
+
+    emb_html = "".join(
+        f'<div class="embed" style="border-color:#{e.get("color", 0x2B2D31):06x}">'
+        + (f'<div class="et">{"<a href=" + chr(34) + H.escape(e["url"]) + chr(34) + ">" if e.get("url") else ""}'
+           f'{H.escape(e["title"])}{"</a>" if e.get("url") else ""}</div>' if e.get("title") else "")
+        + f'<div class="ed">{_md_to_html(e.get("description", ""))}</div>'
+        + (f'<div class="ef">{H.escape(e["footer"]["text"])}</div>' if e.get("footer") else "")
+        + "</div>" for e in embeds)
+
+    rows = []
+    for it in sorted(rich, key=lambda x: (x["category"], -x["importance"])):
+        meta = " ・ ".join(filter(None, [
+            f"{it['emoji']} {it['category_name']}", "★" * it["importance"], it["level"],
+            {"en": "英語", "ja": "日本語", "other": "その他"}.get(it["lang"] or "", ""),
+            f"⏱{it['read_minutes']}分" if it["read_minutes"] else "", it["source"],
+            f"⏰ {it['deadline']}" if it["deadline"] else "", "⚠️ 已推送过（正式发布时会跳过）" if it["dup"] else ""]))
+        rows.append(
+            f'<div class="card"><div class="meta">{H.escape(meta)}</div>'
+            f'<h3><a href="{H.escape(it["url"])}" target="_blank">{H.escape(it["title"])}</a></h3>'
+            f'<p>{H.escape(it["summary"])}</p><p class="note">💡 {H.escape(it["note"])}</p>'
+            f'<div class="tags">{" ".join("#" + H.escape(t) for t in it["tags"])}</div></div>')
+
+    report = batch.get("report") or "（なし）"
+    page = f"""<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>HIKARI NEWS 预览</title>
+<style>
+body{{margin:0;background:#1e1f22;color:#dbdee1;font:15px/1.6 "Noto Sans JP","Yu Gothic UI",system-ui,sans-serif}}
+.wrap{{max-width:860px;margin:0 auto;padding:16px}} h1{{font-size:18px}} h2{{font-size:16px;margin-top:32px;color:#fff}}
+a{{color:#00a8fc;text-decoration:none}} a:hover{{text-decoration:underline}}
+.thread{{background:#2b2d31;border-radius:8px;padding:16px}} .tt{{font-size:17px;font-weight:700;color:#fff;margin-bottom:12px}}
+.embed{{background:#232428;border-left:4px solid;border-radius:4px;padding:10px 14px;margin:8px 0}}
+.et{{font-weight:700;color:#fff;margin-bottom:4px}} .ed{{font-size:14px}} .ef{{font-size:12px;color:#949ba4;margin-top:6px}}
+code{{background:#1e1f22;border-radius:3px;padding:0 4px;font-size:12px}}
+.card{{background:#2b2d31;border-radius:8px;padding:12px 16px;margin:10px 0}} .card h3{{margin:4px 0;font-size:16px}}
+.meta,.tags{{font-size:12px;color:#949ba4}} .note{{color:#b5bac1}} pre{{white-space:pre-wrap;background:#2b2d31;padding:12px;border-radius:8px}}
+</style></head><body><div class="wrap">
+<h1>HIKARI NEWS 预览（没有发送到 Discord）</h1>
+<p>{H.escape(str(day))} ／ slot {H.escape(str(slot))} ／ {len(rich)} 条</p>
+<h2>① Discord 论坛帖子的样子</h2>
+<div class="thread"><div class="tt">{H.escape(title)}</div>{emb_html}</div>
+<h2>② 全文（网站上显示的内容）</h2>{"".join(rows)}
+<h2>③ AI 的研究报告</h2><pre>{H.escape(report)}</pre>
+</div></body></html>"""
+    out = ROOT / "out" / f"preview-{day}-{slot}.html"
+    out.parent.mkdir(exist_ok=True)
+    out.write_text(page, encoding="utf-8")
+    print(f"✅ 预览已生成：{out}")
+    return 0
+
+
+# ======================================================================
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="HIKARI NEWS 工具")
     parser.add_argument("--slot", choices=list(CONFIG["slots"]), help="默认按日本时间自动判断")
     sub = parser.add_subparsers(dest="cmd", required=True)
     sub.add_parser("context")
+    sub.add_parser("feeds")
     sub.add_parser("community")
-    for name in ("check", "submit"):
-        sub.add_parser(name).add_argument("file")
+    sub.add_parser("check").add_argument("file")
+    p = sub.add_parser("submit")
+    p.add_argument("file")
+    p.add_argument("--preview", action="store_true", help="交到预览分支，不发到 Discord")
     sub.add_parser("publish-pending").add_argument("--dry-run", action="store_true")
+    sub.add_parser("preview").add_argument("source", help="预览分支名（claude/preview-…）或结果 JSON 文件")
     args = parser.parse_args()
-    return {"context": cmd_context, "community": cmd_community, "check": cmd_check,
-            "submit": cmd_submit, "publish-pending": cmd_publish_pending}[args.cmd](args)
+    return {"context": cmd_context, "feeds": cmd_feeds, "community": cmd_community, "check": cmd_check,
+            "submit": cmd_submit, "publish-pending": cmd_publish_pending, "preview": cmd_preview}[args.cmd](args)
 
 
 if __name__ == "__main__":
