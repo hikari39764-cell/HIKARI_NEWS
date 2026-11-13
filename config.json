@@ -44,9 +44,9 @@
     { "name": "ファミ通", "url": "https://www.famitsu.com/", "for": ["industry"] },
     { "name": "CGWORLD", "url": "https://cgworld.jp/", "for": ["tech"] },
     { "name": "GDC Vault（無料講演）", "url": "https://gdcvault.com/free", "for": ["classic", "tech"] },
-    { "name": "Togetter 検索「ゲーム開発」（X の議論まとめ。日付を確認し直近のものだけ）", "url": "https://togetter.com/search?q=%E3%82%B2%E3%83%BC%E3%83%A0%E9%96%8B%E7%99%BA", "for": ["community"] },
-    { "name": "Togetter 検索「インディーゲーム」", "url": "https://togetter.com/search?q=%E3%82%A4%E3%83%B3%E3%83%87%E3%82%A3%E3%83%BC%E3%82%B2%E3%83%BC%E3%83%A0", "for": ["community"] },
-    { "name": "Togetter 検索「生成AI ゲーム」", "url": "https://togetter.com/search?q=%E7%94%9F%E6%88%90AI%20%E3%82%B2%E3%83%BC%E3%83%A0", "for": ["community"] }
+    { "name": "Togetter タグ「ゲーム開発」（新しい順。直近2〜3日のものだけ）", "url": "https://togetter.com/t/%E3%82%B2%E3%83%BC%E3%83%A0%E9%96%8B%E7%99%BA", "for": ["community"] },
+    { "name": "Togetter タグ「ゲーム」（新しい順。制作・開発に関係するものだけ）", "url": "https://togetter.com/t/%E3%82%B2%E3%83%BC%E3%83%A0", "for": ["community"] },
+    { "name": "Togetter タグ「生成AI」（新しい順）", "url": "https://togetter.com/t/%E7%94%9F%E6%88%90AI", "for": ["community"] }
   ],
 
   "community": {
