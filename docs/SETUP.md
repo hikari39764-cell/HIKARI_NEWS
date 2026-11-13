@@ -135,7 +135,7 @@ FIREBASE_SERVICE_ACCOUNT_B64=第④步复制的那一长串
 
 **Setup script（安装脚本）**：
 ```
-python3 -m pip install -q requests firebase-admin || python3 -m pip install -q --break-system-packages requests firebase-admin
+python3 -m pip install -q --break-system-packages --ignore-installed requests firebase-admin
 ```
 
 ### 6-3 创建定时任务
