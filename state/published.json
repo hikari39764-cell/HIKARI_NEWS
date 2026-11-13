@@ -1,6 +1,41 @@
 {
- "items": [],
- "batches": [],
+ "items": [
+  {
+   "id": "7d62a8f17f3c735d",
+   "url": "https://9to5mac.com/2026/11/09/anthropic-upgrades-claude-with-new-fable-5-2-model-details-here/",
+   "title": "AnthropicがClaude Fable 5.2を公開、API料金は値下げで出力も最大30%高速に",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-14",
+   "slot": "10",
+   "deadline": null,
+   "source": "9to5Mac",
+   "note": "個人制作のコード生成にどのモデルを使うか、料金と用途で見直すきっかけに。",
+   "reminded": []
+  },
+  {
+   "id": "39d4d09a7955da1e",
+   "url": "https://80.lv/articles/this-new-shopkeeping-sim-is-like-cyberpunk-2077-meets-papers-please",
+   "title": "『Probably Stolen』がSteamで好発進、体験版66万人・発売日同接8.6万人",
+   "category": "industry",
+   "importance": 4,
+   "date": "2026-11-14",
+   "slot": "10",
+   "deadline": null,
+   "source": "80.lv",
+   "note": "一人の個人開発から始まり、体験版で需要を示してヒットに至った流れは企画の参考になる。",
+   "reminded": []
+  }
+ ],
+ "batches": [
+  {
+   "branch": "claude/inbox-20261114-10-014242",
+   "slot": "10",
+   "date": "2026-11-14",
+   "count": 2,
+   "status": "ok"
+  }
+ ],
  "last_weekly": null,
  "warned": []
 }
