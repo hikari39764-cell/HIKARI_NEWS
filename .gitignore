@@ -1,0 +1,19 @@
+# 研究结果和本地测试数据
+out/
+local_data.json
+
+# 密钥文件（绝对不要提交）
+*serviceAccount*.json
+*-firebase-adminsdk-*.json
+*credentials*.json
+.env
+
+# 本地预览设置
+.claude/launch.json
+
+# Python / Firebase CLI
+__pycache__/
+*.pyc
+.venv/
+.firebase/
+firebase-debug.log

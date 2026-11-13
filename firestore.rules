@@ -1,0 +1,58 @@
+rules_version = '2';
+
+// HIKARI NEWS のセキュリティルール
+// - 記事（items / meta）は「承認済みユーザー」と管理者だけが読める
+// - 書き込みはボット（サーバー側の Admin SDK）だけ。ルールは Admin SDK には適用されない
+// - ユーザーは自分の「閲覧申請」を pending で1回だけ作れる。承認・拒否は管理者だけ
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+    function isAdmin() {
+      return signedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    function isApproved() {
+      return signedIn()
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.status == 'approved';
+    }
+
+    match /items/{id} {
+      allow read: if isAdmin() || isApproved();
+      allow write: if false;
+    }
+
+    match /meta/{id} {
+      allow read: if isAdmin() || isApproved();
+      allow write: if false;
+    }
+
+    match /admins/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+
+      allow create: if signedIn()
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['name', 'note', 'email', 'photoURL', 'status', 'createdAt'])
+        && request.resource.data.status == 'pending'
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 50
+        && request.resource.data.note is string
+        && request.resource.data.note.size() <= 300
+        && request.resource.data.createdAt == request.time;
+
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'reviewedAt'])
+        && request.resource.data.status in ['pending', 'approved', 'rejected'];
+
+      allow delete: if isAdmin();
+    }
+  }
+}

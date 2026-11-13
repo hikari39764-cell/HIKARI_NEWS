@@ -1,0 +1,28 @@
+{
+  "items": [
+    {
+      "category": "tech",
+      "title": "（サンプル）Godot のシェーダー入門ガイド",
+      "summary": "これは動作確認用のサンプルです。Godot のビジュアルシェーダーの基本をまとめた記事、という想定です。",
+      "url": "https://example.com/sample-godot-shader",
+      "source": "Example Blog",
+      "tags": ["Godot", "シェーダー"],
+      "note": "シェーダーの基礎が学べる",
+      "importance": 4,
+      "level": "入門",
+      "deadline": null
+    },
+    {
+      "category": "community",
+      "title": "（サンプル）AI エージェントでゲームのテストを自動化した話",
+      "summary": "動作確認用のサンプルです。Hacker News で話題になった、という想定の英語記事を日本語で要約した例です。",
+      "url": "https://example.com/sample-ai-testing",
+      "source": "Hacker News",
+      "tags": ["AI", "テスト"],
+      "note": "コメント欄では実用性について賛否が分かれている",
+      "importance": 3,
+      "level": null,
+      "deadline": null
+    }
+  ]
+}
