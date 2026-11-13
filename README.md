@@ -6,7 +6,7 @@
 🕵️ 研究端：Claude 定时任务（日本时间 9:30 / 16:30 / 21:30，网络全开，没有任何密钥）
      按 RESEARCH.md 执行：
        python3 radar.py context      这一批的任务 + 已推送过的链接（来自 state/published.json）
-       python3 radar.py community    社区热门线索（HN / Reddit / Qiita / Zenn / Bluesky）
+       python3 radar.py community    社区热门线索（HN / Qiita / Zenn / Bluesky）
        AI 自主研究（WebSearch / WebFetch）→ out/results.json（日文）
        python3 radar.py submit       → 推送到 claude/inbox-… 分支
           ↓

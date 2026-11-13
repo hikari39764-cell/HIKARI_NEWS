@@ -43,12 +43,14 @@
     { "name": "Unreal Engine News", "url": "https://www.unrealengine.com/en-US/news", "for": ["tech"] },
     { "name": "ファミ通", "url": "https://www.famitsu.com/", "for": ["industry"] },
     { "name": "CGWORLD", "url": "https://cgworld.jp/", "for": ["tech"] },
-    { "name": "GDC Vault（無料講演）", "url": "https://gdcvault.com/free", "for": ["classic", "tech"] }
+    { "name": "GDC Vault（無料講演）", "url": "https://gdcvault.com/free", "for": ["classic", "tech"] },
+    { "name": "Togetter 検索「ゲーム開発」（X の議論まとめ。日付を確認し直近のものだけ）", "url": "https://togetter.com/search?q=%E3%82%B2%E3%83%BC%E3%83%A0%E9%96%8B%E7%99%BA", "for": ["community"] },
+    { "name": "Togetter 検索「インディーゲーム」", "url": "https://togetter.com/search?q=%E3%82%A4%E3%83%B3%E3%83%87%E3%82%A3%E3%83%BC%E3%82%B2%E3%83%BC%E3%83%A0", "for": ["community"] },
+    { "name": "Togetter 検索「生成AI ゲーム」", "url": "https://togetter.com/search?q=%E7%94%9F%E6%88%90AI%20%E3%82%B2%E3%83%BC%E3%83%A0", "for": ["community"] }
   ],
 
   "community": {
     "hackernews": { "queries": ["game", "gamedev", "LLM", "AI agent", "Claude"], "min_points": 50 },
-    "reddit": { "subreddits": ["gamedev", "LocalLLaMA", "ClaudeAI"] },
     "qiita": { "tags": ["Unity", "UnrealEngine", "Godot", "生成AI", "ClaudeCode"], "min_stocks": 5 },
     "zenn": { "topics": ["gamedev", "unity", "ai", "llm", "claude"] },
     "bluesky": { "queries": ["gamedev", "indiedev", "LLM", "ゲーム開発"], "min_likes": 20 }
@@ -107,7 +109,7 @@
       "color": "EB459E",
       "max_items": 6,
       "when": { "22": [0, 1, 2, 3, 4, 5, 6] },
-      "brief": "この24時間に X（旧Twitter）、Hacker News、Reddit、Qiita、Zenn、Bluesky などで話題になった、ゲーム制作を学ぶ学生にとって有益な投稿・スレッド・記事。`python3 radar.py feeds` の Togetter・はてブと `python3 radar.py community` の候補を出発点にする。X の話題は Togetter のまとめページや「X で話題」と紹介している記事から元の投稿・元の記事をたどる。note には「なぜ読む価値があるか／コミュニティでどう議論されているか」。"
+      "brief": "直近2〜3日に X（旧Twitter）、はてブ、Hacker News、Qiita、Zenn、Bluesky などで話題になり、ゲーム制作を学ぶ学生が「学べる・考えるきっかけになる」投稿・スレッド・記事。`python3 radar.py feeds` の Togetter・はてブ、context に出る Togetter 検索ページ、`python3 radar.py community` の候補を出発点にする。X の話題は Togetter のまとめや「X で話題」と紹介している記事から元の投稿・元の記事をたどる。開発者の知見・制作の工夫・キャリアの実態・AI 活用の実例などを優先し、業界の内輪もめ・珍記録・単なる面白ネタは選ばない。note には「何が学べるか／コミュニティでどう議論されているか」。"
     },
     {
       "id": "chance",
