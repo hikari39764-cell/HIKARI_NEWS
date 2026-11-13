@@ -1,13 +1,20 @@
 {
   "timezone_offset_hours": 9,
-  "reminder_days": 3,
   "site_url": "https://hikarinews-32e11.web.app",
   "keywords": ["Unreal Engine", "Godot", "シェーダー", "Claude", "インターン"],
   "reader": "ゲーム制作を学んでいる学生（ゲームエンジン、グラフィックス、ゲームデザイン、AI活用、日本のゲーム業界への就職に関心がある）",
 
+  "slots": {
+    "10": { "label": "10:00", "research_hour": 9 },
+    "17": { "label": "17:00", "research_hour": 16 },
+    "22": { "label": "22:00", "research_hour": 21 }
+  },
+  "reminder_days": [7, 3, 0],
+  "weekly_digest": { "weekday": 6, "slot": "22" },
+
   "community": {
     "hackernews": { "queries": ["game", "gamedev", "LLM", "AI agent", "Claude"], "min_points": 50 },
-    "reddit": { "subreddits": ["gamedev", "LocalLLaMA", "ClaudeAI", "unrealengine", "godot"] },
+    "reddit": { "subreddits": ["gamedev", "LocalLLaMA", "ClaudeAI"] },
     "qiita": { "tags": ["Unity", "UnrealEngine", "Godot", "生成AI", "ClaudeCode"], "min_stocks": 5 },
     "zenn": { "topics": ["gamedev", "unity", "ai", "llm", "claude"] },
     "bluesky": { "queries": ["gamedev", "indiedev", "LLM", "ゲーム開発"], "min_likes": 20 }
@@ -15,52 +22,58 @@
 
   "tasks": [
     {
-      "id": "community",
-      "name": "SNS・コミュニティ注目",
-      "emoji": "💬",
-      "max_items": 8,
-      "when": { "am": [0, 1, 2, 3, 4, 5, 6], "pm": [] },
-      "brief": "直近24〜36時間に X（旧Twitter）、Hacker News、Reddit、Qiita、Zenn、Bluesky などで話題になった、ゲーム制作を学ぶ学生にとって有益な投稿・スレッド・記事。`python radar.py community` の候補を出発点にしつつ、X の話題もウェブ検索でできる限り探す。note には「なぜ読む価値があるか／コミュニティでどう議論されているか」。"
-    },
-    {
-      "id": "tech",
-      "name": "技術・学習ピックアップ",
-      "emoji": "📚",
-      "max_items": 5,
-      "when": { "am": [0, 2, 4], "pm": [] },
-      "brief": "直近数日に公開されたゲーム開発の技術コンテンツ：GDC / CEDEC / SIGGRAPH などの講演・資料、開発者の技術ブログ、ポストモーテム、Unity / Unreal / Godot などエンジンの重要なアップデート。note には「ここから学べること」、level には難易度。"
-    },
-    {
       "id": "ai",
       "name": "AIトレンド",
       "emoji": "🤖",
-      "max_items": 6,
-      "when": { "am": [1, 3, 5, 6], "pm": [] },
-      "brief": "直近2〜3日のAI動向：主要な大規模言語モデル（Claude、GPT、Gemini、Llama、Qwen、DeepSeek など）の新モデル・アップデート・料金や機能の変更、「AIでここまでできる」という新しい事例、開発者コミュニティで話題の議論。"
+      "color": "5865F2",
+      "max_items": 5,
+      "when": { "10": [0, 1, 2, 3, 4, 5, 6] },
+      "brief": "直近24時間前後のAI動向：主要な大規模言語モデル（Claude、GPT、Gemini、Llama、Qwen、DeepSeek など）の新モデル・アップデート・料金や機能の変更、「AIでここまでできる」という新しい事例、開発者コミュニティで話題の議論。海外の夜間に出たニュースも拾う。"
+    },
+    {
+      "id": "industry",
+      "name": "ゲーム業界",
+      "emoji": "🎮",
+      "color": "ED4245",
+      "max_items": 4,
+      "when": { "10": [0, 1, 2, 3, 4, 5, 6] },
+      "brief": "直近24時間前後のゲーム業界の動き：Steam などで話題のインディーゲームやヒット作、伸びているジャンルや遊び方、注目の新作発表、業界の大きな動き。note には「なぜ話題なのか／学生が参考にできる点」。"
+    },
+    {
+      "id": "tech",
+      "name": "技術・学習",
+      "emoji": "📚",
+      "color": "57F287",
+      "max_items": 4,
+      "when": { "17": [0, 1, 2, 3, 4, 5, 6] },
+      "brief": "直近数日に公開されたゲーム開発の技術コンテンツ：GDC / CEDEC / SIGGRAPH などの講演・資料、開発者の技術ブログ、ポストモーテム、Unity / Unreal / Godot などエンジンの重要なアップデート。note には「ここから学べること」、level には難易度。"
     },
     {
       "id": "ai_howto",
-      "name": "AI活用・使い方",
+      "name": "AI活用",
       "emoji": "🛠️",
-      "max_items": 5,
-      "when": { "am": [], "pm": [2, 5] },
+      "color": "FEE75C",
+      "max_items": 4,
+      "when": { "17": [0, 1, 2, 3, 4, 5, 6] },
       "brief": "AIの具体的な使い方・活用テクニックの新しい記事・動画・スレッド：プロンプトのコツ、開発ワークフローへの組み込み、AIエージェント、ゲーム制作でのAI活用（コード、アセット、テスト、企画）。学生がすぐ試せるもの優先。note には「試すならこうする」、level には難易度。"
+    },
+    {
+      "id": "community",
+      "name": "SNS・コミュニティ",
+      "emoji": "💬",
+      "color": "EB459E",
+      "max_items": 6,
+      "when": { "22": [0, 1, 2, 3, 4, 5, 6] },
+      "brief": "この24時間に X（旧Twitter）、Hacker News、Reddit、Qiita、Zenn、Bluesky などで話題になった、ゲーム制作を学ぶ学生にとって有益な投稿・スレッド・記事。`python3 radar.py community` の候補を出発点にしつつ、X の話題もウェブ検索でできる限り探す。note には「なぜ読む価値があるか／コミュニティでどう議論されているか」。"
     },
     {
       "id": "chance",
       "name": "チャンス情報",
       "emoji": "🎯",
-      "max_items": 6,
-      "when": { "am": [], "pm": [0, 3] },
-      "brief": "ゲーム制作を学ぶ学生が参加・応募できる機会：ゲームジャム、学生作品コンテスト、展示会の出展募集、ゲーム会社のインターンや新卒採用（特に日本）。deadline には締め切り日を必ず調べて入れる。note には参加条件。締め切りを過ぎたものは除外。"
-    },
-    {
-      "id": "industry",
-      "name": "ゲーム業界トレンド",
-      "emoji": "🎮",
+      "color": "F0B232",
       "max_items": 5,
-      "when": { "am": [], "pm": [1, 4, 6] },
-      "brief": "直近2〜3日のゲーム業界のトレンド：Steam などで話題のインディーゲームやヒット作、伸びているジャンルや遊び方、注目の新作発表、業界の大きな動き。note には「なぜ話題なのか／学生が参考にできる点」。"
+      "when": { "22": [0, 3] },
+      "brief": "ゲーム制作を学ぶ学生が参加・応募できる機会：ゲームジャム、学生作品コンテスト、展示会の出展募集、ゲーム会社のインターンや新卒採用（特に日本）。deadline には締め切り日を必ず調べて入れる。note には参加条件。締め切りを過ぎたものは除外。"
     }
   ]
 }

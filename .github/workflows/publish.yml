@@ -1,0 +1,56 @@
+# 发布端：把 Claude 研究好的结果（claude/inbox-* 分支）发到 Discord 和 Firebase。
+#
+# 安全设计：
+# - 这个 workflow 只由定时（schedule）或手动触发，所以永远使用 main 分支上的代码。
+#   claude/inbox-* 分支里的文件只会被当作「数据」读取，不会执行其中的任何代码。
+# - 密钥只存在 GitHub Secrets 里，研究端（Claude 定时任务）完全接触不到。
+name: Publish HIKARI NEWS
+
+on:
+  schedule:
+    # UTC 时间。日本时间 10:05 / 10:25 / 10:45、17:05 / 17:25 / 17:45、22:05 / 22:25 / 22:45
+    - cron: "5,25,45 1,8,13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write   # 更新 state/published.json、删除已处理的 inbox 分支
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -q -r requirements.txt
+
+      - name: Publish pending batches
+        env:
+          DISCORD_FORUM_WEBHOOK: ${{ secrets.DISCORD_FORUM_WEBHOOK }}
+          DISCORD_LOG_WEBHOOK: ${{ secrets.DISCORD_LOG_WEBHOOK }}
+          FIREBASE_SERVICE_ACCOUNT_B64: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_B64 }}
+        run: python radar.py publish-pending
+
+      - name: Save state
+        if: always()
+        run: |
+          git config user.name "hikari-news-publisher"
+          git config user.email "publisher@users.noreply.github.com"
+          git add state/published.json
+          if git diff --cached --quiet; then
+            echo "state unchanged"
+          else
+            git commit -m "state: update published list"
+            git push origin HEAD:main
+          fi
