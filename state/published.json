@@ -1,6 +1,71 @@
 {
  "items": [
   {
+   "id": "b43f427534a5bfcf",
+   "url": "https://bsky.app/profile/enikofox.com",
+   "title": "（Bluesky）@enikofox.com のノイズ画像に関する投稿",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-14",
+   "slot": "10",
+   "deadline": null,
+   "source": "Bluesky",
+   "note": "",
+   "reminded": []
+  },
+  {
+   "id": "508712fbc8ca30a2",
+   "url": "https://github.com/ggml-org/llama.cpp/releases",
+   "title": "llama.cpp v1.0.0 リリース",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-14",
+   "slot": "10",
+   "deadline": null,
+   "source": "GitHub",
+   "note": "",
+   "reminded": []
+  },
+  {
+   "id": "39bb31687f1ba426",
+   "url": "https://zenn.dev/dress_code/articles/568fd547315abe",
+   "title": "AIエージェントが決定を勝手に変えてしまう5つのパターンと対策",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-14",
+   "slot": "10",
+   "deadline": null,
+   "source": "Zenn",
+   "note": "",
+   "reminded": []
+  },
+  {
+   "id": "16f68e7585109074",
+   "url": "https://zenn.dev/oikon/articles/claude-code-recipe",
+   "title": "Claude Codeで最近使っているTips【2026/11】（/btw・Agent Teams・Remote Control）",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-14",
+   "slot": "10",
+   "deadline": null,
+   "source": "Zenn",
+   "note": "",
+   "reminded": []
+  },
+  {
+   "id": "e241f51107a10ffe",
+   "url": "https://qiita.com/7mpy/items/5710fef43ba0e59204c6",
+   "title": "Claude Fable 5.2で大阪が舞台の3Dオープンワールドをブラウザゲーム化（VELA BAY）",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-14",
+   "slot": "10",
+   "deadline": null,
+   "source": "Qiita",
+   "note": "",
+   "reminded": []
+  },
+  {
    "id": "7d62a8f17f3c735d",
    "url": "https://9to5mac.com/2026/11/09/anthropic-upgrades-claude-with-new-fable-5-2-model-details-here/",
    "title": "AnthropicがClaude Fable 5.2を公開、API料金は値下げで出力も最大30%高速に",

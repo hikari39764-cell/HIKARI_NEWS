@@ -200,7 +200,7 @@ def cmd_context(args) -> int:
     slot = args.slot or slot_for(now)
     tasks = tasks_for(now.date(), slot)
     state = load_state()
-    recent = [it["url"] for it in state["items"][-200:]]
+    recent = [f"- {it.get('title', '')}\n  {it['url']}" for it in state["items"][-200:]]
 
     print(f"# 本次运行：{now:%Y-%m-%d %H:%M} JST ／ {CONFIG['slots'][slot]['label']} 这一批（slot={slot}）\n")
     print(f"读者：{CONFIG['reader']}\n")
@@ -221,7 +221,7 @@ def cmd_context(args) -> int:
         classics = [it for it in state["items"] if it.get("category") == "classic"]
         print("\n## 「定番の一本」以前介绍过的（不要重复）")
         print("\n".join(f"- {it['title']}" for it in classics) or "（无）")
-    print("\n## 已经推送过的链接（不要再选，也不要选同一件事的其他报道）")
+    print("\n## 已经推送过的内容（不要再选，同一件事的其他文章也不要选）")
     print("\n".join(recent) if recent else "（无）")
     return 0
 

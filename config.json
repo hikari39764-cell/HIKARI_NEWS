@@ -32,7 +32,11 @@
     { "name": "ITmedia AI+", "url": "https://rss.itmedia.co.jp/rss/2.0/aiplus.xml", "for": ["ai"], "max_age_hours": 48 },
     { "name": "Zenn トレンド", "url": "https://zenn.dev/feed", "for": ["ai_howto", "tech", "community"], "max_age_hours": 336 },
     { "name": "Qiita 人気記事", "url": "https://qiita.com/popular-items/feed", "for": ["ai_howto", "tech", "community"], "max_age_hours": 336 },
-    { "name": "Hacker News（100pt 以上）", "url": "https://hnrss.org/frontpage?points=100", "for": ["ai", "community"], "max_age_hours": 36 }
+    { "name": "Hacker News（100pt 以上）", "url": "https://hnrss.org/frontpage?points=100", "for": ["ai", "community"], "max_age_hours": 36 },
+    { "name": "Togetter 人気（X の話題まとめ）", "url": "https://togetter.com/rss/hot", "for": ["community"], "max_age_hours": 48 },
+    { "name": "はてブ IT 人気", "url": "https://b.hatena.ne.jp/hotentry/it.rss", "for": ["ai", "ai_howto", "community"], "max_age_hours": 48, "max_items": 20 },
+    { "name": "はてブ「ゲーム開発」人気", "url": "https://b.hatena.ne.jp/q/%E3%82%B2%E3%83%BC%E3%83%A0%E9%96%8B%E7%99%BA?mode=rss&sort=hot", "for": ["tech", "industry", "community"], "max_age_hours": 336, "max_items": 15 },
+    { "name": "はてブ ゲーム 人気", "url": "https://b.hatena.ne.jp/hotentry/game.rss", "for": ["industry", "community"], "max_age_hours": 48, "max_items": 15 }
   ],
   "check_pages": [
     { "name": "Anthropic News", "url": "https://www.anthropic.com/news", "for": ["ai"] },
@@ -103,7 +107,7 @@
       "color": "EB459E",
       "max_items": 6,
       "when": { "22": [0, 1, 2, 3, 4, 5, 6] },
-      "brief": "この24時間に X（旧Twitter）、Hacker News、Reddit、Qiita、Zenn、Bluesky などで話題になった、ゲーム制作を学ぶ学生にとって有益な投稿・スレッド・記事。`python3 radar.py community` の候補を出発点にしつつ、X の話題もウェブ検索でできる限り探す。note には「なぜ読む価値があるか／コミュニティでどう議論されているか」。"
+      "brief": "この24時間に X（旧Twitter）、Hacker News、Reddit、Qiita、Zenn、Bluesky などで話題になった、ゲーム制作を学ぶ学生にとって有益な投稿・スレッド・記事。`python3 radar.py feeds` の Togetter・はてブと `python3 radar.py community` の候補を出発点にする。X の話題は Togetter のまとめページや「X で話題」と紹介している記事から元の投稿・元の記事をたどる。note には「なぜ読む価値があるか／コミュニティでどう議論されているか」。"
     },
     {
       "id": "chance",
