@@ -1,223 +1,60 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ja" data-theme="dark">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>HIKARI NEWS</title>
-<style>
-  :root {
-    --bg: #f6f7f9; --panel: #ffffff; --text: #1d2330; --muted: #667085;
-    --line: #e4e7ec; --accent: #3d5afe; --accent-soft: #eef1ff;
-    --warn: #c2410c; --warn-soft: #fff4ed; --star: #e0a100;
-    --ok: #15803d; --ok-soft: #ecfdf3; --ng: #b42318; --ng-soft: #fef3f2;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #12151c; --panel: #1b2029; --text: #e6e9ef; --muted: #98a2b3;
-      --line: #2b3240; --accent: #8c9eff; --accent-soft: #252c45;
-      --warn: #fb923c; --warn-soft: #3a2518; --star: #f5c542;
-      --ok: #4ade80; --ok-soft: #16301f; --ng: #f97066; --ng-soft: #3a1a18;
-    }
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--bg); color: var(--text);
-    font: 15px/1.7 "Hiragino Sans", "Noto Sans JP", "Yu Gothic UI", system-ui, sans-serif;
-  }
-  a { color: inherit; }
-  button { font: inherit; }
-  [hidden] { display: none !important; }
-  header { background: var(--panel); border-bottom: 1px solid var(--line); }
-  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
-  .top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 14px 0 6px; }
-  h1 { font-size: 20px; margin: 0; }
-  .updated { color: var(--muted); font-size: 13px; }
-  .me { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
-  .me img { width: 26px; height: 26px; border-radius: 50%; }
-  .btn {
-    border: 1px solid var(--line); background: var(--panel); color: var(--text);
-    border-radius: 8px; padding: 6px 14px; cursor: pointer;
-  }
-  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .btn.ok { color: var(--ok); border-color: var(--ok); }
-  .btn.ng { color: var(--ng); border-color: var(--ng); }
-  .btn:disabled { opacity: .5; cursor: default; }
-  .tabs { display: flex; gap: 4px; overflow-x: auto; }
-  .tab {
-    border: 0; background: none; color: var(--muted); font-size: 14px;
-    padding: 8px 12px; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap;
-  }
-  .tab.on { color: var(--text); border-color: var(--accent); font-weight: 600; }
-
-  .center { max-width: 460px; margin: 60px auto; padding: 0 16px; }
-  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 24px; }
-  .panel h2 { margin: 0 0 8px; font-size: 18px; }
-  .panel p { color: var(--muted); margin: 0 0 16px; }
-  label { display: block; font-size: 13px; color: var(--muted); margin: 12px 0 4px; }
-  input[type=text], input[type=search], textarea, select {
-    width: 100%; padding: 8px 12px; font: inherit; color: var(--text);
-    background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
-  }
-  textarea { min-height: 80px; resize: vertical; }
-  .msg { font-size: 13px; color: var(--ng); min-height: 1.5em; margin-top: 8px; }
-
-  .layout { display: grid; grid-template-columns: 1fr 280px; gap: 20px; padding: 20px 16px 60px; }
-  @media (max-width: 860px) { .layout { grid-template-columns: 1fr; } aside { order: -1; } }
-  .tools { display: flex; gap: 8px; margin-bottom: 12px; }
-  .tools input { flex: 1; min-width: 0; }
-  .tools select { width: auto; }
-  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
-  .chip {
-    border: 1px solid var(--line); background: var(--panel); color: var(--muted);
-    border-radius: 999px; padding: 2px 10px; font-size: 12px; cursor: pointer;
-  }
-  .chip.on { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
-  .day { font-size: 13px; color: var(--muted); font-weight: 600; margin: 22px 0 8px; }
-  .card {
-    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
-    padding: 14px 16px; margin-bottom: 10px;
-  }
-  .card.read { opacity: .62; }
-  .meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
-  .cat { background: var(--accent-soft); color: var(--accent); border-radius: 6px; padding: 0 8px; }
-  .kw { background: var(--warn-soft); color: var(--warn); border-radius: 6px; padding: 0 8px; }
-  .lvl { border: 1px solid var(--line); border-radius: 6px; padding: 0 6px; }
-  .stars { color: var(--star); letter-spacing: 1px; }
-  .card h3 { font-size: 16px; margin: 6px 0 4px; line-height: 1.5; }
-  .card h3 a { text-decoration: none; }
-  .card h3 a:hover { text-decoration: underline; }
-  .card p { margin: 4px 0; }
-  .note { color: var(--muted); font-size: 14px; }
-  .deadline { color: var(--warn); font-size: 13px; font-weight: 600; }
-  .deadline.past { color: var(--muted); font-weight: 400; text-decoration: line-through; }
-  .foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 6px; }
-  .tags { font-size: 12px; color: var(--muted); }
-  .bm { border: 0; background: none; cursor: pointer; font-size: 18px; color: var(--muted); padding: 0 4px; }
-  .bm.on { color: var(--star); }
-  aside .box {
-    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
-    padding: 14px 16px; position: sticky; top: 16px;
-  }
-  aside h2 { font-size: 14px; margin: 0 0 8px; }
-  .dl { display: block; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; text-decoration: none; }
-  .dl:first-of-type { border-top: 0; }
-  .dl b { display: block; color: var(--warn); font-size: 12px; }
-  .empty { color: var(--muted); padding: 40px 0; text-align: center; }
-  .more { display: block; margin: 16px auto; }
-
-  .admin { padding: 20px 16px 60px; }
-  .admin h2 { font-size: 16px; margin: 20px 0 8px; }
-  .user {
-    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
-    background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; margin-bottom: 8px;
-  }
-  .user .who { flex: 1; min-width: 200px; }
-  .user .who small { display: block; color: var(--muted); }
-  .badge { font-size: 12px; border-radius: 6px; padding: 0 8px; }
-  .badge.pending { background: var(--warn-soft); color: var(--warn); }
-  .badge.approved { background: var(--ok-soft); color: var(--ok); }
-  .badge.rejected { background: var(--ng-soft); color: var(--ng); }
-  .demo { background: var(--warn-soft); color: var(--warn); text-align: center; font-size: 13px; padding: 4px; }
-</style>
+<meta name="theme-color" content="#07080c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Noto+Sans+JP:wght@400;500;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<link rel="stylesheet" href="style.css">
+<script>
+  try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}
+</script>
 </head>
 <body>
-<div class="demo" id="demo-banner" hidden>デモモード（localhost でのみ表示。Firebase 未設定のためローカルデータを表示中）</div>
-<header>
-  <div class="wrap">
-    <div class="top">
-      <h1>🎮 HIKARI NEWS</h1>
-      <span class="updated" id="updated"></span>
-      <div class="me" id="me" hidden>
-        <img id="me-photo" alt="" referrerpolicy="no-referrer">
-        <span id="me-name"></span>
-        <button class="btn" id="logout">ログアウト</button>
-      </div>
-    </div>
-    <nav class="tabs" id="tabs" hidden></nav>
+
+<header class="hdr">
+  <a class="logo" href="#/today" aria-label="HIKARI NEWS"><b>HIKARI</b><i>NEWS</i></a>
+  <nav class="nav" id="nav" hidden>
+    <span class="ind" id="ind"></span>
+    <a href="#/today" data-r="today"><span>今日</span></a>
+    <a href="#/search" data-r="search"><span>さがす</span></a>
+    <a href="#/chance" data-r="chance"><span>チャンス</span></a>
+    <a href="#/saved" data-r="saved"><span>マイページ</span></a>
+    <a href="#/admin" data-r="admin" id="nav-admin" hidden><span>管理<b class="badge" id="admin-badge" hidden></b></span></a>
+  </nav>
+  <span class="sp"></span>
+  <button class="kbtn" id="open-pal" hidden><i class="ti ti-search"></i><span>記事を検索</span><kbd>CTRL K</kbd></button>
+  <button class="iconbtn" id="theme" title="ライト／ダーク切り替え"><i class="ti ti-moon-stars"></i></button>
+  <div class="me" id="me" hidden>
+    <img id="me-photo" alt="" referrerpolicy="no-referrer">
+    <button class="iconbtn" id="logout" title="ログアウト"><i class="ti ti-logout"></i></button>
   </div>
 </header>
 
-<!-- 読み込み中 -->
-<section class="center" id="view-loading"><p class="empty">読み込み中…</p></section>
+<main id="view"></main>
 
-<!-- 設定未完了 -->
-<section class="center" id="view-setup" hidden>
-  <div class="panel">
-    <h2>設定が完了していません</h2>
-    <p>public/firebase-config.js に Firebase の設定を入力してください。</p>
+<nav class="bnav" id="bnav" hidden>
+  <a href="#/today" data-r="today"><i class="ti ti-sun"></i>今日</a>
+  <a href="#/search" data-r="search"><i class="ti ti-search"></i>さがす</a>
+  <a href="#/chance" data-r="chance"><i class="ti ti-flag"></i>チャンス</a>
+  <a href="#/saved" data-r="saved"><i class="ti ti-bookmark"></i>マイページ</a>
+</nav>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true"></aside>
+<div class="pal-wrap" id="pal" hidden>
+  <div class="scrim on" data-close-pal></div>
+  <div class="pal" role="dialog" aria-label="記事を検索">
+    <input type="search" id="pal-q" placeholder="キーワード・タグ・サイト名で検索…" autocomplete="off">
+    <ul id="pal-list"></ul>
+    <div class="foot"><span>↑↓ 移動</span><span>Enter 開く</span><span>Esc 閉じる</span><span id="pal-all" style="margin-left:auto;cursor:pointer;color:var(--flare)">すべての結果を見る →</span></div>
   </div>
-</section>
-
-<!-- ログイン -->
-<section class="center" id="view-login" hidden>
-  <div class="panel">
-    <h2>HIKARI NEWS</h2>
-    <p>ゲーム制作・AI・業界トレンドの情報を毎日まとめています。閲覧には管理者の承認が必要です。</p>
-    <button class="btn primary" id="login">Google でログイン</button>
-    <div class="msg" id="login-msg"></div>
-  </div>
-</section>
-
-<!-- 閲覧申請 -->
-<section class="center" id="view-apply" hidden>
-  <form class="panel" id="apply-form">
-    <h2>閲覧申請</h2>
-    <p>管理者が承認すると閲覧できるようになります。</p>
-    <label for="apply-name">お名前（ニックネーム可）</label>
-    <input type="text" id="apply-name" maxlength="50" required>
-    <label for="apply-note">ひとこと（所属・どこで知ったか など）</label>
-    <textarea id="apply-note" maxlength="300"></textarea>
-    <p></p>
-    <button class="btn primary" type="submit" id="apply-submit">申請する</button>
-    <div class="msg" id="apply-msg"></div>
-  </form>
-</section>
-
-<!-- 承認待ち / 拒否 -->
-<section class="center" id="view-pending" hidden>
-  <div class="panel">
-    <h2>承認待ちです</h2>
-    <p>申請を受け付けました。管理者が承認すると、このページで記事が読めるようになります。</p>
-    <button class="btn" id="recheck">状態を再確認</button>
-  </div>
-</section>
-<section class="center" id="view-rejected" hidden>
-  <div class="panel">
-    <h2>申請は承認されませんでした</h2>
-    <p>心当たりがない場合は管理者に連絡してください。</p>
-  </div>
-</section>
-
-<!-- 記事一覧 -->
-<div class="wrap layout" id="view-main" hidden>
-  <main>
-    <div class="tools">
-      <input type="search" id="q" placeholder="キーワードで検索（タイトル・要約・タグ）">
-      <select id="sort">
-        <option value="new">新しい順</option>
-        <option value="imp">おすすめ度順</option>
-      </select>
-    </div>
-    <div class="chips" id="chips"></div>
-    <div id="list"></div>
-  </main>
-  <aside>
-    <div class="box">
-      <h2>⏰ 締め切りが近いチャンス</h2>
-      <div id="deadlines"></div>
-    </div>
-  </aside>
 </div>
-
-<!-- 管理 -->
-<div class="wrap admin" id="view-admin" hidden>
-  <h2>🙋 承認待ち</h2>
-  <div id="admin-pending"></div>
-  <h2>✅ 承認済み</h2>
-  <div id="admin-approved"></div>
-  <h2>⛔ 拒否</h2>
-  <div id="admin-rejected"></div>
-</div>
+<div class="wipe" id="wipe" hidden><i></i><i></i><i></i></div>
 
 <script type="module" src="app.js"></script>
 </body>

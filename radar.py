@@ -587,7 +587,8 @@ def cmd_publish_pending(args) -> int:
         store.save_meta({
             "updated": now.isoformat(timespec="minutes"),
             "keywords": CONFIG.get("keywords", []),
-            "categories": [{"id": t["id"], "name": t["name"], "emoji": t["emoji"]} for t in CONFIG["tasks"]],
+            "categories": [{"id": t["id"], "name": t["name"], "emoji": t["emoji"], "color": t["color"]}
+                           for t in CONFIG["tasks"]],
         })
         store.flush()
 
