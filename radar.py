@@ -983,15 +983,34 @@ def email_for_day(day: date, items: list[dict], kws: list[dict]) -> tuple[str, s
     return html, "\n".join(text)
 
 
+def send_via_relay(url: str, token: str, to_list: list[str], subject: str, html: str, text: str) -> str:
+    """Google Apps Script（tools/mail_relay.gs）経由で送る。送信元の Gmail で 1 人ずつ送られる。"""
+    import requests
+    try:
+        r = requests.post(url, json={"token": token, "to": to_list, "subject": subject, "html": html, "text": text}, timeout=90)
+        data = r.json()
+    except Exception as e:
+        return f"⚠️ メールを送れませんでした（Apps Script に接続できない：{str(e)[:150]}）"
+    if not data.get("ok"):
+        return f"⚠️ メールを送れませんでした（Apps Script：{str(data.get('error'))[:150]}）"
+    errs = data.get("errors") or []
+    return (f"メール {data.get('sent', 0)}/{len(to_list)} 人（今日あと {data.get('remaining', '?')} 通まで）"
+            + (f"（失敗：{'; '.join(map(str, errs))[:300]}）" if errs else ""))
+
+
 def send_emails(to_list: list[str], subject: str, html: str, text: str, dry_run: bool) -> str:
-    """Gmail（アプリ パスワード）で 1 人ずつ送る。宛先はお互いに見えない。"""
+    """1 人ずつ送る（宛先はお互いに見えない）。Apps Script の中継があればそれを、なければ Gmail（アプリ パスワード）を使う。"""
     if not to_list:
         return ""
     if dry_run:
         return f"（dry-run）メール {len(to_list)} 人：{subject}"
+    relay, token = os.environ.get("MAIL_RELAY_URL"), os.environ.get("MAIL_RELAY_TOKEN")
+    if relay and token:
+        return send_via_relay(relay, token, to_list, subject, html, text)
     addr, pw = os.environ.get("GMAIL_ADDRESS"), os.environ.get("GMAIL_APP_PASSWORD")
     if not addr or not pw:
-        return f"⚠️ メール {len(to_list)} 人ぶん未送信（GitHub Secrets に GMAIL_ADDRESS / GMAIL_APP_PASSWORD がまだありません）"
+        return (f"⚠️ メール {len(to_list)} 人ぶん未送信（GitHub Secrets に MAIL_RELAY_URL / MAIL_RELAY_TOKEN、"
+                f"または GMAIL_ADDRESS / GMAIL_APP_PASSWORD がまだありません）")
     import smtplib
     import ssl
     from email.message import EmailMessage
