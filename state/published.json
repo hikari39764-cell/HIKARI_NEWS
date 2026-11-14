@@ -415,6 +415,32 @@
    "source": "Reddit投稿の紹介（AUTOMATON）",
    "note": "「できない」を工夫で突破する発想と、圧縮の実例が学べる",
    "reminded": []
+  },
+  {
+   "id": "f6fec5af6d6c76c7",
+   "url": "https://80.lv/articles/this-manga-style-action-fps-uses-radial-gravity-to-turn-walls-into-floors/",
+   "title": "Godot製FPS「Balitti」の球形ワールド：点重力と「上」の回し方",
+   "category": "programmer",
+   "importance": 3,
+   "date": "2026-11-15",
+   "slot": "learn",
+   "deadline": null,
+   "source": "80 Level",
+   "note": "壁が床になる球形ワールドの作り方を、Godot の実装ベースで知る。",
+   "reminded": []
+  },
+  {
+   "id": "f84171a670aa2746",
+   "url": "https://unity.com/blog/ungodly-azra-games-mobile-rpg-unity",
+   "title": "モバイルRPG「UnGodly」の設計思想：コンソール品質の戦闘と「プレイヤーを尊重する」進行",
+   "category": "planner",
+   "importance": 3,
+   "date": "2026-11-15",
+   "slot": "learn",
+   "deadline": null,
+   "source": "Unity Blog（Azra Games 寄稿）",
+   "note": "「1回のプレイで何が完結するか」を設計する視点が学べる。",
+   "reminded": []
   }
  ],
  "batches": [
@@ -472,6 +498,13 @@
    "slot": "22",
    "date": "2026-11-14",
    "count": 6,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/learn-20261115-learn-063717",
+   "slot": "learn",
+   "date": "2026-11-15",
+   "count": 14,
    "status": "ok"
   }
  ],
@@ -1305,6 +1338,90 @@
    "track": "planner",
    "level": "発展",
    "q": "運営型ゲームの指標「ARPPU」が表すものは？"
+  },
+  {
+   "id": "3bb1a7b0f140",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "応用",
+   "q": "次のコードで、ファイルが存在せず fopen が nullptr を返した場合、関数を抜けて fp が破棄されるときに何が起きる？"
+  },
+  {
+   "id": "a302e14e3ff2",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "発展",
+   "q": "1つ目の Dispatch がバッファ B に UAV 経由で書き込み、直後の2つ目の Dispatch が同じバッファ B を UAV 経由で読む。B は全体を通して UNORD"
+  },
+  {
+   "id": "e04c127f62ac",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "発展",
+   "q": "サンプラーのアドレスモード（U 方向）を WRAP にして、UV の U 座標 1.25 でテクスチャをサンプルした。実際に参照される U 座標はどれ？"
+  },
+  {
+   "id": "dc002205289b",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "発展",
+   "q": "HLSL で float3x3 M と float3 v があるとき、mul(v, M) と必ず同じ結果になる式は？"
+  },
+  {
+   "id": "de32dac6146a",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "応用",
+   "q": "固定タイムステップ（例：1/60 秒）で物理を回すゲームループで、1 回の更新に 1/60 秒より長くかかる状態が続くと、「遅れを取り戻すための更新が増え、さらに遅れる」という悪循"
+  },
+  {
+   "id": "953a52511eab",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "親子関係のあるオブジェクトのワールド行列を、毎フレームすべて再計算するのは無駄が多い。「ダーティフラグ」の考え方として正しいのは？"
+  },
+  {
+   "id": "715120c3c5a9",
+   "topic": "math",
+   "track": "programmer",
+   "level": "発展",
+   "q": "中心 C の空洞の球体の「内側の面」を歩くキャラクターがいる。重力は中心から外向き（殻の方向）に働き、キャラクターは今位置 P にいる。キャラクターの「上」方向の単位ベクトルとして"
+  },
+  {
+   "id": "6b5253f00f7a",
+   "topic": "math",
+   "track": "programmer",
+   "level": "応用",
+   "q": "敵の視野は正面から左右に 45°ずつ（全体で 90°）。敵の正面方向 forward = (0, 0, 1) で、敵からプレイヤーへの単位ベクトルが d = (0.8, 0, 0."
+  },
+  {
+   "id": "4f33eb62542a",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "発展",
+   "q": "2本のダイレクトコマンドリスト A と B がある。A は作成時の初期 PSO が P1 で、記録中に SetPipelineState(P2) を呼んだ。B は作成時の初期 PS"
+  },
+  {
+   "id": "3795a99201b9",
+   "topic": "level",
+   "track": "planner",
+   "level": "発展",
+   "q": "レベルデザインで、アートを入れる前に仮の簡素な形状（グレーボックス／ブロックアウト）でステージを組んで遊ぶ。この段階のテストで、特に確かめるべきことは？"
+  },
+  {
+   "id": "72caf34a4699",
+   "topic": "ux",
+   "track": "planner",
+   "level": "発展",
+   "q": "スマホ向けアクションゲームで、戦闘中に最も頻繁に押す「攻撃」ボタンを配置する。フィッツの法則の考え方に合う設計は？"
+  },
+  {
+   "id": "4e1ed7296a16",
+   "topic": "narrative",
+   "track": "planner",
+   "level": "基礎",
+   "q": "RPG の序盤で、すでに事情をよく知っているはずの2人の兵士が「ご存じのとおり、この国は十年前の戦争で…」と、設定をプレイヤー向けに長々と説明し合う。この台詞の問題と、改善の方向と"
   }
  ],
  "themes": [
@@ -1315,15 +1432,19 @@
   {
    "date": "2026-11-14",
    "title": "境界線のむこう"
+  },
+  {
+   "date": "2026-11-15",
+   "title": "地図に載っていない場所"
   }
  ],
  "reports": [],
  "idea_counts": {
-  "genre": 17,
-  "mechanic": 17,
-  "theme": 17,
-  "constraint": 17,
-  "feeling": 15,
-  "prompt": 15
+  "genre": 22,
+  "mechanic": 22,
+  "theme": 22,
+  "constraint": 22,
+  "feeling": 20,
+  "prompt": 20
  }
 }
