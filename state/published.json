@@ -207,6 +207,136 @@
    "source": "Game Developer",
    "note": "課金設計に関わる、これから変わるかもしれないルールの全体像",
    "reminded": []
+  },
+  {
+   "id": "e403958929b1de4a",
+   "url": "https://80.lv/articles/eve-online-dev-open-sources-its-physically-based-ssao-technology/",
+   "title": "EVE Onlineの開発元がSSAO「CORTAO」をMITで公開、GTAOより少ないサンプルで安定",
+   "category": "tech",
+   "importance": 5,
+   "date": "2026-11-14",
+   "slot": "17",
+   "deadline": null,
+   "source": "80 Level / GitHub（theagentd/CORTAO）",
+   "note": "AOを「少サンプルで安定させる」発想とシェーダーの実コードから学べる",
+   "reminded": []
+  },
+  {
+   "id": "97ba99091379f036",
+   "url": "https://unity.com/blog/seed-unity-rendering-performance",
+   "title": "プレイヤーが街を作り続けるSEED、Unity描画の負荷をどう見つけて直したか",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-14",
+   "slot": "17",
+   "deadline": null,
+   "source": "Unity Blog（Klang Games）",
+   "note": "「CPU律速かメモリ律速か」の見極め方と直し方の実例が学べる",
+   "reminded": []
+  },
+  {
+   "id": "386ce057a26e2611",
+   "url": "https://cgworld.jp/regular/202611-ue5tool-24.html",
+   "title": "UE5：テクスチャのインポート時にsRGBなどを自動設定するEditor Utility",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-14",
+   "slot": "17",
+   "deadline": null,
+   "source": "CGWORLD（連載：UE5 Editor Utility）",
+   "note": "毎回の手作業を自動化する第一歩。TA・ツール志望の入口に",
+   "reminded": []
+  },
+  {
+   "id": "e91e017a6cb77550",
+   "url": "https://cgworld.jp/flashnews/01-202611-Coyote-Houdini.html",
+   "title": "Houdiniで割ったメッシュをNiagaraで1ピースずつ動かす、破壊エフェクトの作り方",
+   "category": "tech",
+   "importance": 3,
+   "date": "2026-11-14",
+   "slot": "17",
+   "deadline": null,
+   "source": "CGWORLD（元記事：COYOTE VFXテックブログ）",
+   "note": "「ピースごとにパーティクル化→WPOで描く」という分業の発想が学べる",
+   "reminded": []
+  },
+  {
+   "id": "bc67ba2d498edf34",
+   "url": "https://zenn.dev/karamage/articles/5c3f8370b2b370",
+   "title": "AI同士の「敵対的レビュー」は効かない？ 検証にトークンを使うpstackの考え方",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-14",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（karamage）",
+   "note": "試すなら「完了条件＋見せてほしい証拠」を依頼文に書いてみる",
+   "reminded": []
+  },
+  {
+   "id": "6f6fff482120edaf",
+   "url": "https://simonwillison.net/2026/Nov/10/prompting-claude-fable-52/",
+   "title": "Claude Fable 5.2に「このコードの持ち主はあなた」と伝えると、整理して直す率が約75%に",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-14",
+   "slot": "17",
+   "deadline": null,
+   "source": "Simon Willison's Weblog（Anthropic公式ガイドの引用）",
+   "note": "試すなら、CLAUDE.mdに「所有者・保守者」の一文を足して比べる",
+   "reminded": []
+  },
+  {
+   "id": "43738a69e67ded87",
+   "url": "https://unity.com/blog/how-to-organize-a-game-project-with-ai",
+   "title": "コード不要でAIとゲームを作る人へ。Unityが勧める「整理の10のコツ」",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-14",
+   "slot": "17",
+   "deadline": null,
+   "source": "Unity Blog",
+   "note": "試すなら、まず「1文のゲーム概要」から。AI制作の迷子を防ぐ型",
+   "reminded": []
+  },
+  {
+   "id": "411b891a32005563",
+   "url": "https://gafferongames.com/post/fix_your_timestep/",
+   "title": "Fix Your Timestep!：ゲームループと物理の時間刻みを固定する定番解説",
+   "category": "classic",
+   "importance": 4,
+   "date": "2026-11-14",
+   "slot": "17",
+   "deadline": null,
+   "source": "Gaffer On Games（Glenn Fiedler）",
+   "note": "今も通用する「描画と更新を切り離す」ゲームループの設計原則",
+   "reminded": []
+  },
+  {
+   "id": "f8afd7a9e645bb80",
+   "url": "https://github.com/theagentd/CORTAO",
+   "title": "SSAO の新手法「CORTAO」が公開：円形オクルーダーで GTAO の弱点を解く",
+   "category": "programmer",
+   "importance": 4,
+   "date": "2026-11-14",
+   "slot": "learn",
+   "deadline": null,
+   "source": "GitHub（CORTAO README）／80.lv の報道を参照",
+   "note": "SSAO を GTAO 以外の発想で見直す、実装付きの教材になる",
+   "reminded": []
+  },
+  {
+   "id": "f0353eb23d847a5c",
+   "url": "https://unity.com/blog/video-game-rules-states-win-conditions",
+   "title": "Unity 公式解説：ルール・状態・勝敗条件を 5 ステップで企画に落とし込む",
+   "category": "planner",
+   "importance": 3,
+   "date": "2026-11-14",
+   "slot": "learn",
+   "deadline": null,
+   "source": "Unity Blog",
+   "note": "企画に活かせる視点：ゴールを 1 文で書けるかを最初に確認する",
+   "reminded": []
   }
  ],
  "batches": [
@@ -237,6 +367,27 @@
    "date": "2026-11-14",
    "count": 0,
    "status": "error: news 第 1 条：section 必须是 ['planner', 'programmer'] 之一\nnews 第 2 条：section 必须是 ['planner', 'programmer'] 之一"
+  },
+  {
+   "branch": "claude/inbox-20261114-17-161546",
+   "slot": "17",
+   "date": "2026-11-14",
+   "count": 8,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/learn-20261114-learn-115840",
+   "slot": "learn",
+   "date": "2026-11-14",
+   "count": 26,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/learn-20261114-learn-120557",
+   "slot": "learn",
+   "date": "2026-11-14",
+   "count": 37,
+   "status": "ok"
   }
  ],
  "last_weekly": null,
@@ -324,6 +475,27 @@
    "level": "応用",
    "area": "shader",
    "theme": "ライティングの基本",
+   "date": "2026-11-14"
+  },
+  {
+   "term": "フェンス",
+   "level": "基礎",
+   "area": "dx12",
+   "theme": "GPU同期とフレーム管理",
+   "date": "2026-11-14"
+  },
+  {
+   "term": "リソースバリア",
+   "level": "発展",
+   "area": "dx12",
+   "theme": "GPU同期とフレーム管理",
+   "date": "2026-11-14"
+  },
+  {
+   "term": "フレームごとのコマンドアロケータ管理",
+   "level": "応用",
+   "area": "dx12",
+   "theme": "GPU同期とフレーム管理",
    "date": "2026-11-14"
   }
  ],
@@ -600,21 +772,452 @@
    "track": "planner",
    "level": "発展",
    "q": "開発の初期に作る「バーティカルスライス」とは？"
+  },
+  {
+   "id": "732c3edbba8d",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "次のコードで、無駄なコピーが発生している理由と直し方として正しいのは？"
+  },
+  {
+   "id": "3782f9a79754",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "発展",
+   "q": "次のコードで a と b がローカル変数としてスコープを抜けたあと、何が起きる？"
+  },
+  {
+   "id": "a11d7c332e3b",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "応用",
+   "q": "このプログラムを実行したときの出力は？"
+  },
+  {
+   "id": "075056f2d4e6",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "DirectX 12 の「ディスクリプタ（descriptor）」の説明として正しいのは？"
+  },
+  {
+   "id": "81f9e1bc0ea4",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "発展",
+   "q": "DirectX 12 の「ルートシグネチャ」が定義するものは？"
+  },
+  {
+   "id": "179cc46f43b4",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "応用",
+   "q": "フレームごとにコマンドアロケータを Reset して再利用したい。安全に Reset を呼べるタイミングは？"
+  },
+  {
+   "id": "f6022f07c12d",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "次の HLSL コードで、c の値は？"
+  },
+  {
+   "id": "890bd908c4cd",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "発展",
+   "q": "HLSL で、float4x4 同士を * 演算子で掛けたときの動作は？"
+  },
+  {
+   "id": "9be787dc60e1",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "応用",
+   "q": "ブリン・フォン反射で、N・H の計算に使うハーフベクトル H として正しい式は？（L：光源方向、V：視線方向、どちらも表面から外向きの単位ベクトル）"
+  },
+  {
+   "id": "4e2420368d7a",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "毎フレーム「player.x += 5.0f;」と動かすと、60fps の PC と 120fps の PC で移動速度が 2 倍違ってしまう。フレームレートが変わっても速度を一定"
+  },
+  {
+   "id": "26e2f38f43e9",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "発展",
+   "q": "1 フレームの間だけ使う一時データに、アリーナ（リニア）アロケータを使い、フレームの終わりにまとめてリセットする設計の主な利点は？"
+  },
+  {
+   "id": "9fcd207ebb00",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "応用",
+   "q": "このコードの問題と、ゲームエンジンでの一般的な対処として正しいのは？"
+  },
+  {
+   "id": "99c3b5cede65",
+   "topic": "math",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "3 次元ベクトル a と b の外積 a × b について、正しい説明は？"
+  },
+  {
+   "id": "5fa7860cce18",
+   "topic": "math",
+   "track": "programmer",
+   "level": "発展",
+   "q": "ヨー・ピッチ・ロールのオイラー角で姿勢を表すとき、「ジンバルロック」が起きる原因は？"
+  },
+  {
+   "id": "cb8c6e63ab1d",
+   "topic": "math",
+   "track": "programmer",
+   "level": "応用",
+   "q": "次の HLSL コードで、R の値は？（reflect(i, n) は i - 2 * n * dot(i, n) で計算される）"
+  },
+  {
+   "id": "6e986aa4afe7",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "「フラスタムカリング」の目的は？"
+  },
+  {
+   "id": "17c4895c7847",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "発展",
+   "q": "半透明のパーティクルを画面いっぱいに何枚も重ねて描くと、ポリゴン数が少なくても重くなりやすい主な理由は？"
+  },
+  {
+   "id": "89d8f2dd1a9d",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "応用",
+   "q": "GPU 負荷の原因を探るため、描画解像度を半分にしてみたが、フレーム時間がほとんど変わらなかった。この結果から最も合理的な結論は？"
+  },
+  {
+   "id": "91b381d54af2",
+   "topic": "design",
+   "track": "planner",
+   "level": "応用",
+   "q": "ゲーム内通貨がプレイヤーの手元に溜まる一方で、後半は何を買っても痛くない（インフレ）状態になっている。ゲーム経済の設計として最も適切な対処は？"
+  },
+  {
+   "id": "a4c45e3f0db1",
+   "topic": "level",
+   "track": "planner",
+   "level": "応用",
+   "q": "プレイテストで、多くのテスターが同じ部屋で迷って足を止めてしまった。最初に疑うべきことは？"
+  },
+  {
+   "id": "0289a8d81363",
+   "topic": "ux",
+   "track": "planner",
+   "level": "応用",
+   "q": "赤＝敵、青＝味方を「色だけ」で見分けさせているゲームがある。色覚の多様性に配慮した改善として、最も適切なのは？"
+  },
+  {
+   "id": "0d61563b012b",
+   "topic": "narrative",
+   "track": "planner",
+   "level": "発展",
+   "q": "「三幕構成」の第二幕（中盤）の役割として、最も適切なのは？"
+  },
+  {
+   "id": "decb0c818b49",
+   "topic": "narrative",
+   "track": "planner",
+   "level": "応用",
+   "q": "物語では争いを嫌う心優しい主人公なのに、ゲームプレイでは敵を何百人も倒さないと先に進めない。この「物語とゲームプレイの矛盾」を表す用語は？"
+  },
+  {
+   "id": "bab4488c36e2",
+   "topic": "biz",
+   "track": "planner",
+   "level": "応用",
+   "q": "広告でユーザーを獲得する運営型ゲームで、「広告を打つほど赤字になる」状態を避けるための基本条件は？"
+  },
+  {
+   "id": "21ea11cb5c07",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "const int* p; と宣言したポインタ p について正しいのは？"
+  },
+  {
+   "id": "3542dbb51120",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "参照（例：int& r = x;）について正しい説明は？"
+  },
+  {
+   "id": "06471930df1f",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "発展",
+   "q": "std::move(x) という呼び出し自体が行うことは？"
+  },
+  {
+   "id": "dbccf660688f",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "発展",
+   "q": "std::vector<std::string> の要素を「読むだけ」のループで、要素のコピーを避けられる書き方は？"
+  },
+  {
+   "id": "62367c17c41b",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "発展",
+   "q": "基底クラスのポインタが実際にどの派生クラスを指しているか分からないとき、実行時に型を確かめながら安全に変換できるのは？（基底クラスは仮想関数を持つ）"
+  },
+  {
+   "id": "0edc34028c01",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "応用",
+   "q": "次のコードの問題点として正しいのは？"
+  },
+  {
+   "id": "209abef89a77",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "DX12 で、シェーダーが定数バッファやテクスチャを「どのレジスタで受け取るか」をまとめて定義するものは？"
+  },
+  {
+   "id": "83ae3475fce3",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "パイプラインステートオブジェクト（PSO）にまとめて設定するものとして正しいのは？"
+  },
+  {
+   "id": "4ded6755827f",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "発展",
+   "q": "コマンドリストへの記録を終えて ExecuteCommandLists に渡す前に、必ず呼ぶ必要があるメソッドは？"
+  },
+  {
+   "id": "c16abf8c1523",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "発展",
+   "q": "D3D12_HEAP_TYPE_DEFAULT のヒープに置いたリソースの特徴として正しいのは？"
+  },
+  {
+   "id": "42a7dd3352d1",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "応用",
+   "q": "ディスクリプタヒープのうち、シェーダーから参照できるように「シェーダー可視（SHADER_VISIBLE）」にできる種類は？"
+  },
+  {
+   "id": "c7963713e9b5",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "ピクセルシェーダーの出力で、1枚目のレンダーターゲットに書き込む色を表すシステム値セマンティクスは？"
+  },
+  {
+   "id": "adc437931d8b",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "HLSL の lerp(a, b, t) が返す値は？"
+  },
+  {
+   "id": "c4b237a139b5",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "発展",
+   "q": "ノーマルマップ（R8G8B8A8_UNORM のテクスチャに、法線を 0〜1 で保存したもの）から法線ベクトルを取り出すときの正しい変換は？"
+  },
+  {
+   "id": "e27bac73d816",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "発展",
+   "q": "テクスチャの Sample と SampleLevel の違いとして正しいのは？"
+  },
+  {
+   "id": "8a76779ea240",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "応用",
+   "q": "コンピュートシェーダーで groupshared メモリに書き込んだ値を、同じグループの別のスレッドが読む前に必要な処理は？"
+  },
+  {
+   "id": "07c50a4f472e",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "ゲームループで、前のフレームからの経過時間（デルタタイム）を移動量に掛ける主な理由は？"
+  },
+  {
+   "id": "98ba277b41a6",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "発展",
+   "q": "2つのオブジェクトが互いを std::shared_ptr で持ち合うと、どんな問題が起きる？"
+  },
+  {
+   "id": "53b9897bfead",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "応用",
+   "q": "弾やパーティクルのような小さなオブジェクトを毎フレーム大量に作っては捨てるとき、オブジェクトプール（あらかじめ確保して使い回す仕組み）を使う主な利点は？"
+  },
+  {
+   "id": "635d77e96ac8",
+   "topic": "math",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "3D ベクトル a と b の外積 a × b について正しいのは？"
+  },
+  {
+   "id": "9ffe049efec2",
+   "topic": "math",
+   "track": "programmer",
+   "level": "発展",
+   "q": "回転をクォータニオンで表す主な利点として正しいのは？"
+  },
+  {
+   "id": "e2455548e1a9",
+   "topic": "math",
+   "track": "programmer",
+   "level": "応用",
+   "q": "点 P が三角形の「表側」にあるか調べたい。三角形の法線 N（表側を向く）と、三角形上の点 A が分かっている。正しい判定は？"
+  },
+  {
+   "id": "8d3b826c2fe6",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "遠くにある物体を、ポリゴン数の少ないモデルに切り替えて描画する手法は？"
+  },
+  {
+   "id": "76604a009d0b",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "テクスチャにミップマップを用意する主な効果は？"
+  },
+  {
+   "id": "82b1d18b2ef1",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "発展",
+   "q": "配列の要素を先頭から順番に処理すると、ランダムな順番より速くなりやすい理由は？"
+  },
+  {
+   "id": "1ed3085cc0b0",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "応用",
+   "q": "「オーバードロー」（同じピクセルを何度も塗ること）が特に問題になりやすい場面は？"
+  },
+  {
+   "id": "3ae171cf6ea4",
+   "topic": "design",
+   "track": "planner",
+   "level": "基礎",
+   "q": "ゲームデザインでいう「アフォーダンス」の考え方に最も近いのは？"
+  },
+  {
+   "id": "fbf402d0074d",
+   "topic": "design",
+   "track": "planner",
+   "level": "発展",
+   "q": "「ダイナミック・ディフィカルティ・アジャストメント（DDA）」の説明として正しいのは？"
+  },
+  {
+   "id": "3ce1407f6385",
+   "topic": "design",
+   "track": "planner",
+   "level": "応用",
+   "q": "対戦ゲームで、ある1つの戦略だけが強すぎて、他の選択肢がほとんど使われなくなった状態を何と呼ぶ？"
+  },
+  {
+   "id": "7154fa5c2034",
+   "topic": "level",
+   "track": "planner",
+   "level": "基礎",
+   "q": "マップの中で、遠くからでも見えて、現在地や進む方向の目印になる建物や地形を何と呼ぶ？"
+  },
+  {
+   "id": "665b7819ebbe",
+   "topic": "level",
+   "track": "planner",
+   "level": "応用",
+   "q": "アクションゲームのステージで、激しい戦闘のあとに敵のいない安全な区間を置く主な目的は？"
+  },
+  {
+   "id": "a8f8fcafa882",
+   "topic": "ux",
+   "track": "planner",
+   "level": "基礎",
+   "q": "HUD（ヘッドアップディスプレイ）の説明として正しいのは？"
+  },
+  {
+   "id": "994bb459ee3f",
+   "topic": "ux",
+   "track": "planner",
+   "level": "応用",
+   "q": "色覚の違いに配慮したアクセシビリティの工夫として適切なのは？"
+  },
+  {
+   "id": "bac7ba1dc0a9",
+   "topic": "narrative",
+   "track": "planner",
+   "level": "発展",
+   "q": "物語の序盤で何気なく見せた要素が、後半で重要な意味を持つように仕組む技法は？"
+  },
+  {
+   "id": "769da0a12887",
+   "topic": "narrative",
+   "track": "planner",
+   "level": "応用",
+   "q": "「ルドナラティブ・ディソナンス」とは？"
+  },
+  {
+   "id": "e958e97b3163",
+   "topic": "biz",
+   "track": "planner",
+   "level": "基礎",
+   "q": "開発中のゲームを実際に人に遊んでもらい、その様子を観察して改善点を見つけることを何と呼ぶ？"
+  },
+  {
+   "id": "02b0ae0a9b11",
+   "topic": "biz",
+   "track": "planner",
+   "level": "発展",
+   "q": "運営型ゲームの指標「ARPPU」が表すものは？"
   }
  ],
  "themes": [
   {
    "date": "2026-11-14",
    "title": "ひとつだけ足りない"
+  },
+  {
+   "date": "2026-11-14",
+   "title": "境界線のむこう"
   }
  ],
  "reports": [],
  "idea_counts": {
-  "genre": 12,
-  "mechanic": 12,
-  "theme": 12,
-  "constraint": 12,
-  "feeling": 10,
-  "prompt": 10
+  "genre": 17,
+  "mechanic": 17,
+  "theme": 17,
+  "constraint": 17,
+  "feeling": 15,
+  "prompt": 15
  }
 }
