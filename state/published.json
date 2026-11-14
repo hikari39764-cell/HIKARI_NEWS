@@ -90,6 +90,123 @@
    "source": "80.lv",
    "note": "一人の個人開発から始まり、体験版で需要を示してヒットに至った流れは企画の参考になる。",
    "reminded": []
+  },
+  {
+   "id": "56dac742ff29ffe2",
+   "url": "https://huggingface.co/blog/3d-lora-finetuning",
+   "title": "3D生成モデルTRELLIS.2をLoRAで微調整、靴の形状精度が大幅向上",
+   "category": "ai",
+   "importance": 5,
+   "date": "2026-11-14",
+   "slot": "10",
+   "deadline": null,
+   "source": "Hugging Face Blog",
+   "note": "3D生成AIを自分用に特化させる手順と、効果の測り方が数字で分かる",
+   "reminded": []
+  },
+  {
+   "id": "0667a519c65042ee",
+   "url": "https://github.com/hyperionaidev/smolmaxxing/",
+   "title": "古いTVボックスやiPadでAIを動かす「smolmaxxing」、16Bモデルも秒5トークン",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-14",
+   "slot": "10",
+   "deadline": null,
+   "source": "GitHub（hyperionaidev）／Hacker News",
+   "note": "古い機材でAIを動かす工夫を、実測値と失敗ログ付きで学べる",
+   "reminded": []
+  },
+  {
+   "id": "8fdb0296ea11e78c",
+   "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/",
+   "title": "Google「Gemini 4 Hydrogen」登場、コーディング向けの高速・低価格モデル",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-14",
+   "slot": "10",
+   "deadline": null,
+   "source": "Google公式ブログ",
+   "note": "思考レベルと料金の設計が分かる。数値は自己申告なので自分で試して確認を",
+   "reminded": []
+  },
+  {
+   "id": "cce714811b519a82",
+   "url": "https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/",
+   "title": "文章を作らず「選ぶ」だけのAPI、Gemini Decisions APIで分類を安く速く",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-14",
+   "slot": "10",
+   "deadline": null,
+   "source": "Google公式ブログ",
+   "note": "AIに「作らせる」のではなく「選ばせる」という使い方と、確信度の設計が学べる",
+   "reminded": []
+  },
+  {
+   "id": "cd3e7a8ea6cfa3ff",
+   "url": "https://zenn.dev/watany/articles/342b9815dd0553",
+   "title": "MetaのAIエージェント「Muse」にコーディングを任せて、日常に溶け込ませる使い方",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-14",
+   "slot": "10",
+   "deadline": null,
+   "source": "Zenn（watany）",
+   "note": "AIにコーディングを任せる運用のコツと、費用のやりくりが具体例で分かる",
+   "reminded": []
+  },
+  {
+   "id": "83d283e63ec64d26",
+   "url": "https://automaton-media.com/articles/newsjp/20261113-479125/",
+   "title": "AAA開発は「自社エンジン」が53%で首位に。UE5は41%に後退（GDC調査）",
+   "category": "industry",
+   "importance": 5,
+   "date": "2026-11-14",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON（GDC State of the Game Industry調査の報道）",
+   "note": "進路選びに効く、エンジン採用率の最新データ（AAAは自社エンジンが首位）",
+   "reminded": []
+  },
+  {
+   "id": "fb2e044e229a8cb9",
+   "url": "https://www.gamedeveloper.com/business/valve-warns-of-slower-steam-approval-process-due-to-flood-of-new-games",
+   "title": "Steamの審査が最大12営業日に。リリースが遅れないためのチェック項目",
+   "category": "industry",
+   "importance": 5,
+   "date": "2026-11-14",
+   "slot": "10",
+   "deadline": null,
+   "source": "Game Developer",
+   "note": "出す前にやるべき確認項目が分かる。審査待ちで発売が遅れる事例も",
+   "reminded": []
+  },
+  {
+   "id": "ee233d53cb0ad94a",
+   "url": "https://www.4gamer.net/games/991/G999101/20261112025/",
+   "title": "どの言語に対応すべきか？ Newzooが示した「ローカライズの費用対効果」",
+   "category": "industry",
+   "importance": 5,
+   "date": "2026-11-14",
+   "slot": "10",
+   "deadline": null,
+   "source": "4Gamer.net（Newzoo「Game Localization in 2026」の紹介）",
+   "note": "どの言語に対応すべきかを、データで判断する材料が手に入る",
+   "reminded": []
+  },
+  {
+   "id": "0ddf7adb70a87b8d",
+   "url": "https://www.gamedeveloper.com/business/european-union-proposes-digital-fairness-act-which-could-have-major-effects-on-game-development",
+   "title": "EUの「デジタル公正法」案、ルートボックス禁止やゲーム内通貨の表示義務を提案",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-14",
+   "slot": "10",
+   "deadline": null,
+   "source": "Game Developer",
+   "note": "課金設計に関わる、これから変わるかもしれないルールの全体像",
+   "reminded": []
   }
  ],
  "batches": [
@@ -99,8 +216,405 @@
    "date": "2026-11-14",
    "count": 2,
    "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261114-10-091526",
+   "slot": "10",
+   "date": "2026-11-14",
+   "count": 9,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/learn-20261114-learn-044436",
+   "slot": "learn",
+   "date": "2026-11-14",
+   "count": 39,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/learn-20261114-learn-063759",
+   "slot": "?",
+   "date": "2026-11-14",
+   "count": 0,
+   "status": "error: news 第 1 条：section 必须是 ['planner', 'programmer'] 之一\nnews 第 2 条：section 必须是 ['planner', 'programmer'] 之一"
   }
  ],
  "last_weekly": null,
- "warned": []
+ "warned": [],
+ "keywords": [
+  {
+   "term": "unique_ptr（ユニークポインタ）",
+   "level": "基礎",
+   "area": "cpp",
+   "theme": "所有権とスマートポインタ",
+   "date": "2026-11-14"
+  },
+  {
+   "term": "weak_ptr（ウィークポインタ）と循環参照",
+   "level": "発展",
+   "area": "cpp",
+   "theme": "所有権とスマートポインタ",
+   "date": "2026-11-14"
+  },
+  {
+   "term": "カスタムデリータ",
+   "level": "応用",
+   "area": "cpp",
+   "theme": "所有権とスマートポインタ",
+   "date": "2026-11-14"
+  },
+  {
+   "term": "右辺値参照",
+   "level": "基礎",
+   "area": "cpp",
+   "theme": "ムーブセマンティクス",
+   "date": "2026-11-14"
+  },
+  {
+   "term": "std::move",
+   "level": "発展",
+   "area": "cpp",
+   "theme": "ムーブセマンティクス",
+   "date": "2026-11-14"
+  },
+  {
+   "term": "noexcept なムーブコンストラクタ",
+   "level": "応用",
+   "area": "cpp",
+   "theme": "ムーブセマンティクス",
+   "date": "2026-11-14"
+  },
+  {
+   "term": "ディスクリプタ",
+   "level": "基礎",
+   "area": "dx12",
+   "theme": "リソースバインディング",
+   "date": "2026-11-14"
+  },
+  {
+   "term": "ルートシグネチャ",
+   "level": "発展",
+   "area": "dx12",
+   "theme": "リソースバインディング",
+   "date": "2026-11-14"
+  },
+  {
+   "term": "バインドレス（ResourceDescriptorHeap）",
+   "level": "応用",
+   "area": "dx12",
+   "theme": "リソースバインディング",
+   "date": "2026-11-14"
+  },
+  {
+   "term": "法線ベクトル",
+   "level": "基礎",
+   "area": "shader",
+   "theme": "ライティングの基本",
+   "date": "2026-11-14"
+  },
+  {
+   "term": "ランバート反射",
+   "level": "発展",
+   "area": "shader",
+   "theme": "ライティングの基本",
+   "date": "2026-11-14"
+  },
+  {
+   "term": "ブリン・フォンの鏡面反射",
+   "level": "応用",
+   "area": "shader",
+   "theme": "ライティングの基本",
+   "date": "2026-11-14"
+  }
+ ],
+ "quiz": [
+  {
+   "id": "227aac7cdf25",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "大きなオブジェクトを「コピーせず」「関数の中で変更もさせず」に渡すのに最も適した引数の書き方は？"
+  },
+  {
+   "id": "644e53042a26",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "std::unique_ptr について正しい説明はどれ？"
+  },
+  {
+   "id": "210c7e025b5f",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "同じヘッダーファイルが、1つの翻訳単位の中で二重に読み込まれるのを防ぐために使うものは？"
+  },
+  {
+   "id": "efdea9a6c012",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "発展",
+   "q": "基底クラスのポインタ経由で、派生クラスのオブジェクトを delete する予定がある。基底クラスのデストラクタに必要なのは？"
+  },
+  {
+   "id": "9e691a7377e0",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "発展",
+   "q": "std::vector に 10000 個の要素を push_back する前に reserve(10000) を呼ぶ主な効果は？"
+  },
+  {
+   "id": "21242d4b0d1b",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "応用",
+   "q": "std::vector が再確保するとき、要素をムーブせずにコピーすることがあるのはどんな場合？"
+  },
+  {
+   "id": "3feb3084fddc",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "応用",
+   "q": "別々のスレッドが別々の変数を更新しているだけなのに、性能が大きく落ちる「フォールスシェアリング」の原因は？"
+  },
+  {
+   "id": "26f7f0d5df0c",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "DirectX 12 で、GPU に実行させる描画命令を「記録」していくオブジェクトは？"
+  },
+  {
+   "id": "91c93f7873ea",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "画面に表示するバックバッファを管理し、Present で表示を切り替えるオブジェクトは？"
+  },
+  {
+   "id": "5bbce409f466",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "発展",
+   "q": "GPU がまだ使っているリソースを CPU が上書きしないよう、GPU の処理の完了を待つために使うオブジェクトは？"
+  },
+  {
+   "id": "b2dad4f05bd2",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "発展",
+   "q": "レンダーターゲットとして描画したテクスチャを、次のパスのピクセルシェーダーで読む前に必要な処理は？"
+  },
+  {
+   "id": "1edfa7b86865",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "応用",
+   "q": "毎フレーム CPU から書き換える小さな定数バッファを置く場所として、一般的なのは？"
+  },
+  {
+   "id": "4f94f356a564",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "応用",
+   "q": "Shader Model 6.6 の ResourceDescriptorHeap を使ったバインドレスの主な利点は？"
+  },
+  {
+   "id": "bb01377f72ee",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "頂点シェーダーの出力で、クリップ空間の位置を表すシステム値セマンティクスは？"
+  },
+  {
+   "id": "fa18561ced59",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "HLSL の saturate(x) の働きは？"
+  },
+  {
+   "id": "e4d16b4cf013",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "発展",
+   "q": "cbuffer のパッキングで、16 バイトの境界をまたがずに 1 レジスタ（16 バイト）に収まる組み合わせは？"
+  },
+  {
+   "id": "2db9789c38be",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "発展",
+   "q": "ランバート拡散反射の明るさの計算として正しいのは？（N：法線、L：表面から光源へ向かう単位ベクトル）"
+  },
+  {
+   "id": "2fe81701cdc7",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "応用",
+   "q": "ピクセルシェーダーで、ピクセルごとに結果が変わる if 文の中から Sample() を呼ぶと問題になりやすい理由は？"
+  },
+  {
+   "id": "6bee486f2137",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "応用",
+   "q": "このコンピュートシェーダーを Dispatch(16, 16, 1) で起動したとき、実行されるスレッドの総数は？"
+  },
+  {
+   "id": "af26471863dc",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "物理シミュレーションを「固定タイムステップ」で更新する主な理由は？"
+  },
+  {
+   "id": "f3516401e37d",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "発展",
+   "q": "ECS（Entity Component System）で、同じ種類のコンポーネントを連続したメモリに並べる主な利点は？"
+  },
+  {
+   "id": "a55e247e62e3",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "応用",
+   "q": "CPU が次のフレームのコマンドを作っている間も GPU が前のフレームを描画できるように、定数バッファやコマンドアロケータをフレーム数ぶん用意する設計を何と呼ぶ？"
+  },
+  {
+   "id": "f1b6270e7a5e",
+   "topic": "math",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "長さ1の2つのベクトルの内積が 0 になるとき、2つのベクトルの関係は？"
+  },
+  {
+   "id": "f7c14aef9b83",
+   "topic": "math",
+   "track": "programmer",
+   "level": "発展",
+   "q": "DirectXMath のような行ベクトル（v × M）の規約で、拡大（S）→ 回転（R）→ 平行移動（T）の順に適用したい。正しい掛け算の順は？"
+  },
+  {
+   "id": "b6d386e3239f",
+   "topic": "math",
+   "track": "programmer",
+   "level": "応用",
+   "q": "非一様スケール（例：X 方向だけ 2 倍）を含むワールド行列で法線を変換するとき、使うべき行列は？"
+  },
+  {
+   "id": "b1ccb50200b8",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "同じメッシュの木を 1000 本描くとき、ドローコールを減らすのに適した手法は？"
+  },
+  {
+   "id": "0df72bb717da",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "発展",
+   "q": "ゲームの動作が重いとき、最適化を始める前にまずやるべきことは？"
+  },
+  {
+   "id": "10981faff193",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "応用",
+   "q": "不透明なオブジェクトを「手前から奥へ」の順で描画すると速くなりやすい理由は？"
+  },
+  {
+   "id": "08953d9c8fb1",
+   "topic": "design",
+   "track": "planner",
+   "level": "基礎",
+   "q": "ゲームの「コアループ」の説明として最も適切なのは？"
+  },
+  {
+   "id": "2e3475829701",
+   "topic": "design",
+   "track": "planner",
+   "level": "基礎",
+   "q": "ゲームデザインの考え方「MDA フレームワーク」の M・D・A の組み合わせとして正しいのは？"
+  },
+  {
+   "id": "a64babb56967",
+   "topic": "design",
+   "track": "planner",
+   "level": "発展",
+   "q": "チクセントミハイの「フロー」状態にプレイヤーが入りやすい条件として適切なのは？"
+  },
+  {
+   "id": "0546b4b062e9",
+   "topic": "design",
+   "track": "planner",
+   "level": "発展",
+   "q": "「リスクとリターン」がうまく設計された例として最も適切なのは？"
+  },
+  {
+   "id": "312663d807fa",
+   "topic": "level",
+   "track": "planner",
+   "level": "基礎",
+   "q": "レベルデザインで、文字の説明なしにプレイヤーを自然に目的地へ導く手法として適切なのは？"
+  },
+  {
+   "id": "a6bb2b175a7f",
+   "topic": "level",
+   "track": "planner",
+   "level": "発展",
+   "q": "新しいギミックをプレイヤーに教えるときの、段階的な流れとして適切なのは？"
+  },
+  {
+   "id": "53545260ed79",
+   "topic": "ux",
+   "track": "planner",
+   "level": "基礎",
+   "q": "プレイヤーの操作に対して、音・画面の揺れ・エフェクトなどですぐに反応を返すことを何と呼ぶ？"
+  },
+  {
+   "id": "8364b15175e6",
+   "topic": "ux",
+   "track": "planner",
+   "level": "発展",
+   "q": "チュートリアル（オンボーディング）の設計として望ましいのは？"
+  },
+  {
+   "id": "9242c154e5d5",
+   "topic": "narrative",
+   "track": "planner",
+   "level": "基礎",
+   "q": "台詞や文章を使わず、背景や置かれている物で物語や出来事を伝える手法は？"
+  },
+  {
+   "id": "ebbd82865ac3",
+   "topic": "biz",
+   "track": "planner",
+   "level": "基礎",
+   "q": "運営型ゲームの指標「D1 リテンション」が表すものは？"
+  },
+  {
+   "id": "cee73335ac4a",
+   "topic": "biz",
+   "track": "planner",
+   "level": "発展",
+   "q": "開発の初期に作る「バーティカルスライス」とは？"
+  }
+ ],
+ "themes": [
+  {
+   "date": "2026-11-14",
+   "title": "ひとつだけ足りない"
+  }
+ ],
+ "reports": [],
+ "idea_counts": {
+  "genre": 12,
+  "mechanic": 12,
+  "theme": 12,
+  "constraint": 12,
+  "feeling": 10,
+  "prompt": 10
+ }
 }
