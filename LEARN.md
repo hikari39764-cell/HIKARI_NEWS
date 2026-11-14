@@ -120,6 +120,8 @@ python3 radar.py learn-submit out/learn.json
 
 看到「✅ 已提交」就完成了。**每次运行只交稿一次。**
 
+> **交稿时已经过了 7:03**：不要等定时发布，按 `PUBLISH_CHECK.md` 的第 3〜5 步，**立刻触发发布流程并确认写进网站了**（只能触发 `publish.yml`，ref 只能是 `main`）。7:03 之前交稿的不用做。预览模式的交稿也不用做。
+
 ### 8. 结束
 
 - 除了 `learn-submit` 之外，**不要** commit、push 或创建 PR，也不要修改仓库里的任何文件。
