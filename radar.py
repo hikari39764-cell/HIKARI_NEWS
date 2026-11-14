@@ -1246,6 +1246,75 @@ def cmd_preview_learn(args) -> int:
 
 # ======================================================================
 
+# ======================================================================
+# 发布检查（定时任务 PUBLISH_CHECK.md 用）：有没有交了稿、却还没发布的分支
+# ======================================================================
+
+def _published_today() -> list[dict]:
+    """main 上的 state/published.json 里，今天的发布记录（发布端每次运行后会更新）。"""
+    git("fetch", "origin", "main")
+    try:
+        state = json.loads(git("show", "origin/main:state/published.json"))
+    except Exception:
+        return []
+    today = now_jst().date().isoformat()
+    return [b for b in state.get("batches", []) if b.get("date") == today]
+
+
+def _batch_label(b: dict) -> str:
+    slot = str(b.get("slot"))
+    return "学习内容" if slot == "learn" else CONFIG["slots"].get(slot, {}).get("label", slot)
+
+
+def cmd_publish_status(args) -> int:
+    now = now_jst()
+    pending = pending_branches(INBOX_PREFIX) + pending_branches(LEARN_PREFIX)
+    done = _published_today()
+    print(f"# 发布状态（{now:%Y-%m-%d %H:%M} 日本时间）\n\n## 今天已经发布的批次")
+    for b in done:
+        ok = str(b.get("status", "")).startswith("ok")
+        print(f"- {'✅' if ok else '❌'} {_batch_label(b)}：{b.get('count', 0)} 条" + ("" if ok else f"（{b.get('status')}）"))
+    if not done:
+        print("- （还没有）")
+    print("\n## 已交稿、还没发布的分支")
+    print("\n".join(f"- {br}" for br in pending) or "- （没有）")
+    late = [CONFIG["slots"][s]["label"] for s in CONFIG["slots"]
+            if now.hour >= int(s) and tasks_for(now.date(), s) and not any(str(b.get("slot")) == s for b in done)
+            and not any(f"-{s}-" in br for br in pending)]
+    if late:
+        print(f"\n⚠️ 研究端还没交稿的批次：{'、'.join(late)}（这不是发布的问题，报告里写上即可）")
+    print(f"\nNEED_PUBLISH={'yes' if pending else 'no'}")
+    return 0
+
+
+def cmd_wait_published(args) -> int:
+    """触发发布之后，等到待发布的分支都被处理掉（发布端处理完会删除分支），再看有没有失败。"""
+    watch = set(pending_branches(INBOX_PREFIX) + pending_branches(LEARN_PREFIX))
+    if not watch:
+        print("✅ 没有待发布的分支（已经发布完了）")
+        return 0
+    print(f"等待发布：{', '.join(sorted(watch))}（最多 {args.timeout} 秒）", flush=True)
+    deadline = time.time() + args.timeout
+    while True:
+        left = watch & set(pending_branches(INBOX_PREFIX) + pending_branches(LEARN_PREFIX))
+        if not left:
+            break
+        if time.time() >= deadline:
+            print(f"⏳ 超时：还没被处理的分支：{', '.join(sorted(left))}")
+            return 1
+        time.sleep(15)
+    done = {b.get("branch"): b for b in _published_today()}
+    failed = [done[br] for br in watch if br in done and not str(done[br].get("status", "")).startswith("ok")]
+    for br in sorted(watch):
+        b = done.get(br)
+        if b:
+            ok = str(b.get("status", "")).startswith("ok")
+            print(f"{'✅' if ok else '❌'} {br}：{_batch_label(b)} {b.get('count', 0)} 条" + ("" if ok else f"\n   错误：{b.get('status')}"))
+        else:
+            print(f"✅ {br}：已处理（记录稍后会出现在 main 上）")
+    return 2 if failed else 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="HIKARI NEWS 工具")
     parser.add_argument("--slot", choices=list(CONFIG["slots"]), help="默认按日本时间自动判断")
@@ -1265,11 +1334,14 @@ def main() -> int:
     sub.add_parser("publish-pending").add_argument("--dry-run", action="store_true")
     sub.add_parser("preview").add_argument("source", help="预览分支名（claude/preview-…）或结果 JSON 文件")
     sub.add_parser("preview-learn").add_argument("source", help="学习内容的预览分支或 JSON 文件")
+    sub.add_parser("publish-status", help="发布检查：今天的发布记录和待发布的分支")
+    sub.add_parser("wait-published", help="触发发布后，等待并确认分支被处理").add_argument("--timeout", type=int, default=240)
     args = parser.parse_args()
     return {"context": cmd_context, "feeds": cmd_feeds, "community": cmd_community, "check": cmd_check,
             "submit": cmd_submit, "learn-context": cmd_learn_context, "learn-check": cmd_learn_check,
             "learn-submit": cmd_learn_submit, "publish-pending": cmd_publish_pending,
-            "preview": cmd_preview, "preview-learn": cmd_preview_learn}[args.cmd](args)
+            "preview": cmd_preview, "preview-learn": cmd_preview_learn,
+            "publish-status": cmd_publish_status, "wait-published": cmd_wait_published}[args.cmd](args)
 
 
 if __name__ == "__main__":
