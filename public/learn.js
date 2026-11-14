@@ -341,6 +341,11 @@ async function sendReport(btn) {
   if (!q) return;
   const extra = $("#rep-text")?.value.trim();
   const reason = ($(".reasons .chip.on")?.dataset.v || "その他") + (extra ? "：" + extra : "");
+  if (!S.api.report && S.api.login) {   // 本番でログインしていない：ログインしてからもう一度押してもらう
+    toast("ti-login", "報告にはログインが必要です（ログイン後にもう一度送ってください）");
+    S.api.login();
+    return;
+  }
   btn.disabled = true;
   try {
     if (S.api.report) await S.api.report({ qid: String(q.id).slice(0, 40), topic: q.topic || "", track: q.track || "", q: q.q.slice(0, 300), reason: reason.slice(0, 300) });

@@ -2,7 +2,7 @@ import { firebaseConfig } from "./firebase-config.js";
 import { logoSVG } from "./logo.js";
 import { SDK, REDUCED, $, $$, esc, safeUrl, todayStr, daysUntil, norm, ic, hash, AREAS, CAT_ICON, SLOT_LABEL, WEEK,
          P, S, setData, setLearn, catOf, catColor, catIc, isSection, byId, itemText, kwOf, sortNew, level, dlBadge, hl,
-         metaLine, bmBtn, rowHTML, heroHTML, emptyHTML, pageHead, toast, burst, countUp, copyText, paraHTML } from "./core.js";
+         metaLine, bmBtn, rowHTML, heroHTML, emptyHTML, pageHead, toast, burst, countUp, copyText, paraHTML, store } from "./core.js";
 import { initStarfield, showDrawer, closeDrawer } from "./fx.js";
 import { viewProg, viewPlan, afterLearn, todayLearnSide, ladders, ladderHTML, kwHits, openKw, rankBox } from "./learn.js";
 
@@ -14,6 +14,8 @@ import { viewProg, viewPlan, afterLearn, todayLearnSide, ladders, ladderHTML, kw
    ========================================================================= */
 
 const PAGE_SIZE = 300;
+const ITEMS_CACHE = "itemsCache:v1";
+const tsMs = v => (v && typeof v.toMillis === "function") ? v.toMillis() : (typeof v === "number" ? v : 0);
 
 /* ================================================================== views */
 function viewToday() {
@@ -202,6 +204,9 @@ function viewSaved() {
           : emptyHTML(tab === "read" ? "まだありません" : "保存した記事はありません", tab === "read" ? "記事を開くと記録されます" : "しおりのアイコンで保存できます")}
       </div>
       <aside class="side-col">
+        ${S.api.login && !S.user ? `<div class="box rv" style="--i:2"><div class="box-h"><span class="hi p">${ic("ti-cloud")}</span>記録の同期</div>
+          <p class="muted-s">ログインすると、ドリルの記録・保存した記事・ノートを、ほかの端末でも使えます（読むだけならログイン不要）。</p>
+          <button class="btn wide" data-login>${ic("ti-brand-google")}Google でログイン</button></div>` : ""}
         ${rankBox(2)}
         <div class="box rv" style="--i:3"><div class="box-h"><span class="hi">${ic("ti-chart-bar")}</span>読書ログ</div>
           <div class="stat"><div data-tip="累計">${ic("ti-books")}<b data-count="${st.total}">0</b></div><div data-tip="今週">${ic("ti-book")}<b data-count="${st.week}">0</b></div><div data-tip="連続日数">${ic("ti-flame")}<b data-count="${st.streak}">0</b></div></div></div>
@@ -247,14 +252,6 @@ const gate = inner => `<div class="gate"><div class="orbs">${[[12, 20], [80, 14]
 const GATES = {
   loading: () => `<div class="loader">${logoSVG({ full: false })}</div>`,
   setup: () => gate(`<h2>設定が未完了です</h2><p>public/firebase-config.js を設定してください</p>`),
-  login: () => gate(`<h2>HIKARI NEWS</h2><p>ゲーム制作を学ぶ人のための情報を、毎日 3 回。<br>閲覧には管理者の承認が必要です。</p>
-    <button class="btn" id="login">${ic("ti-brand-google")}Google でログイン</button><div class="msg" id="login-msg"></div>`),
-  apply: name => gate(`<h2>閲覧申請</h2><p>承認されると読めるようになります</p>
-    <form id="apply-form"><label for="apply-name">${ic("ti-user")}お名前（ニックネーム可）</label><input type="text" id="apply-name" maxlength="50" required value="${esc(name || "")}">
-    <label for="apply-note">${ic("ti-message")}ひとこと（所属など）</label><textarea id="apply-note" maxlength="300"></textarea>
-    <p style="margin-top:20px;text-align:center"><button class="btn" id="apply-submit">${ic("ti-send")}申請する</button></p><div class="msg" id="apply-msg"></div></form>`),
-  pending: () => gate(`<h2>承認待ち</h2><p>申請を受け付けました</p><button class="btn plain" id="recheck">${ic("ti-refresh")}再確認</button>`),
-  rejected: () => gate(`<h2>承認されませんでした</h2><p>心当たりがない場合は管理者に連絡してください</p>`),
   error: msg => gate(`<h2>読み込みに失敗しました</h2><p>${esc(msg)}</p><button class="btn plain" id="recheck">${ic("ti-refresh")}再読み込み</button>`),
 };
 function showGate(name, arg) {
@@ -415,8 +412,9 @@ function markRead(id) {
 
 /* ================================================================ events */
 document.addEventListener("click", async e => {
-  const t = e.target.closest("[data-bm],[data-read],[data-toggle-read],[data-copy],[data-rmkw],[data-kw],[data-chance],[data-open-btn],[data-open],[data-close],[data-close-pal],[data-batch],[data-f],[data-act],[data-rep-del],#freset,#older,#pal-list li,#pal-all,#totop");
+  const t = e.target.closest("[data-bm],[data-read],[data-toggle-read],[data-copy],[data-rmkw],[data-kw],[data-chance],[data-open-btn],[data-open],[data-close],[data-close-pal],[data-batch],[data-f],[data-act],[data-rep-del],[data-login],#freset,#older,#pal-list li,#pal-all,#totop");
   if (!t) return;
+  if (t.matches("[data-login]")) { S.api.login?.(); return; }
   const point = { x: e.clientX, y: e.clientY };
   if (t.dataset.bm) {
     e.preventDefault();
@@ -596,6 +594,15 @@ async function startFirebase() {
   const app = initializeApp(firebaseConfig);
   const auth = A.getAuth(app);
   const db = F.getFirestore(app);
+  // ログインは任意（記録の同期・問題の報告に使う）。読むだけならログイン不要
+  const login = async () => {
+    try { await A.signInWithPopup(auth, new A.GoogleAuthProvider()); }
+    catch (err) {
+      if (!["auth/popup-closed-by-user", "auth/cancelled-popup-request"].includes(err.code)) toast("ti-alert-triangle", "ログインできませんでした");
+    }
+  };
+  S.api.login = login;
+  $("#login-btn").onclick = login;
   $("#logout").onclick = () => A.signOut(auth).then(() => location.reload());
 
   const adminApi = {
@@ -616,23 +623,39 @@ async function startFirebase() {
     delReport: id => F.deleteDoc(F.doc(db, "reports", id)),
   };
 
+  // 記事：前回読んだ分はブラウザに保存しておき、新しく増えた分だけを読む（データベースの読み取り回数を減らす）
   async function loadItems() {
-    const meta = await F.getDoc(F.doc(db, "meta", "site"));
-    let last = null; const items = [];
-    async function page() {
-      const base = [F.collection(db, "items"), F.orderBy("createdAt", "desc")];
-      const snap = await F.getDocs(last ? F.query(...base, F.startAfter(last), F.limit(PAGE_SIZE)) : F.query(...base, F.limit(PAGE_SIZE)));
-      snap.forEach(d => items.push({ id: d.id, ...d.data() }));
-      last = snap.docs[snap.docs.length - 1] || last;
-      S.loadMore = snap.size === PAGE_SIZE ? page : null;
-      setData(items, meta.exists() ? meta.data() : {});
+    const metaSnap = await F.getDoc(F.doc(db, "meta", "site"));
+    const meta = metaSnap.exists() ? metaSnap.data() : {};
+    const col = F.collection(db, "items");
+    const toItem = d => ({ ...d.data(), id: d.id, createdAt: null, _t: tsMs(d.data().createdAt) });
+    const cached = store.get(ITEMS_CACHE, null);
+    let items = Array.isArray(cached?.items) ? cached.items.filter(it => it && it.id && it._t) : [];
+    const newest = items.reduce((m, it) => Math.max(m, it._t), 0);
+    const snap = await F.getDocs(newest
+      ? F.query(col, F.where("createdAt", ">", F.Timestamp.fromMillis(newest + 1)), F.orderBy("createdAt", "desc"), F.limit(PAGE_SIZE))
+      : F.query(col, F.orderBy("createdAt", "desc"), F.limit(PAGE_SIZE)));
+    const fresh = snap.docs.map(toItem);
+    if (newest && fresh.length === PAGE_SIZE) items = [];   // 間が空きすぎたときは保存分を捨てて読み直す
+    const ids = new Set(fresh.map(it => it.id));
+    items = [...fresh, ...items.filter(it => !ids.has(it.id))].sort((a, b) => b._t - a._t);
+    store.set(ITEMS_CACHE, { items: items.slice(0, 400) });
+
+    async function older() {   // 「もっと前」：今ある一番古い記事より前を読む
+      const oldest = items.reduce((m, it) => Math.min(m, it._t), Infinity);
+      const s = await F.getDocs(F.query(col, F.where("createdAt", "<", F.Timestamp.fromMillis(oldest + 1)), F.orderBy("createdAt", "desc"), F.limit(PAGE_SIZE)));
+      const have = new Set(items.map(it => it.id));
+      items = [...items, ...s.docs.map(toItem).filter(it => !have.has(it.id))];
+      S.loadMore = s.size === PAGE_SIZE ? older : null;
+      setData(items, meta);
     }
-    await page();
+    S.loadMore = items.length >= PAGE_SIZE ? older : null;
+    setData(items, meta);
   }
 
   async function loadLearn() {   // 分区の学習データ（learn コレクションの数個の文書）
     try {
-      const snap = await F.getDocs(F.collection(db, "learn"));
+      const snap = await F.getDocs(F.query(F.collection(db, "learn"), F.limit(50)));
       const docs = {};
       snap.forEach(d => { docs[d.id] = d.data(); });
       setLearn(docs);
@@ -650,45 +673,30 @@ async function startFirebase() {
     P.save();
   }
 
+  // ログイン状態が変わったとき（ページを開いた直後にも1回呼ばれる）
   A.onAuthStateChanged(auth, async user => {
-    await introDone;
+    S.user = user || null;
     $("#me").hidden = !user;
-    if (!user) {
-      showGate("login");
-      $("#login").onclick = async () => {
-        $("#login-msg").textContent = "";
-        try { await A.signInWithPopup(auth, new A.GoogleAuthProvider()); }
-        catch (err) { $("#login-msg").textContent = "ログインできませんでした（" + err.code + "）"; }
-      };
-      return;
+    $("#login-btn").hidden = !!user;
+    if (user) {
+      $("#me-photo").src = user.photoURL || "";
+      S.api.report = r => F.addDoc(F.collection(db, "reports"), { ...r, uid: user.uid, status: "new", createdAt: F.serverTimestamp() });
+      await syncProgress(user.uid);
+      try { S.isAdmin = (await F.getDoc(F.doc(db, "admins", user.uid))).exists(); } catch { S.isAdmin = false; }
+      S.adminApi = S.isAdmin ? adminApi : null;
+      if (S.isAdmin) adminApi.list().then(g => updateAdminBadge(g.pending.length)).catch(() => {});
+    } else {
+      S.api.report = null; S.isAdmin = false; S.adminApi = null; P.onSave = null;
     }
-    $("#me-photo").src = user.photoURL || "";
-    showGate("loading");
-    try {
-      S.isAdmin = (await F.getDoc(F.doc(db, "admins", user.uid))).exists();
-      const me = await F.getDoc(F.doc(db, "users", user.uid));
-      const status = me.exists() ? me.data().status : null;
-      if (S.isAdmin || status === "approved") {
-        await Promise.all([loadItems(), loadLearn(), syncProgress(user.uid)]);
-        S.adminApi = S.isAdmin ? adminApi : null;
-        S.api.report = r => F.addDoc(F.collection(db, "reports"), { ...r, uid: user.uid, status: "new", createdAt: F.serverTimestamp() });
-        enterApp();
-        if (S.isAdmin) adminApi.list().then(g => updateAdminBadge(g.pending.length)).catch(() => {});
-      } else if (status === "pending") showGate("pending");
-      else if (status === "rejected") showGate("rejected");
-      else {
-        showGate("apply", user.displayName);
-        $("#apply-form").onsubmit = async e => {
-          e.preventDefault(); $("#apply-submit").disabled = true;
-          try {
-            await F.setDoc(F.doc(db, "users", user.uid), { name: $("#apply-name").value.trim(), note: $("#apply-note").value.trim(),
-              email: user.email, photoURL: user.photoURL || "", status: "pending", createdAt: F.serverTimestamp() });
-            showGate("pending");
-          } catch (err) { $("#apply-msg").textContent = "送信できませんでした（" + err.code + "）"; $("#apply-submit").disabled = false; }
-        };
-      }
-    } catch (err) { console.error(err); showGate("error", err.code || err.message); }
+    $("#nav-admin").hidden = !S.isAdmin;
+    if (S.ready) { redraw(); moveIndicator(); }
   });
+
+  // 記事と学習データはログインしていなくても読める
+  try {
+    await Promise.all([loadItems(), loadLearn(), introDone]);
+    enterApp();
+  } catch (err) { console.error(err); showGate("error", err.code || err.message); }
 }
 
 $("#brand-logo").innerHTML = logoSVG({ full: false });
