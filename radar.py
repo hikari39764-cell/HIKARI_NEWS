@@ -985,8 +985,8 @@ def email_for_day(day: date, items: list[dict], kws: list[dict]) -> tuple[str, s
 
 def send_via_relay(url: str, token: str, to_list: list[str], subject: str, html: str, text: str) -> str:
     """Google Apps Script（tools/mail_relay.gs）経由で送る。送信元の Gmail で 1 人ずつ送られる。"""
-    import requests
     try:
+        import requests
         r = requests.post(url, json={"token": token, "to": to_list, "subject": subject, "html": html, "text": text}, timeout=90)
         data = r.json()
     except Exception as e:
@@ -1043,11 +1043,18 @@ def deliver_batch(store, title: str, embeds: list[dict], items: list[dict], kw: 
         subs = store.subscribers() if store is not None else []
     except Exception as e:
         return f"（受け取り設定を読めませんでした：{str(e)[:120]}）"
-    notes = [deliver_webhooks(subs, store, title, embeds, dry_run)]
+    notes = []
+    try:
+        notes.append(deliver_webhooks(subs, store, title, embeds, dry_run))
+    except Exception as e:   # 配信の失敗で、論坛帖子・網站への発布を「失敗」にしない
+        notes.append(f"⚠️ 自分の Discord への配信でエラー：{str(e)[:150]}")
     each = [s["email"] for s in subs if s.get("email_on") and s.get("email_mode") == "each" and s.get("email")]
     if each:
-        html, text = email_for_batch(title, items, kw, area_name, reminders)
-        notes.append(send_emails(each, title, html, text, dry_run))
+        try:
+            html, text = email_for_batch(title, items, kw, area_name, reminders)
+            notes.append(send_emails(each, title, html, text, dry_run))
+        except Exception as e:
+            notes.append(f"⚠️ メール配信でエラー：{str(e)[:150]}")
     return "；".join(n for n in notes if n)
 
 
@@ -1334,7 +1341,10 @@ def cmd_publish_pending(args) -> int:
     digest = weekly_digest(state, now, args.dry_run)
     if digest:
         notes.append(digest)
-    daily = daily_mail(state, store, now, args.dry_run)
+    try:
+        daily = daily_mail(state, store, now, args.dry_run)
+    except Exception as e:
+        daily = f"⚠️ 1 日まとめメールでエラー：{str(e)[:150]}"
     if daily:
         notes.append(daily)
     notes += missing_batch_warnings(state, now)
