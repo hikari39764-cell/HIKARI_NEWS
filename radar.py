@@ -530,7 +530,8 @@ def validate_learn(data, strict: bool = True) -> dict:
            "reviewed_reports": [], "report": str(data.get("report") or "")[:3000]}
 
     for n, it in enumerate(data.get("news") or [], 1):
-        sec = it.get("section") if isinstance(it, dict) else None
+        # 研究端は section で書く。交稿後のデータ（発布端が読むもの）は整理済みで category に入っている
+        sec = (it.get("section") or it.get("category")) if isinstance(it, dict) else None
         if sec not in SECTIONS:
             errors.append(f"news 第 {n} 条：section 必须是 {sorted(SECTIONS)} 之一")
             continue
