@@ -89,6 +89,12 @@ class JsonStore:
     def mark_reports(self, ids, status):
         pass
 
+    def new_contacts(self):
+        return []
+
+    def mark_contacts(self, ids):
+        pass
+
     def flush(self):
         self.data["items"] = self.data["items"][-3000:]
         self.path.write_text(json.dumps(self.data, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -156,6 +162,16 @@ class FirestoreStore:
             ref = self.db.collection("reports").document(i)
             if ref.get().exists:
                 ref.update({"status": status})
+
+    # ------------------------------------------------- 掲載の取り下げ・訂正の依頼
+    def new_contacts(self):
+        q = self.db.collection("contacts").where("status", "==", "new")
+        return [{"id": d.id, **{k: v for k, v in d.to_dict().items() if k in ("kind", "url", "message", "contact")}}
+                for d in q.stream()]
+
+    def mark_contacts(self, ids):
+        for i in ids:
+            self.db.collection("contacts").document(i).update({"status": "notified"})
 
     # --------------------------------------------------------------- users
     def new_access_requests(self):

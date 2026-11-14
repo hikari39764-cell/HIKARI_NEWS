@@ -1097,6 +1097,15 @@ def cmd_publish_pending(args) -> int:
             state["reports"] += [r for r in reports if r["id"] not in have]
             store.mark_reports([r["id"] for r in reports], "queued")
             notes.append(f"🚩 有 {len(reports)} 个题目被回报有问题，下次学习任务会核实修正")
+        contacts = store.new_contacts()
+        if contacts:
+            kinds = {"takedown": "掲載の取り下げ", "fix": "内容の訂正", "other": "その他"}
+            lines = "\n".join(f"・【{kinds.get(c.get('kind'), '?')}】{str(c.get('url') or '（URLなし）')[:200]}\n"
+                              f"　{str(c.get('message', ''))[:300]}" + (f"\n　連絡先：{str(c.get('contact'))[:100]}" if c.get("contact") else "")
+                              for c in contacts)
+            log(f"📮 有 {len(contacts)} 条来自网站表单的请求（请尽快处理，删除请求优先）\n{lines}\n"
+                f"在网站的「管理」页可以查看全文：{CONFIG.get('site_url', '')}", args.dry_run)   # 他の通知と混ざって切れないよう単独で送る
+            store.mark_contacts([c["id"] for c in contacts])
         store.save_meta({
             "updated": now.isoformat(timespec="minutes"),
             "keywords": CONFIG.get("keywords", []),

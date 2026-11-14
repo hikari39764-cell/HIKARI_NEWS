@@ -33,7 +33,7 @@ learn-context 会列出：今天要出几道题、题库里每个 topic 和难�
 - `section: "programmer"`：游戏程序员关心的技术新闻（图形 API、着色器、C++、引擎架构、GPU 新功能、优化）
 - `section: "planner"`：游戏策划关心的新闻（游戏设计、关卡、UX、叙事、运营与市场、热门作品的设计分析）
 - 选题标准和 RESEARCH.md 一样：**一手来源、有具体内容、亲自读过正文**，最近 1 周以内的内容，不能和推送过的重复。
-- 字段和 RESEARCH.md 的 items 相同（**包括 `points` 要点、分段的 `detail` 解说稿、`terms` 术语解析**，写法见 RESEARCH.md 的 5.1），再加上 `section`（不用写 `category`）。分区新闻每天只有 1 条，解说稿要写得**比平时更充实、更好读**。
+- 字段和 RESEARCH.md 的 items 相同（**包括 `points` 要点、分段的 `detail` 解说稿、`terms` 术语解析**，写法和**著作权规则**见 RESEARCH.md 的 5.1：不照搬、不逐句翻译、不按原文顺序复述，要有自己的解说），再加上 `section`（不用写 `category`）。分区新闻每天只有 1 条，解说稿要写得**比平时更充实、更好读**。
 
 ### 3. 出题（最重要，质量第一）
 

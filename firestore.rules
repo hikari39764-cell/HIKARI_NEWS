@@ -48,6 +48,19 @@ service cloud.firestore {
       allow read, delete: if isAdmin();
     }
 
+    // 「このサイトについて」のフォーム（掲載の取り下げ・訂正の依頼など）：誰でも送れる。読むのは管理者だけ
+    match /contacts/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['kind', 'url', 'message', 'contact', 'status', 'createdAt'])
+        && request.resource.data.kind in ['takedown', 'fix', 'other']
+        && request.resource.data.url is string && request.resource.data.url.size() <= 500
+        && request.resource.data.message is string && request.resource.data.message.size() > 0
+        && request.resource.data.message.size() <= 2000
+        && request.resource.data.contact is string && request.resource.data.contact.size() <= 200
+        && request.resource.data.status == 'new'
+        && request.resource.data.createdAt == request.time;
+      allow read, delete: if isAdmin();
+    }
+
     // 学習の進み具合（自分のものだけ読み書き）
     match /users/{uid}/progress/{doc} {
       allow read, write: if signedIn() && request.auth.uid == uid;

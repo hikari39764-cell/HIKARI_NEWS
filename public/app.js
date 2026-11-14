@@ -225,24 +225,24 @@ function viewAdmin() {
   return `<div class="page">${pageHead("ti-shield-check", "管理")}<div id="admin-list" class="loader">${logoSVG({ full: false })}</div></div>`;
 }
 const REP_ST = { new: "未確認", queued: "確認待ち", done: "対応済み" };
+const CONTACT_KIND = { takedown: "掲載の取り下げ", fix: "内容の訂正", other: "その他" };
 async function renderAdminList() {
-  const g = await S.adminApi.list();
-  let reps = [];
+  let reps = [], contacts = [];
   try { reps = await S.adminApi.reports(); } catch (err) { console.warn("reports", err); }
-  const row = (u, acts) => `<div class="user rv in"><div class="who"><b>${esc(u.name)}</b><small>${esc(u.email)}</small><small>${esc(u.note)}</small></div>
-    ${acts.map(([a, icon, tip, cls]) => `<button class="ib ${cls}" data-act="${a}" data-uid="${esc(u.uid)}" data-tip="${tip}">${ic(icon)}</button>`).join("")}</div>`;
-  const sec = (icon, title, list, acts) => `<div class="adm-h">${ic(icon)}${title}<span class="n" style="color:var(--muted)">${list.length}</span></div>` +
-    (list.map(u => row(u, acts)).join("") || `<p class="muted-s">なし</p>`);
+  try { contacts = await S.adminApi.contacts(); } catch (err) { console.warn("contacts", err); }
+  const when = c => { const t = c.createdAt?.toDate?.(); return t ? t.toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : ""; };
+  const conHTML = `<div class="adm-h">${ic("ti-mail-forward")}フォームからの依頼<span class="n" style="color:var(--muted)">${contacts.length}</span></div>` +
+    (contacts.map(c => `<div class="user rv in"><div class="who"><b>【${esc(CONTACT_KIND[c.kind] || c.kind)}】${esc(c.url || "（URLなし）")}</b>
+      <small class="pre">${esc(c.message)}</small><small>${c.contact ? `連絡先：${esc(c.contact)} ・ ` : ""}${esc(when(c))}</small></div>
+      <button class="ib" data-contact-del="${esc(c.id)}" data-tip="対応済み（削除）">${ic("ti-check")}</button></div>`).join("") || `<p class="muted-s">なし</p>`);
   const repHTML = `<div class="adm-h">${ic("ti-flag")}問題の報告<span class="n" style="color:var(--muted)">${reps.length}</span></div>` +
     (reps.map(r => `<div class="user rv in"><div class="who"><b>${esc(r.q)}</b><small>${esc(r.reason)}</small><small>${esc(r.track)} / ${esc(r.topic)} ・ ${esc(REP_ST[r.status] || r.status)}</small></div>
       <button class="ib" data-rep-del="${esc(r.id)}" data-tip="削除">${ic("ti-trash")}</button></div>`).join("") || `<p class="muted-s">なし</p>`);
   const el = $("#admin-list");
   if (!el) return;
   el.className = "";
-  el.innerHTML = sec("ti-user-question", "承認待ち", g.pending, [["approved", "ti-check", "承認", "on"], ["rejected", "ti-x", "拒否", ""]]) +
-    sec("ti-user-check", "承認済み", g.approved, [["rejected", "ti-user-off", "承認を取り消す", ""]]) +
-    sec("ti-user-x", "拒否", g.rejected, [["approved", "ti-check", "承認", "on"], ["delete", "ti-trash", "削除（再申請可能に）", ""]]) + repHTML;
-  updateAdminBadge(g.pending.length);
+  el.innerHTML = conHTML + repHTML;
+  updateAdminBadge(contacts.length);
 }
 function updateAdminBadge(n) { const b = $("#admin-badge"); b.hidden = !n; b.textContent = n; }
 
@@ -256,13 +256,49 @@ const GATES = {
 };
 function showGate(name, arg) {
   S.ready = false;
-  $("#nav").hidden = $("#bnav").hidden = $("#open-pal").hidden = true;
+  $("#nav").hidden = $("#bnav").hidden = $("#open-pal").hidden = $("#foot").hidden = true;
   $("#view").innerHTML = GATES[name](arg);
   const re = $("#recheck"); if (re) re.onclick = () => location.reload();
 }
 
 /* ================================================================ router */
-const VIEWS = { today: viewToday, search: viewSearch, prog: viewProg, plan: viewPlan, chance: viewChance, saved: viewSaved, admin: viewAdmin };
+/* ----------------------------------------------------------------- about */
+const contactForm = () => `<form class="cform" id="cform">
+    <div class="cf-row"><span class="cf-l">${ic("ti-category")}種類</span><div class="seg" id="cf-kind">
+      <button type="button" class="on" data-ck="takedown">掲載の取り下げ</button><button type="button" data-ck="fix">内容の訂正</button><button type="button" data-ck="other">その他</button></div></div>
+    <label class="cf-row"><span class="cf-l">${ic("ti-link")}対象の記事</span><input type="text" id="cf-url" maxlength="500" value="${esc(S.params.u || "")}" placeholder="原文の URL、またはこのサイトでの記事のタイトル"></label>
+    <label class="cf-row"><span class="cf-l">${ic("ti-message")}ご依頼の内容</span><textarea id="cf-msg" maxlength="2000" placeholder="ご依頼の内容と理由をお書きください"></textarea></label>
+    <label class="cf-row"><span class="cf-l">${ic("ti-at")}ご連絡先（任意）</span><input type="text" id="cf-contact" maxlength="200" placeholder="返信が必要な場合は、メールアドレスなど"></label>
+    <div class="cf-go"><small>${ic("ti-lock")}送信内容は管理者だけが確認します</small><button class="btn" id="cf-send">${ic("ti-send")}送信する</button></div>
+  </form>`;
+
+function viewAbout() {
+  const sec = (icon, title, body, i, id = "") => `<section class="ab-sec rv" style="--i:${i}" ${id ? `id="${id}"` : ""}><h2 class="sh">${ic(icon)}${title}</h2>${body}</section>`;
+  return `<div class="page about">
+    ${pageHead("ti-info-circle", "このサイトについて")}
+    <div class="grid2"><div>
+      ${sec("ti-star", "HIKARI NEWS とは", `<p class="para">ゲーム制作を学ぶ学生のために、ゲーム業界・技術・AI の情報を毎日 3 回まとめて紹介する、非営利の個人サイトです。広告は掲載していません。</p>`, 1)}
+      ${sec("ti-robot", "要約・解説について", `<p class="para">記事のタイトル・要約・要点・解説・用語の説明は、AI（Anthropic の Claude）が原文を読んで作成しています。内容の確認には努めていますが、誤りや古い情報が含まれる場合があります。<b>正確な内容は、必ず原文でご確認ください。</b></p>`, 2)}
+      ${sec("ti-copyright", "著作権について", `<ul class="ab-list">
+        <li>紹介している記事の著作権は、それぞれの著作者・媒体に帰属します。</li>
+        <li>このサイトでは、記事の事実や要点を独自の言葉でまとめ、出典（媒体名）と原文へのリンクを必ず表示しています。</li>
+        <li>記事の本文や画像の転載は行っていません。引用が必要な場合は短い範囲にとどめ、出典を明記します。</li></ul>`, 3)}
+      ${sec("ti-mail-forward", "掲載の取り下げ・訂正のご依頼", `<p class="para">権利者の方からの掲載の取り下げや、内容の訂正のご依頼は、下のフォームからお送りください。確認のうえ、できるだけ早く対応します（取り下げのご依頼は優先して対応します）。</p>${contactForm()}`, 4, "form")}
+      ${sec("ti-alert-circle", "免責事項", `<ul class="ab-list">
+        <li>掲載している情報の正確性・完全性は保証できません。</li>
+        <li>リンク先のサイトの内容については責任を負いかねます。</li>
+        <li>このサイトの情報を利用したことで生じた損害について、責任を負いかねます。</li></ul>`, 5)}
+    </div>
+    <aside class="side-col">
+      <div class="box rv" style="--i:2"><div class="box-h"><span class="hi">${ic("ti-clock")}</span>更新</div>
+        <p class="muted-s">毎日 10:00・17:00・22:00（日本時間）に記事を追加します。プログラマー・プランナーの学習コンテンツは毎朝更新します。</p></div>
+      <div class="box rv" style="--i:3"><div class="box-h"><span class="hi p">${ic("ti-palette")}</span>使用している素材</div>
+        <p class="muted-s">フォント：Noto Sans JP・Dela Gothic One・Oswald（SIL Open Font License）<br>アイコン：Tabler Icons（MIT License）</p></div>
+    </aside></div>
+  </div>`;
+}
+
+const VIEWS = { today: viewToday, search: viewSearch, prog: viewProg, plan: viewPlan, chance: viewChance, saved: viewSaved, admin: viewAdmin, about: viewAbout };
 function parseHash() {
   const [path, qs] = location.hash.replace(/^#\/?/, "").split("?");
   return { route: VIEWS[path] ? path : "today", params: Object.fromEntries(new URLSearchParams(qs || "")) };
@@ -312,6 +348,7 @@ function afterDraw() {
   $$("#view [data-count]").forEach(el => countUp(el, Number(el.dataset.count)));
   setTimeout(() => $$(".bar[data-w]").forEach(b => { b.style.width = b.dataset.w + "%"; }), 40);
   afterLearn();
+  if (S.route === "about" && (S.params.u || S.params.f)) setTimeout(() => $("#form")?.scrollIntoView({ block: "start", behavior: REDUCED ? "auto" : "smooth" }), 350);
 }
 
 /* ----------------------------------------------------------------- wipe */
@@ -336,6 +373,7 @@ function moveIndicator() {
   const r = S.route;
   $$(".nav a, .bnav a").forEach(a => a.classList.toggle("on", a.dataset.r === r));
   const on = $(`.nav a[data-r="${r}"]`), ind = $("#ind");
+  if (ind) ind.style.opacity = on ? 1 : 0;   // ナビにないページ（このサイトについて 等）では消す
   if (on && ind) { ind.style.left = on.offsetLeft + "px"; ind.style.width = on.offsetWidth + "px"; }
 }
 
@@ -367,6 +405,8 @@ function openDetail(id, fromEl, point) {
       </div>
       <aside class="dside">
         <a class="btn big wide dz" style="--d:3" href="${esc(safeUrl(it.url))}" target="_blank" rel="noopener noreferrer" data-read="${esc(it.id)}">${ic("ti-external-link")}原文を読む${it.lang === "en" ? `<small>英語</small>` : ""}</a>
+        <p class="src-note dz" style="--d:3">${ic("ti-info-circle")}<span>出典：<b>${esc(it.source)}</b>。この要約・解説は AI が原文をもとに作成したものです。正確な内容は原文でご確認ください。
+          <a href="#/about?u=${encodeURIComponent(it.url)}" data-close>取り下げ・訂正の依頼</a></span></p>
         ${terms.length ? `<section class="dsec dz" style="--d:4"><h3 class="sh">${ic("ti-abc")}用語</h3>
           <dl class="terms">${terms.map(t => `<div><dt>${esc(t.term)}</dt><dd>${esc(t.explain)}</dd></div>`).join("")}</dl></section>` : ""}
         ${(it.tags || []).length ? `<div class="dtags dz" style="--d:5">${it.tags.map(t => `<a class="chip" href="#/search?q=${encodeURIComponent(t)}" data-close>${ic("ti-hash")}${esc(t)}</a>`).join("")}</div>` : ""}
@@ -412,7 +452,7 @@ function markRead(id) {
 
 /* ================================================================ events */
 document.addEventListener("click", async e => {
-  const t = e.target.closest("[data-bm],[data-read],[data-toggle-read],[data-copy],[data-rmkw],[data-kw],[data-chance],[data-open-btn],[data-open],[data-close],[data-close-pal],[data-batch],[data-f],[data-act],[data-rep-del],[data-login],#freset,#older,#pal-list li,#pal-all,#totop");
+  const t = e.target.closest("[data-bm],[data-read],[data-toggle-read],[data-copy],[data-rmkw],[data-kw],[data-chance],[data-open-btn],[data-open],[data-close],[data-close-pal],[data-batch],[data-f],[data-act],[data-rep-del],[data-contact-del],[data-ck],[data-login],#freset,#older,#pal-list li,#pal-all,#totop");
   if (!t) return;
   if (t.matches("[data-login]")) { S.api.login?.(); return; }
   const point = { x: e.clientX, y: e.clientY };
@@ -477,10 +517,32 @@ document.addEventListener("click", async e => {
     t.disabled = true; await S.adminApi.setStatus(t.dataset.uid, t.dataset.act); await renderAdminList(); toast("ti-check", "更新しました");
   } else if (t.dataset.repDel && S.adminApi) {
     t.disabled = true; await S.adminApi.delReport(t.dataset.repDel); await renderAdminList(); toast("ti-trash", "削除しました");
+  } else if (t.dataset.contactDel && S.adminApi) {
+    t.disabled = true; await S.adminApi.delContact(t.dataset.contactDel); await renderAdminList(); toast("ti-check", "対応済みにしました");
+  } else if (t.dataset.ck) {
+    $$("#cf-kind [data-ck]").forEach(b => b.classList.toggle("on", b === t));
   }
 });
 
+// 「このサイトについて」のフォーム（掲載の取り下げ・訂正の依頼）
+async function sendContact(form) {
+  const msg = $("#cf-msg").value.trim();
+  if (!msg) { toast("ti-alert-triangle", "ご依頼の内容を入力してください"); $("#cf-msg").focus(); return; }
+  const data = { kind: $("#cf-kind .on")?.dataset.ck || "other", url: $("#cf-url").value.trim().slice(0, 500),
+                 message: msg.slice(0, 2000), contact: $("#cf-contact").value.trim().slice(0, 200) };
+  const btn = $("#cf-send"); btn.disabled = true;
+  try {
+    if (S.api.contact) await S.api.contact(data);
+    form.outerHTML = `<div class="cf-done">${ic("ti-circle-check-filled")}<b>送信しました</b><span>ご依頼ありがとうございます。確認のうえ、できるだけ早く対応します。</span></div>`;
+    toast("ti-send", S.api.contact ? "送信しました" : "（デモ）送信しました");
+  } catch (err) {
+    console.error(err); btn.disabled = false;
+    toast("ti-alert-triangle", "送信できませんでした。時間をおいてもう一度お試しください");
+  }
+}
+
 document.addEventListener("submit", e => {
+  if (e.target.id === "cform") { e.preventDefault(); sendContact(e.target); return; }
   if (e.target.id !== "kwform") return;
   e.preventDefault();
   const v = $("#kwinput").value.trim();
@@ -555,7 +617,7 @@ function intro() {
 
 function enterApp() {
   S.ready = true;
-  $("#nav").hidden = $("#bnav").hidden = $("#open-pal").hidden = false;
+  $("#nav").hidden = $("#bnav").hidden = $("#open-pal").hidden = $("#foot").hidden = false;
   $("#nav-admin").hidden = !S.isAdmin;
   render();
   requestAnimationFrame(moveIndicator);
@@ -602,6 +664,7 @@ async function startFirebase() {
     }
   };
   S.api.login = login;
+  S.api.contact = d => F.addDoc(F.collection(db, "contacts"), { ...d, status: "new", createdAt: F.serverTimestamp() });
   $("#login-btn").onclick = login;
   $("#logout").onclick = () => A.signOut(auth).then(() => location.reload());
 
@@ -621,6 +684,11 @@ async function startFirebase() {
       return snap.docs.map(d => ({ id: d.id, ...d.data() }));
     },
     delReport: id => F.deleteDoc(F.doc(db, "reports", id)),
+    async contacts() {
+      const snap = await F.getDocs(F.query(F.collection(db, "contacts"), F.orderBy("createdAt", "desc"), F.limit(50)));
+      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    },
+    delContact: id => F.deleteDoc(F.doc(db, "contacts", id)),
   };
 
   // 記事：前回読んだ分はブラウザに保存しておき、新しく増えた分だけを読む（データベースの読み取り回数を減らす）
