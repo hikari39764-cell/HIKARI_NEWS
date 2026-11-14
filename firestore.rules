@@ -61,6 +61,23 @@ service cloud.firestore {
       allow read, delete: if isAdmin();
     }
 
+    // 受け取り設定（メール・自分の Discord）：本人だけが読み書きできる。メールは Google で確認済みの自分のアドレスだけ
+    match /subscriptions/{uid} {
+      allow read, delete: if signedIn() && request.auth.uid == uid;
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['email', 'email_on', 'email_mode', 'webhook', 'webhook_on', 'updated'])
+        && request.resource.data.email == request.auth.token.email
+        && request.auth.token.email_verified == true
+        && request.resource.data.email_on is bool
+        && request.resource.data.email_mode in ['each', 'daily']
+        && request.resource.data.webhook_on is bool
+        && request.resource.data.webhook is string
+        && (request.resource.data.webhook == ''
+            || (request.resource.data.webhook.size() <= 200
+                && request.resource.data.webhook.matches('^https://((ptb|canary)[.])?discord(app)?[.]com/api/webhooks/[0-9]+/[A-Za-z0-9_-]+$')))
+        && request.resource.data.updated == request.time;
+    }
+
     // 学習の進み具合（自分のものだけ読み書き）
     match /users/{uid}/progress/{doc} {
       allow read, write: if signedIn() && request.auth.uid == uid;

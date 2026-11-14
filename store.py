@@ -95,6 +95,14 @@ class JsonStore:
     def mark_contacts(self, ids):
         pass
 
+    def subscribers(self):
+        return self.data.get("subscribers", [])   # ローカルの試験用
+
+    def disable_webhook(self, uid):
+        for s in self.data.get("subscribers", []):
+            if s.get("uid") == uid:
+                s["webhook_on"] = False
+
     def flush(self):
         self.data["items"] = self.data["items"][-3000:]
         self.path.write_text(json.dumps(self.data, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -172,6 +180,20 @@ class FirestoreStore:
     def mark_contacts(self, ids):
         for i in ids:
             self.db.collection("contacts").document(i).update({"status": "notified"})
+
+    # ------------------------------------------------ 受け取り設定（メール・Discord）
+    def subscribers(self):
+        out = []
+        for d in self.db.collection("subscriptions").stream():
+            s = d.to_dict() or {}
+            out.append({"uid": d.id, "email": s.get("email") or "", "email_on": bool(s.get("email_on")),
+                        "email_mode": s.get("email_mode") or "each", "webhook": s.get("webhook") or "",
+                        "webhook_on": bool(s.get("webhook_on"))})
+        return out
+
+    def disable_webhook(self, uid):
+        """Webhook が消されていた（404 など）ときは、その人への Discord 配信を止める。"""
+        self.db.collection("subscriptions").document(uid).update({"webhook_on": False})
 
     # --------------------------------------------------------------- users
     def new_access_requests(self):

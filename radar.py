@@ -828,6 +828,235 @@ def post_forum_thread(title: str, embeds: list[dict], dry_run: bool) -> None:
         discord_post(webhook, {"embeds": chunk}, thread_id=thread_id)
 
 
+# ======================================================================
+# 配信：「受け取り設定」をした人へ（自分の Discord チャンネル・メール）
+# ======================================================================
+
+def site_link(path: str = "") -> str:
+    base = (CONFIG.get("site_url") or "").rstrip("/")
+    return f"{base}/{path}" if base else ""
+
+
+def post_to_own_webhook(url: str, title: str, embeds: list[dict]) -> None:
+    """登録された Webhook へ、論坛帖子と同じ内容を送る。フォーラムのチャンネルなら新しいスレッドを作る。"""
+    chunks = chunk_embeds(embeds)
+    thread_id = None
+    for i, chunk in enumerate(chunks):
+        payload = {"embeds": chunk}
+        if i == 0:
+            payload["content"] = f"**{title[:180]}**"
+            try:
+                discord_post(url, payload)
+                continue
+            except RuntimeError as e:
+                if "thread_name" not in str(e):
+                    raise
+                first = discord_post(url, {"thread_name": title[:100], "embeds": chunk})   # フォーラムのチャンネルだった
+                thread_id = first.get("channel_id")
+                continue
+        discord_post(url, payload, thread_id=thread_id)
+        time.sleep(0.3)
+
+
+def deliver_webhooks(subs: list[dict], store, title: str, embeds: list[dict], dry_run: bool) -> str:
+    targets = [s for s in subs if s.get("webhook_on") and s.get("webhook")]
+    if not targets:
+        return ""
+    if dry_run:
+        return f"（dry-run）自分の Discord への配信 {len(targets)} 人"
+    ok, errors = 0, []
+    for s in targets:
+        try:
+            post_to_own_webhook(s["webhook"], title, embeds)
+            ok += 1
+        except Exception as e:
+            msg = str(e)
+            if any(f"HTTP {c}" in msg for c in (401, 403, 404)):
+                store.disable_webhook(s["uid"])
+                errors.append("Webhook が削除されていたので、その人への配信を止めました")
+            else:
+                errors.append(msg[:120])
+        time.sleep(0.5)
+    return f"自分の Discord へ配信 {ok}/{len(targets)} 人" + (f"（{'; '.join(errors)[:300]}）" if errors else "")
+
+
+# ---------------------------------------------------------------- メール
+def _h(s) -> str:
+    import html as H
+    return H.escape(str(s or ""))
+
+
+MAIL_WRAP = ("<div style=\"background:#f4f1e8;padding:24px 12px;font-family:'Hiragino Sans','Noto Sans JP','Yu Gothic',Meiryo,sans-serif;"
+             "color:#15161c;line-height:1.8\"><div style=\"max-width:640px;margin:0 auto\">{body}</div></div>")
+
+
+def _mail_head(title: str, sub: str) -> str:
+    return (f"<div style=\"background:#0b0b0b;border-radius:16px 16px 0 0;padding:18px 22px\">"
+            f"<div style=\"color:#f2f56a;font-weight:900;font-size:20px;letter-spacing:.04em\">★ HIKARI NEWS</div>"
+            f"<div style=\"color:#ffffff;font-size:14px;font-weight:700;margin-top:2px\">{_h(title)}</div>"
+            f"<div style=\"color:#b8bcc8;font-size:12px\">{_h(sub)}</div></div>")
+
+
+def _mail_foot() -> str:
+    return (f"<p style=\"font-size:12px;color:#7a7e8a;margin:16px 4px 0;line-height:1.7\">"
+            f"記事の要約・解説は AI が作成しています。正確な内容は原文でご確認ください。紹介記事の著作権は各著作者に帰属します。<br>"
+            f"配信の停止・設定の変更は <a href=\"{_h(site_link('#/notify'))}\" style=\"color:#b06d00\">受け取り設定</a> から。"
+            f" ／ <a href=\"{_h(site_link('#/about'))}\" style=\"color:#b06d00\">このサイトについて</a></p>")
+
+
+def _mail_item(it: dict, big: bool = False) -> str:
+    link = site_link(f"#/today?open={it['id']}") if it.get("id") else ""
+    pts = it.get("points") or []
+    out = (f"<div style=\"padding:14px 0;border-top:1px solid #ebe6d9\">"
+           f"<a href=\"{_h(it['url'])}\" style=\"color:#15161c;text-decoration:none;font-weight:800;font-size:{18 if big else 15}px\">{_h(it['title'])}</a>"
+           f"<div style=\"font-size:12px;color:#7a7e8a;margin-top:2px\">{_h(it.get('source'))}"
+           + (f" ・ ⏰ 締切 {_h(it['deadline'])}" if it.get("deadline") else "") + "</div>")
+    if big and it.get("summary"):
+        out += f"<p style=\"margin:8px 0;font-size:14px\">{_h(it['summary'])}</p>"
+    if big and pts:
+        out += "<ul style=\"margin:6px 0 6px 18px;padding:0;font-size:14px\">" + "".join(f"<li style=\"margin:2px 0\">{_h(p)}</li>" for p in pts) + "</ul>"
+    elif it.get("note"):
+        out += f"<div style=\"font-size:14px;color:#3c3f4a;margin-top:4px\">💡 {_h(it['note'])}</div>"
+    if link and (it.get("detail") or big):
+        out += f"<div style=\"margin-top:6px\"><a href=\"{_h(link)}\" style=\"font-size:13px;color:#b06d00;font-weight:700\">サイトで解説を読む →</a></div>"
+    return out + "</div>"
+
+
+def _mail_box(inner: str) -> str:
+    return f"<div style=\"background:#fffdf7;border:1px solid #e5e0d2;border-top:0;border-radius:0 0 16px 16px;padding:6px 22px 18px\">{inner}</div>"
+
+
+def email_for_batch(title: str, items: list[dict], kw: dict | None, area_name: str,
+                    reminders: list[tuple[int, dict]]) -> tuple[str, str]:
+    """1 回の配信ぶんのメール（HTML とテキスト）。"""
+    inner, text = "", [title, ""]
+    pick = max(items, key=lambda x: (x["importance"], bool(x.get("keywords")))) if items else None
+    if pick:
+        inner += "<p style=\"margin:16px 0 0;font-size:12px;font-weight:800;color:#b06d00\">🔥 イチオシ</p>" + _mail_item(pick, big=True)
+        text += [f"🔥 {pick['title']}", pick["url"], *[f"・{p}" for p in pick.get("points") or []], ""]
+    for task in CONFIG["tasks"]:
+        group = [it for it in items if it["category"] == task["id"] and it is not pick]
+        if not group:
+            continue
+        inner += f"<p style=\"margin:18px 0 0;font-size:13px;font-weight:800\">{_h(task['emoji'])} {_h(task['name'])}</p>"
+        inner += "".join(_mail_item(it) for it in sorted(group, key=lambda x: -x["importance"]))
+        text += [f"{task['emoji']} {task['name']}"] + [f"・{it['title']}\n  {it['url']}" for it in group] + [""]
+    if kw:
+        inner += (f"<div style=\"margin-top:18px;padding:14px 16px;background:#fbf9c9;border-radius:12px\">"
+                  f"<div style=\"font-weight:800;font-size:14px\">🔑 今日の技術キーワード｜{_h(area_name)}</div>"
+                  f"<div style=\"font-size:12px;color:#5c6070\">テーマ：{_h(kw['theme'])}</div>")
+        for k in kw["items"]:
+            inner += (f"<div style=\"margin-top:8px;font-size:14px\"><b>{_h(k['level'])}｜{_h(k['term'])}</b>"
+                      f"<div>{_h(k['explain'])}</div><div style=\"color:#5c6070\">🛠 {_h(k['use'])}</div></div>")
+            text.append(f"🔑 {k['level']}｜{k['term']}：{k['explain']}")
+        inner += "</div>"
+    if reminders:
+        inner += "<p style=\"margin:18px 0 4px;font-size:13px;font-weight:800\">⏰ 締め切り間近</p>" + "".join(
+            f"<div style=\"font-size:14px\">{'今日まで' if d == 0 else f'あと{d}日'}：<a href=\"{_h(it['url'])}\" style=\"color:#15161c\">{_h(it['title'])}</a></div>"
+            for d, it in reminders)
+    inner += f"<p style=\"margin:20px 0 0\"><a href=\"{_h(site_link('#/today'))}\" style=\"display:inline-block;background:#f2f56a;color:#0b0b0b;font-weight:800;padding:10px 18px;border-radius:10px;border:2px solid #0b0b0b;text-decoration:none\">サイトで全部見る</a></p>"
+    html = MAIL_WRAP.format(body=_mail_head(title, "新しい記事が届きました") + _mail_box(inner) + _mail_foot())
+    text += ["", f"サイト：{site_link('#/today')}", f"配信の停止・設定：{site_link('#/notify')}"]
+    return html, "\n".join(text)
+
+
+def email_for_day(day: date, items: list[dict], kws: list[dict]) -> tuple[str, str]:
+    """1 日 1 回まとめ（22 時ごろ）のメール。"""
+    title = f"{day.month}/{day.day}（{WEEKDAYS_JA[day.weekday()]}）のまとめ"
+    inner, text = "", [title, ""]
+    for slot in ("10", "17", "22"):
+        group = sorted((it for it in items if str(it.get("slot")) == slot), key=lambda x: -int(x.get("importance") or 3))
+        if not group:
+            continue
+        inner += f"<p style=\"margin:18px 0 0;font-size:13px;font-weight:800\">🕘 {_h(CONFIG['slots'][slot]['label'])} の便</p>"
+        inner += "".join(_mail_item(it) for it in group)
+        text += [f"🕘 {CONFIG['slots'][slot]['label']}"] + [f"・{it['title']}\n  {it['url']}" for it in group] + [""]
+    if kws:
+        inner += ("<div style=\"margin-top:18px;padding:14px 16px;background:#fbf9c9;border-radius:12px\">"
+                  "<div style=\"font-weight:800;font-size:14px\">🔑 今日の技術キーワード</div>"
+                  + "".join(f"<div style=\"font-size:14px;margin-top:4px\">{_h(k.get('level'))}｜<b>{_h(k.get('term'))}</b>"
+                            f"<span style=\"color:#5c6070\">（{_h(k.get('theme'))}）</span></div>" for k in kws) + "</div>")
+        text += ["🔑 " + "、".join(str(k.get("term")) for k in kws)]
+    inner += f"<p style=\"margin:20px 0 0\"><a href=\"{_h(site_link('#/today'))}\" style=\"display:inline-block;background:#f2f56a;color:#0b0b0b;font-weight:800;padding:10px 18px;border-radius:10px;border:2px solid #0b0b0b;text-decoration:none\">サイトで解説を読む</a></p>"
+    html = MAIL_WRAP.format(body=_mail_head(title, f"今日の記事 {len(items)} 本") + _mail_box(inner) + _mail_foot())
+    text += ["", f"サイト：{site_link('#/today')}", f"配信の停止・設定：{site_link('#/notify')}"]
+    return html, "\n".join(text)
+
+
+def send_emails(to_list: list[str], subject: str, html: str, text: str, dry_run: bool) -> str:
+    """Gmail（アプリ パスワード）で 1 人ずつ送る。宛先はお互いに見えない。"""
+    if not to_list:
+        return ""
+    if dry_run:
+        return f"（dry-run）メール {len(to_list)} 人：{subject}"
+    addr, pw = os.environ.get("GMAIL_ADDRESS"), os.environ.get("GMAIL_APP_PASSWORD")
+    if not addr or not pw:
+        return f"⚠️ メール {len(to_list)} 人ぶん未送信（GitHub Secrets に GMAIL_ADDRESS / GMAIL_APP_PASSWORD がまだありません）"
+    import smtplib
+    import ssl
+    from email.message import EmailMessage
+    ok, errors = 0, []
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context(), timeout=30) as smtp:
+            smtp.login(addr, pw)
+            for to in to_list:
+                msg = EmailMessage()
+                msg["Subject"], msg["From"], msg["To"] = subject, f"HIKARI NEWS <{addr}>", to
+                msg["List-Unsubscribe"] = f"<{site_link('#/notify')}>"
+                msg.set_content(text)
+                msg.add_alternative(html, subtype="html")
+                try:
+                    smtp.send_message(msg)
+                    ok += 1
+                except Exception as e:
+                    errors.append(str(e)[:120])
+    except Exception as e:
+        return f"⚠️ メールを送れませんでした：{str(e)[:200]}"
+    return f"メール {ok}/{len(to_list)} 人" + (f"（失敗：{'; '.join(errors)[:300]}）" if errors else "")
+
+
+def deliver_batch(store, title: str, embeds: list[dict], items: list[dict], kw: dict | None, area_name: str,
+                  reminders: list[tuple[int, dict]], dry_run: bool) -> str:
+    """1 回の配信を、受け取り設定をした人へ。失敗しても論坛帖子・網站には影響させない。"""
+    if store is None and not dry_run:
+        return ""
+    try:
+        subs = store.subscribers() if store is not None else []
+    except Exception as e:
+        return f"（受け取り設定を読めませんでした：{str(e)[:120]}）"
+    notes = [deliver_webhooks(subs, store, title, embeds, dry_run)]
+    each = [s["email"] for s in subs if s.get("email_on") and s.get("email_mode") == "each" and s.get("email")]
+    if each:
+        html, text = email_for_batch(title, items, kw, area_name, reminders)
+        notes.append(send_emails(each, title, html, text, dry_run))
+    return "；".join(n for n in notes if n)
+
+
+def daily_mail(state: dict, store, now: datetime, dry_run: bool) -> str | None:
+    """「1 日 1 回まとめ」の人へ、22 時の便のあと（遅くとも 22:40 以降）に 1 回だけ送る。"""
+    today = now.date().isoformat()
+    if state.get("last_daily_mail") == today:
+        return None
+    got22 = any(b.get("date") == today and str(b.get("slot")) == "22" and str(b.get("status", "")).startswith("ok")
+                for b in state["batches"])
+    if not (got22 or now.hour >= 23 or (now.hour == 22 and now.minute >= 40)):
+        return None
+    if store is None:
+        return None
+    state["last_daily_mail"] = today
+    try:
+        to = [s["email"] for s in store.subscribers() if s.get("email_on") and s.get("email_mode") == "daily" and s.get("email")]
+    except Exception as e:
+        return f"（受け取り設定を読めませんでした：{str(e)[:120]}）"
+    items = [it for it in state["items"] if it.get("date") == today and str(it.get("slot")) in CONFIG["slots"]
+             and not TASKS.get(it.get("category"), {}).get("section")]
+    kws = [k for k in state.get("keywords", []) if k.get("date") == today]
+    if not to or not (items or kws):
+        return None
+    html, text = email_for_day(now.date(), items, kws)
+    return "📮 1 日まとめメール：" + send_emails(to, f"📰 HIKARI NEWS {now.month}/{now.day} のまとめ", html, text, dry_run)
+
+
 def log(text: str, dry_run: bool) -> None:
     """发给管理员日志频道（没有设置的话只打印出来）。"""
     print(f"[bot-log] {text}")
@@ -911,10 +1140,13 @@ def publish_batch(branch: str, state: dict, store, dry_run: bool) -> str:
         fresh.append(e)
 
     reminders = due_reminders(state, day) if slot == "10" else []
+    note_deliver = ""
     if fresh or reminders or kw:
         cats = [t["id"] for t in CONFIG["tasks"] if any(it["category"] == t["id"] for it in fresh)]
-        post_forum_thread(thread_title(day, slot, cats),
-                          build_batch_embeds(fresh, reminders, kw, track["name"] if track else ""), dry_run)
+        title = thread_title(day, slot, cats)
+        embeds = build_batch_embeds(fresh, reminders, kw, track["name"] if track else "")
+        post_forum_thread(title, embeds, dry_run)
+        note_deliver = deliver_batch(store, title, embeds, fresh, kw, track["name"] if track else "", reminders, dry_run)
 
     if not dry_run:
         store.add_items([{**it, "reminded": []} for it in fresh])
@@ -932,7 +1164,8 @@ def publish_batch(branch: str, state: dict, store, dry_run: bool) -> str:
                              "count": len(fresh), "status": "ok"})
     return (f"✅ {day} {CONFIG['slots'][slot]['label']} 已发布：新内容 {len(fresh)} 条"
             f"（重复跳过 {len(items) - len(fresh)} 条），截止提醒 {len(reminders)} 条，"
-            f"技术关键词 {'3 个（' + kw['theme'] + '）' if kw else '无'}{note_kw}")
+            f"技术关键词 {'3 个（' + kw['theme'] + '）' if kw else '无'}{note_kw}"
+            + (f"\n　{note_deliver}" if note_deliver else ""))
 
 
 def publish_learn(branch: str, state: dict, store, dry_run: bool) -> str:
@@ -1082,6 +1315,9 @@ def cmd_publish_pending(args) -> int:
     digest = weekly_digest(state, now, args.dry_run)
     if digest:
         notes.append(digest)
+    daily = daily_mail(state, store, now, args.dry_run)
+    if daily:
+        notes.append(daily)
     notes += missing_batch_warnings(state, now)
 
     if store is not None:

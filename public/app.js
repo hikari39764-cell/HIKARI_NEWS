@@ -298,7 +298,81 @@ function viewAbout() {
   </div>`;
 }
 
-const VIEWS = { today: viewToday, search: viewSearch, prog: viewProg, plan: viewPlan, chance: viewChance, saved: viewSaved, admin: viewAdmin, about: viewAbout };
+/* ---------------------------------------------------------------- notify */
+// 受け取り設定：メール（ログイン中の Google アカウント宛て）・自分の Discord チャンネル（Webhook）
+const WEBHOOK_RE = /^https:\/\/((ptb|canary)\.)?discord(app)?\.com\/api\/webhooks\/\d+\/[\w-]+$/;
+const subNow = () => ({ email_on: false, email_mode: "each", webhook: "", webhook_on: false, ...(S.sub || {}) });
+
+function viewNotify() {
+  const live = !!S.api.login, sub = subNow();
+  const needLogin = live && !S.user;
+  const sw = (key, on) => `<button type="button" class="switch ${on ? "on" : ""}" data-sub="${key}" role="switch" aria-checked="${on}" ${needLogin ? "disabled" : ""}><i></i></button>`;
+  return `<div class="page notify">
+    ${pageHead("ti-bell-ringing", "受け取り設定")}
+    <p class="lead-s rv" style="--i:1">新しい記事が届いたら、メールや自分の Discord でお知らせします。このサイトの Discord サーバーに参加していなくても使えます。</p>
+    ${needLogin ? `<div class="nt-login rv" style="--i:2">${ic("ti-lock")}<span>設定には Google でのログインが必要です（メールはログインしたアカウントのアドレスに届きます）。</span>
+      <button class="btn" data-login>${ic("ti-brand-google")}Google でログイン</button></div>` : ""}
+    <div class="grid2"><div>
+      <section class="nt-card rv" style="--i:3;--cat:var(--peach)">
+        <div class="nt-h"><span class="nt-ic">${ic("ti-mail")}</span><div><b>メールで受け取る</b><small>Gmail などのメールアプリに届きます</small></div>${sw("email_on", sub.email_on)}</div>
+        <div class="nt-row"><span class="cf-l">${ic("ti-at")}送信先</span><b class="nt-mail">${esc(S.user?.email || (live ? "（ログインすると表示されます）" : "demo@example.com"))}</b></div>
+        <div class="nt-row"><span class="cf-l">${ic("ti-clock")}頻度</span><div class="seg" id="nt-mode">
+          <button type="button" class="${sub.email_mode !== "daily" ? "on" : ""}" data-mode="each" ${needLogin ? "disabled" : ""}>配信ごと（1日3通）</button>
+          <button type="button" class="${sub.email_mode === "daily" ? "on" : ""}" data-mode="daily" ${needLogin ? "disabled" : ""}>1日1回まとめ（22時ごろ）</button></div></div>
+        <p class="nt-note">${ic("ti-info-circle")}届かないときは、迷惑メールフォルダも確認してください。最初の1通を「迷惑メールではない」にすると、次から普通に届きます。</p>
+      </section>
+      <section class="nt-card rv" style="--i:4;--cat:#7b8cff">
+        <div class="nt-h"><span class="nt-ic">${ic("ti-brand-discord")}</span><div><b>自分の Discord に届ける</b><small>自分のサーバーのチャンネルに、配信と同じ内容が届きます</small></div>${sw("webhook_on", sub.webhook_on && !!sub.webhook)}</div>
+        <ol class="nt-steps">
+          <li>Discord で自分専用のサーバーを作ります（すでにあれば、それで OK）。</li>
+          <li>受け取りたいチャンネルの「チャンネルの編集」→「連携サービス」→「ウェブフック」→「新しいウェブフック」を開きます。</li>
+          <li>「ウェブフック URL をコピー」して、下に貼り付けます。「テスト送信」で届くか確かめてから「保存」してください。</li>
+        </ol>
+        <div class="nt-wh"><input type="text" id="wh-url" value="${esc(sub.webhook)}" placeholder="https://discord.com/api/webhooks/..." autocomplete="off" ${needLogin ? "disabled" : ""}>
+          <button type="button" class="btn plain" data-wh="test" ${needLogin ? "disabled" : ""}>${ic("ti-send")}テスト送信</button>
+          <button type="button" class="btn" data-wh="save" ${needLogin ? "disabled" : ""}>${ic("ti-device-floppy")}保存</button>
+          ${sub.webhook ? `<button type="button" class="ib" data-wh="del" data-tip="削除">${ic("ti-trash")}</button>` : ""}</div>
+        <p class="nt-note">${ic("ti-lock")}この URL はあなたにしか見えません。Discord 側でウェブフックを削除すると、配信は自動で止まります。</p>
+      </section>
+    </div>
+    <aside class="side-col">
+      <div class="box rv" style="--i:3"><div class="box-h"><span class="hi">${ic("ti-clock")}</span>届くタイミング</div>
+        <p class="muted-s">毎日 10:00・17:00・22:00 の配信のあと、すぐに届きます。「1日1回まとめ」は 22 時の配信のあとに、その日の記事をまとめて 1 通で届けます。</p></div>
+      <div class="box rv" style="--i:4"><div class="box-h"><span class="hi p">${ic("ti-bell-off")}</span>止めるとき</div>
+        <p class="muted-s">このページのスイッチをオフにするだけで止まります。メールの最後にも、このページへのリンクがあります。</p></div>
+    </aside></div>
+  </div>`;
+}
+
+async function saveSub(patch, msg) {
+  const next = { ...subNow(), ...patch };
+  if (!S.api.saveSub) {   // デモ／未ログイン
+    if (S.api.login) { S.api.login(); return false; }
+    S.sub = next; toast("ti-check", `（デモ）${msg}`); return true;
+  }
+  try { await S.api.saveSub(next); S.sub = next; toast("ti-check", msg); return true; }
+  catch (err) { console.error(err); toast("ti-alert-triangle", "保存できませんでした"); return false; }
+}
+
+async function webhookAction(kind) {
+  const url = $("#wh-url")?.value.trim() || "";
+  if (kind === "del") {
+    if (await saveSub({ webhook: "", webhook_on: false }, "Discord への配信を止めて、URL を削除しました")) redraw();
+    return;
+  }
+  if (!WEBHOOK_RE.test(url)) { toast("ti-alert-triangle", "Discord のウェブフック URL を貼り付けてください"); $("#wh-url")?.focus(); return; }
+  if (kind === "test") {
+    try {
+      const r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: "✅ HIKARI NEWS からのテスト送信です。保存すると、これからの配信がこのチャンネルに届きます。", allowed_mentions: { parse: [] } }) });
+      toast(r.ok ? "ti-send" : "ti-alert-triangle", r.ok ? "テスト送信しました。Discord を確認してください" : `送れませんでした（${r.status}）。URL を確認してください`);
+    } catch { toast("ti-alert-triangle", "送れませんでした。URL を確認してください"); }
+    return;
+  }
+  if (await saveSub({ webhook: url, webhook_on: true }, "保存しました。次の配信から届きます")) redraw();
+}
+
+const VIEWS = { today: viewToday, search: viewSearch, prog: viewProg, plan: viewPlan, chance: viewChance, saved: viewSaved, admin: viewAdmin, about: viewAbout, notify: viewNotify };
 function parseHash() {
   const [path, qs] = location.hash.replace(/^#\/?/, "").split("?");
   return { route: VIEWS[path] ? path : "today", params: Object.fromEntries(new URLSearchParams(qs || "")) };
@@ -349,6 +423,14 @@ function afterDraw() {
   setTimeout(() => $$(".bar[data-w]").forEach(b => { b.style.width = b.dataset.w + "%"; }), 40);
   afterLearn();
   if (S.route === "about" && (S.params.u || S.params.f)) setTimeout(() => $("#form")?.scrollIntoView({ block: "start", behavior: REDUCED ? "auto" : "smooth" }), 350);
+  if (S.params.open) {   // メールの「サイトで解説を読む」：#/today?open=記事ID → その記事のカードを開く
+    const id = S.params.open, { open, ...rest } = S.params;
+    S.params = rest;
+    const qs = new URLSearchParams(rest).toString();
+    history.replaceState(null, "", `#/${S.route}${qs ? "?" + qs : ""}`);
+    if (byId(id)) setTimeout(() => openDetail(id), 500);
+    else toast("ti-info-circle", "記事が見つかりませんでした（古い記事は「さがす」から探せます）");
+  }
 }
 
 /* ----------------------------------------------------------------- wipe */
@@ -452,7 +534,8 @@ function markRead(id) {
 
 /* ================================================================ events */
 document.addEventListener("click", async e => {
-  const t = e.target.closest("[data-bm],[data-read],[data-toggle-read],[data-copy],[data-rmkw],[data-kw],[data-chance],[data-open-btn],[data-open],[data-close],[data-close-pal],[data-batch],[data-f],[data-act],[data-rep-del],[data-contact-del],[data-ck],[data-login],#freset,#older,#pal-list li,#pal-all,#totop");
+  const t = e.target.closest("[data-bm],[data-read],[data-toggle-read],[data-copy],[data-rmkw],[data-kw],[data-chance],[data-open-btn],[data-open],[data-close],[data-close-pal],[data-batch],[data-f],[data-act],[data-rep-del],[data-contact-del],[data-ck],[data-sub],[data-mode],[data-wh],[data-login],#freset,#older,#pal-list li,#pal-all,#totop");
+  if (t?.disabled) return;
   if (!t) return;
   if (t.matches("[data-login]")) { S.api.login?.(); return; }
   const point = { x: e.clientX, y: e.clientY };
@@ -521,6 +604,15 @@ document.addEventListener("click", async e => {
     t.disabled = true; await S.adminApi.delContact(t.dataset.contactDel); await renderAdminList(); toast("ti-check", "対応済みにしました");
   } else if (t.dataset.ck) {
     $$("#cf-kind [data-ck]").forEach(b => b.classList.toggle("on", b === t));
+  } else if (t.dataset.sub) {   // 受け取り設定のスイッチ
+    const key = t.dataset.sub, on = !t.classList.contains("on");
+    if (key === "webhook_on" && on && !subNow().webhook) { toast("ti-info-circle", "先にウェブフック URL を保存してください"); return; }
+    if (await saveSub({ [key]: on }, on ? "オンにしました" : "オフにしました")) { t.classList.toggle("on", on); t.setAttribute("aria-checked", on); }
+  } else if (t.dataset.mode) {
+    const m = t.dataset.mode;
+    if (await saveSub({ email_mode: m }, m === "daily" ? "1日1回まとめて届けます" : "配信ごとに届けます")) $$("#nt-mode [data-mode]").forEach(b => b.classList.toggle("on", b === t));
+  } else if (t.dataset.wh) {
+    webhookAction(t.dataset.wh);
   }
 });
 
@@ -749,12 +841,17 @@ async function startFirebase() {
     if (user) {
       $("#me-photo").src = user.photoURL || "";
       S.api.report = r => F.addDoc(F.collection(db, "reports"), { ...r, uid: user.uid, status: "new", createdAt: F.serverTimestamp() });
+      // 受け取り設定（メール・自分の Discord）。本人だけが読み書きできる
+      const subRef = F.doc(db, "subscriptions", user.uid);
+      S.api.saveSub = d => F.setDoc(subRef, { email: user.email, email_on: !!d.email_on, email_mode: d.email_mode === "daily" ? "daily" : "each",
+                                              webhook: d.webhook || "", webhook_on: !!(d.webhook && d.webhook_on), updated: F.serverTimestamp() });
+      try { const s = await F.getDoc(subRef); S.sub = s.exists() ? s.data() : null; } catch { S.sub = null; }
       await syncProgress(user.uid);
       try { S.isAdmin = (await F.getDoc(F.doc(db, "admins", user.uid))).exists(); } catch { S.isAdmin = false; }
       S.adminApi = S.isAdmin ? adminApi : null;
-      if (S.isAdmin) adminApi.list().then(g => updateAdminBadge(g.pending.length)).catch(() => {});
+      if (S.isAdmin) adminApi.contacts().then(c => updateAdminBadge(c.length)).catch(() => {});
     } else {
-      S.api.report = null; S.isAdmin = false; S.adminApi = null; P.onSave = null;
+      S.api.report = null; S.api.saveSub = null; S.sub = null; S.isAdmin = false; S.adminApi = null; P.onSave = null;
     }
     $("#nav-admin").hidden = !S.isAdmin;
     if (S.ready) { redraw(); moveIndicator(); }
