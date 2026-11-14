@@ -337,6 +337,84 @@
    "source": "Unity Blog",
    "note": "企画に活かせる視点：ゴールを 1 文で書けるかを最初に確認する",
    "reminded": []
+  },
+  {
+   "id": "931e8f4c18eba5b9",
+   "url": "https://automaton-media.com/articles/newsjp/20261113-479219/",
+   "title": "「木の後ろにキャラが隠れたらどう見せる？」開発者の議論が白熱",
+   "category": "community",
+   "importance": 5,
+   "date": "2026-11-14",
+   "slot": "22",
+   "deadline": null,
+   "source": "X で話題（AUTOMATON）",
+   "note": "正解のない見せ方問題を、現場の開発者はどう判断しているか",
+   "reminded": []
+  },
+  {
+   "id": "4f67075c4af50f7d",
+   "url": "https://pc.watch.impress.co.jp/docs/news/2155676.html",
+   "title": "スクエニがローカルLLMでゲーム開発を検証、向く作業と向かない作業",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-14",
+   "slot": "22",
+   "deadline": null,
+   "source": "PC Watch（NVIDIAイベント発表）",
+   "note": "AIに任せられる作業と、まだ任せられない作業の線引きが分かる",
+   "reminded": []
+  },
+  {
+   "id": "7b5cb229ebddccc5",
+   "url": "https://alichraghi.github.io/blog/how-not-to-build-a-music-player/",
+   "title": "AIで一気に作った音楽プレーヤーを、4か月かけて書き直した話",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-14",
+   "slot": "22",
+   "deadline": null,
+   "source": "Hacker News / 個人ブログ",
+   "note": "AI任せで作ったコードの「読めない問題」を、実体験から学べる",
+   "reminded": []
+  },
+  {
+   "id": "54da382f83691d79",
+   "url": "https://zenn.dev/sae_eng/articles/0e9ed7205ebc41",
+   "title": "Claude Codeに早めに「忘れさせる」と、トークン使用量が約4割減った",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-14",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn",
+   "note": "AIとの長い会話を安く速く保つ具体的な設定と、その限界",
+   "reminded": []
+  },
+  {
+   "id": "7c081df1a701b2d4",
+   "url": "https://automaton-media.com/articles/newsjp/20261113-479193/",
+   "title": "ゲーム業界の解雇、「過半数がまだ失業中」との調査。学生が知っておきたい現実",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-14",
+   "slot": "22",
+   "deadline": null,
+   "source": "AUTOMATON（GDC調査）",
+   "note": "解雇と再就職の数字から、就活で何を準備すべきか考える材料に",
+   "reminded": []
+  },
+  {
+   "id": "b34b8817fc63ade8",
+   "url": "https://automaton-media.com/articles/newsjp/20261114-479284/",
+   "title": "Modなしの『Factorio』で「音楽再生工場」、2,499個のスピーカーで曲を鳴らす",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-14",
+   "slot": "22",
+   "deadline": null,
+   "source": "Reddit投稿の紹介（AUTOMATON）",
+   "note": "「できない」を工夫で突破する発想と、圧縮の実例が学べる",
+   "reminded": []
   }
  ],
  "batches": [
@@ -387,6 +465,13 @@
    "slot": "learn",
    "date": "2026-11-14",
    "count": 37,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261114-22-211538",
+   "slot": "22",
+   "date": "2026-11-14",
+   "count": 6,
    "status": "ok"
   }
  ],
@@ -496,6 +581,27 @@
    "level": "応用",
    "area": "dx12",
    "theme": "GPU同期とフレーム管理",
+   "date": "2026-11-14"
+  },
+  {
+   "term": "テクスチャ座標（UV）",
+   "level": "基礎",
+   "area": "shader",
+   "theme": "テクスチャとサンプラー",
+   "date": "2026-11-14"
+  },
+  {
+   "term": "サンプラーステート",
+   "level": "発展",
+   "area": "shader",
+   "theme": "テクスチャとサンプラー",
+   "date": "2026-11-14"
+  },
+  {
+   "term": "ミップレベルの明示指定（SampleLevel）",
+   "level": "応用",
+   "area": "shader",
+   "theme": "テクスチャとサンプラー",
    "date": "2026-11-14"
   }
  ],
