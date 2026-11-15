@@ -675,6 +675,84 @@
    "source": "Game Developer（Doug Church氏、1999年）",
    "note": "25年以上たっても使える、ゲームを分析する3つの物差し",
    "reminded": []
+  },
+  {
+   "id": "4272c6068b203170",
+   "url": "https://qiita.com/BaspisKawaE/items/933b883e4585ebd59299",
+   "title": "「調べ方」を設計し直したClaude Codeスキル「imozuru」、検索要約で終わらせない5つのルール",
+   "category": "community",
+   "importance": 5,
+   "date": "2026-11-15",
+   "slot": "22",
+   "deadline": null,
+   "source": "Qiita / X で話題（BaspisKawaE）",
+   "note": "AIの下調べを「それっぽい要約」で終わらせない、検証つきの手順が学べる",
+   "reminded": []
+  },
+  {
+   "id": "4d0c29e8f59af820",
+   "url": "https://news.ycombinator.com/item?id=50494696",
+   "title": "「AIで稼ぐために独学すべき具体的スキルは？」HNの議論から見える、検証力と土台の強さ",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-15",
+   "slot": "22",
+   "deadline": null,
+   "source": "Hacker News（Ask HN）",
+   "note": "AI時代に「何を練習すればいいか」を現場の声で具体的に知れる",
+   "reminded": []
+  },
+  {
+   "id": "47776dbd20cd52b1",
+   "url": "https://togetter.com/li/2769209",
+   "title": "『時のオカリナ』を初めて遊んだ人の感想で見える、3Dゲームの「当たり前」を作った設計",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-15",
+   "slot": "22",
+   "deadline": null,
+   "source": "X で話題（Togetter）",
+   "note": "名作の仕組みが「当たり前」になった今、何が見えるかを考える材料に",
+   "reminded": []
+  },
+  {
+   "id": "12eac5f3a572f653",
+   "url": "https://gigazine.net/news/20261115-ai-isnt-replacing-sres-its-deskilling/",
+   "title": "AIが対応を自動化するほど、人間が腕を落とす？「自動化の皮肉」がAI時代の学び方に突きつけるもの",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-15",
+   "slot": "22",
+   "deadline": null,
+   "source": "GIGAZINE（元記事：SigNoz）",
+   "note": "AIに任せすぎて「自分の腕」が育たない落とし穴と、その防ぎ方",
+   "reminded": []
+  },
+  {
+   "id": "77ad4b5e0c1f8f09",
+   "url": "https://note.com/at_sushi_at/n/n2e6ea3453e37",
+   "title": "AIが「十分に賢い」と感じる時代に、ソフトウェアエンジニアは何をするか——現役開発者の率直な整理",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-15",
+   "slot": "22",
+   "deadline": null,
+   "source": "note（Mori Atsushi）／はてブで話題",
+   "note": "「AIが十分賢い」時代の仕事の残り方を、現役開発者が率直に整理",
+   "reminded": []
+  },
+  {
+   "id": "7e5c3e9977e00e23",
+   "url": "https://togetter.com/li/2770106",
+   "title": "「スライドは全部AI」と答えた学生、HTMLで資料もエディタも作る時代の使い方",
+   "category": "community",
+   "importance": 2,
+   "date": "2026-11-15",
+   "slot": "22",
+   "deadline": null,
+   "source": "X で話題（Togetter）",
+   "note": "作品発表のスライドを、AIとHTMLで素早く作って直す使い方のヒント",
+   "reminded": []
   }
  ],
  "batches": [
@@ -754,9 +832,16 @@
    "date": "2026-11-15",
    "count": 9,
    "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261115-22-211612",
+   "slot": "22",
+   "date": "2026-11-15",
+   "count": 6,
+   "status": "ok"
   }
  ],
- "last_weekly": null,
+ "last_weekly": "2026-11-15",
  "warned": [],
  "keywords": [
   {
@@ -925,6 +1010,27 @@
    "level": "応用",
    "area": "dx12",
    "theme": "PSO（パイプラインステート）と事前キャッシュ",
+   "date": "2026-11-15"
+  },
+  {
+   "term": "クリップ空間とSV_Position",
+   "level": "基礎",
+   "area": "shader",
+   "theme": "座標変換",
+   "date": "2026-11-15"
+  },
+  {
+   "term": "mul関数と行列の掛け順",
+   "level": "発展",
+   "area": "shader",
+   "theme": "座標変換",
+   "date": "2026-11-15"
+  },
+  {
+   "term": "ビューポート変換とピクセルシェーダーのSV_Position",
+   "level": "応用",
+   "area": "shader",
+   "theme": "座標変換",
    "date": "2026-11-15"
   }
  ],
@@ -1736,5 +1842,6 @@
   "constraint": 22,
   "feeling": 20,
   "prompt": 20
- }
+ },
+ "last_daily_mail": "2026-11-15"
 }
