@@ -441,6 +441,123 @@
    "source": "Unity Blog（Azra Games 寄稿）",
    "note": "「1回のプレイで何が完結するか」を設計する視点が学べる。",
    "reminded": []
+  },
+  {
+   "id": "984d08da3cf7995c",
+   "url": "https://claude.com/resources/articles/building-always-on-agents",
+   "title": "常時稼働エージェントの作り方：受信箱・タイマー・記憶・権限・送信の5部品",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-15",
+   "slot": "10",
+   "deadline": null,
+   "source": "Claude 公式ブログ（はてブ IT 人気）",
+   "note": "エージェントを「作る側」に回りたい人へ。落ちても再開できる設計の基本形が分かる",
+   "reminded": []
+  },
+  {
+   "id": "9f394f52c8139719",
+   "url": "https://www.crissyfield.de/research/lovable-en/",
+   "title": "AIでつくったアプリの個人情報が丸見えに。Lovable製サイトの調査結果",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-15",
+   "slot": "10",
+   "deadline": null,
+   "source": "Crissy Field GmbH（Hacker News で585pt）",
+   "note": "AIで作ったアプリを公開する前に、ログアウト状態で見えるデータを確認しよう",
+   "reminded": []
+  },
+  {
+   "id": "24c575a4ea2ec625",
+   "url": "https://zenn.dev/sun_asterisk/articles/1d1c65b1fe409a",
+   "title": "週間制限を3日で使い切っていたClaude Code、モデルと思考量の使い分けで5日もつように",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-15",
+   "slot": "10",
+   "deadline": null,
+   "source": "Zenn（sun_asterisk）",
+   "note": "AIコーディングが続かない人へ。設定の変更だけで試せる節約の第一歩",
+   "reminded": []
+  },
+  {
+   "id": "720e9819e3d11799",
+   "url": "https://zenn.dev/caphtech/articles/qwen38-zh-ban",
+   "title": "ローカルLLMに混ざる中国語を消す。出力層の「行」を書き換えて27%→0%に",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-15",
+   "slot": "10",
+   "deadline": null,
+   "source": "Zenn（はてブ IT 人気）",
+   "note": "変えていないことを証明する、検証の作法ごと学べるLLM改造の実験記録",
+   "reminded": []
+  },
+  {
+   "id": "be81354d8a302a35",
+   "url": "https://research.google/blog/advancing-science-engineering-with-antigravitys-teamwork-feature/",
+   "title": "Google AntigravityのAIチーム機能「/teamwork」、並列で試して検証役が絞り込む設計とは",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-15",
+   "slot": "10",
+   "deadline": null,
+   "source": "Google Research Blog（Hacker News）",
+   "note": "AIに任せるときは検証役を先に用意する。その発想を大規模な実例で学べる",
+   "reminded": []
+  },
+  {
+   "id": "7daa961eaa6b8fac",
+   "url": "https://sensortower.com/blog/indie-and-new-ip-break-out-without-denting-aaa",
+   "title": "インディー作品の「ヒット」が1年で13本→33本に。Sensor Towerの調査",
+   "category": "industry",
+   "importance": 4,
+   "date": "2026-11-15",
+   "slot": "10",
+   "deadline": null,
+   "source": "Sensor Tower",
+   "note": "インディーは本当に勝てているのか。企画の前提になる数字がそろっている",
+   "reminded": []
+  },
+  {
+   "id": "cf16a0a90a9726ce",
+   "url": "https://www.famitsu.com/article/202611/93673",
+   "title": "『スーパーリアル麻雀VR』開発者が語る「計画だけ見ると大失敗」の理由",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-15",
+   "slot": "10",
+   "deadline": null,
+   "source": "ファミ通.com",
+   "note": "ヒットしても赤字になる理由。見積もりとスコープ管理の生きた教材",
+   "reminded": []
+  },
+  {
+   "id": "9356a7dc7d6bab2a",
+   "url": "https://www.famitsu.com/article/202611/94049",
+   "title": "『牛丼店シミュレーター』は「米が切れたら即閉店」。現場10年の経験がゲームの核に",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-15",
+   "slot": "10",
+   "deadline": null,
+   "source": "ファミ通.com",
+   "note": "自分の経験を遊びのルールに変えるお手本。企画の芯の見つけ方が分かる",
+   "reminded": []
+  },
+  {
+   "id": "b45e65032edcb391",
+   "url": "https://www.gamedeveloper.com/production/polish-voice-actor-for-geralt-returns-for-the-witcher-3-with-ai",
+   "title": "『ウィッチャー3』新DLCで、脳卒中後の声優の声にAIを使った経緯。同意と条件は",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-15",
+   "slot": "10",
+   "deadline": null,
+   "source": "Game Developer",
+   "note": "AIを使うなら同意と条件をどう整えるか。業界の実例から考え方が学べる",
+   "reminded": []
   }
  ],
  "batches": [
@@ -505,6 +622,13 @@
    "slot": "learn",
    "date": "2026-11-15",
    "count": 14,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261115-10-091624",
+   "slot": "10",
+   "date": "2026-11-15",
+   "count": 9,
    "status": "ok"
   }
  ],
@@ -636,6 +760,27 @@
    "area": "shader",
    "theme": "テクスチャとサンプラー",
    "date": "2026-11-14"
+  },
+  {
+   "term": "constexpr変数",
+   "level": "基礎",
+   "area": "cpp",
+   "theme": "コンパイル時計算",
+   "date": "2026-11-15"
+  },
+  {
+   "term": "if constexpr",
+   "level": "発展",
+   "area": "cpp",
+   "theme": "コンパイル時計算",
+   "date": "2026-11-15"
+  },
+  {
+   "term": "consteval",
+   "level": "応用",
+   "area": "cpp",
+   "theme": "コンパイル時計算",
+   "date": "2026-11-15"
   }
  ],
  "quiz": [
