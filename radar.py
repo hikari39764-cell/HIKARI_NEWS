@@ -1318,6 +1318,31 @@ def missing_batch_warnings(state: dict, now: datetime) -> list[str]:
     return out
 
 
+EARLY_WINDOW = timedelta(minutes=10)   # 公开时间前多少分钟以内的稿，算「该发了」（发布端会等到整点再发）
+
+
+def due_at(branch: str) -> datetime | None:
+    """分支名里的日期和时段 → 这份稿的公开时间（日本时间）。
+    claude/inbox-20261115-10-091624 → 2026-11-15 10:00；claude/learn-20261115-learn-063712 → 7:00。"""
+    m = re.search(r"-(\d{8})-([a-z0-9]+)-\d{6}$", branch)
+    if not m:
+        return None
+    tag = m.group(2)
+    if tag == "learn":
+        hour = int(LEARN.get("hour", 7))
+    elif tag in CONFIG["slots"]:
+        hour = int(tag)
+    else:
+        return None
+    return datetime.strptime(m.group(1), "%Y%m%d").replace(hour=hour, tzinfo=JST)
+
+
+def is_ready(branch: str, now: datetime) -> bool:
+    """已经到了（或 10 分钟以内就到）公开时间的稿。更早交的稿留着，等整点前的发布任务。"""
+    due = due_at(branch)
+    return due is None or due - now <= EARLY_WINDOW
+
+
 def cmd_publish_pending(args) -> int:
     from store import open_store
 
@@ -1326,18 +1351,32 @@ def cmd_publish_pending(args) -> int:
     store = None if args.dry_run else open_store()
     notes, failed = [], False
 
-    for prefix, fn in ((INBOX_PREFIX, publish_batch), (LEARN_PREFIX, publish_learn)):
-        for branch in pending_branches(prefix):
-            try:
-                notes.append(fn(branch, state, store, args.dry_run))
-            except Exception as e:
-                failed = True
-                state["batches"].append({"branch": branch, "slot": "?", "date": now.date().isoformat(),
-                                         "count": 0, "status": f"error: {str(e)[:200]}"})
-                notes.append(f"❌ {branch} 发布失败：{str(e)[:500]}")
-            if not args.dry_run:
-                git("push", "origin", "--delete", branch, check=False)
+    jobs = [(b, fn) for prefix, fn in ((INBOX_PREFIX, publish_batch), (LEARN_PREFIX, publish_learn))
+            for b in pending_branches(prefix)]
+    jobs.sort(key=lambda j: due_at(j[0]) or now)   # 公开时间早的先发
+    for branch, fn in jobs:
+        due = due_at(branch)
+        if due and not args.now:
+            gap = (due - now_jst()).total_seconds()
+            if gap > EARLY_WINDOW.total_seconds():
+                print(f"⏰ {branch}：{due:%m/%d %H:%M} 才公开，现在还早，先留着", flush=True)
+                continue
+            if gap > 0:
+                # 整点前就被触发的话（发布任务在 :56 触发），准备好之后等到整点，准时发出去
+                print(f"⏰ {branch}：等到 {due:%H:%M:%S} 准时发布（还有 {gap:.0f} 秒）", flush=True)
+                if not args.dry_run:
+                    time.sleep(gap)
+        try:
+            notes.append(fn(branch, state, store, args.dry_run))
+        except Exception as e:
+            failed = True
+            state["batches"].append({"branch": branch, "slot": "?", "date": now_jst().date().isoformat(),
+                                     "count": 0, "status": f"error: {str(e)[:200]}"})
+            notes.append(f"❌ {branch} 发布失败：{str(e)[:500]}")
+        if not args.dry_run:
+            git("push", "origin", "--delete", branch, check=False)
 
+    now = now_jst()   # 等过整点的话，后面的判断（每日邮件、漏稿提醒）用发完之后的时间
     digest = weekly_digest(state, now, args.dry_run)
     if digest:
         notes.append(digest)
@@ -1534,6 +1573,7 @@ def _batch_label(b: dict) -> str:
 def cmd_publish_status(args) -> int:
     now = now_jst()
     pending = pending_branches(INBOX_PREFIX) + pending_branches(LEARN_PREFIX)
+    ready = [br for br in pending if is_ready(br, now)]
     done = _published_today()
     print(f"# 发布状态（{now:%Y-%m-%d %H:%M} 日本时间）\n\n## 今天已经发布的批次")
     for b in done:
@@ -1542,29 +1582,38 @@ def cmd_publish_status(args) -> int:
     if not done:
         print("- （还没有）")
     print("\n## 已交稿、还没发布的分支")
-    print("\n".join(f"- {br}" for br in pending) or "- （没有）")
+    for br in pending:
+        due = due_at(br)
+        when = f"{due:%H:%M} 公开" if due else "公开时间不明"
+        print(f"- {br}（{when}" + ("）" if br in ready else "，现在还早，不用管）"))
+    if not pending:
+        print("- （没有）")
     late = [CONFIG["slots"][s]["label"] for s in CONFIG["slots"]
-            if now.hour >= int(s) and tasks_for(now.date(), s) and not any(str(b.get("slot")) == s for b in done)
+            if now >= now.replace(hour=int(s), minute=0, second=0, microsecond=0) - EARLY_WINDOW
+            and tasks_for(now.date(), s) and not any(str(b.get("slot")) == s for b in done)
             and not any(f"-{s}-" in br for br in pending)]
     if late:
         print(f"\n⚠️ 研究端还没交稿的批次：{'、'.join(late)}（这不是发布的问题，报告里写上即可）")
-    print(f"\nNEED_PUBLISH={'yes' if pending else 'no'}")
+    print(f"\nNEED_PUBLISH={'yes' if ready else 'no'}")
     return 0
 
 
 def cmd_wait_published(args) -> int:
-    """触发发布之后，等到待发布的分支都被处理掉（发布端处理完会删除分支），再看有没有失败。"""
-    watch = set(pending_branches(INBOX_PREFIX) + pending_branches(LEARN_PREFIX))
+    """触发发布之后，等到待发布的分支都被处理掉（发布端处理完会删除分支），再看有没有失败。
+    发布端会等到整点才发，所以最多等到「公开时间 + timeout 秒」。"""
+    now = now_jst()
+    watch = {br for br in pending_branches(INBOX_PREFIX) + pending_branches(LEARN_PREFIX) if is_ready(br, now)}
     if not watch:
         print("✅ 没有待发布的分支（已经发布完了）")
         return 0
-    print(f"等待发布：{', '.join(sorted(watch))}（最多 {args.timeout} 秒）", flush=True)
-    deadline = time.time() + args.timeout
+    last_due = max([d for d in map(due_at, watch) if d] + [now])
+    deadline = max(now, last_due) + timedelta(seconds=args.timeout)
+    print(f"等待发布：{', '.join(sorted(watch))}（{last_due:%H:%M} 公开，最多等到 {deadline:%H:%M:%S}）", flush=True)
     while True:
         left = watch & set(pending_branches(INBOX_PREFIX) + pending_branches(LEARN_PREFIX))
         if not left:
             break
-        if time.time() >= deadline:
+        if now_jst() >= deadline:
             print(f"⏳ 超时：还没被处理的分支：{', '.join(sorted(left))}")
             return 1
         time.sleep(15)
@@ -1596,7 +1645,9 @@ def main() -> int:
     p = sub.add_parser("learn-submit")
     p.add_argument("file")
     p.add_argument("--preview", action="store_true", help="交到预览分支，不写入网站")
-    sub.add_parser("publish-pending").add_argument("--dry-run", action="store_true")
+    p = sub.add_parser("publish-pending")
+    p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--now", action="store_true", help="不等公开时间，所有待发布的稿马上发")
     sub.add_parser("preview").add_argument("source", help="预览分支名（claude/preview-…）或结果 JSON 文件")
     sub.add_parser("preview-learn").add_argument("source", help="学习内容的预览分支或 JSON 文件")
     sub.add_parser("publish-status", help="发布检查：今天的发布记录和待发布的分支")

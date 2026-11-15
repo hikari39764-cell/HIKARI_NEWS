@@ -12,7 +12,14 @@ on:
     - cron: "5,25,45 1,8,13 * * *"
     # 日本时间 7:05 / 7:35：夜间学习任务（6:30 开始）的题目・お題・分区新闻
     - cron: "5,35 22 * * *"
+  # 主要的触发方式：发布任务（Claude 定时任务）在 6:56 / 9:56 / 16:56 / 21:56 按下「运行」，
+  # 这个流程准备好之后等到整点（7:00 / 10:00 / 17:00 / 22:00）准时发出。上面的 schedule 只是备用。
   workflow_dispatch:
+    inputs:
+      now:
+        description: "不等公开时间，马上发布所有待发布的稿"
+        type: boolean
+        default: false
 
 permissions:
   contents: write   # 更新 state/published.json、删除已处理的 inbox 分支
@@ -24,7 +31,7 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20   # 整点前触发时，会在里面等最多 10 分钟
     steps:
       - uses: actions/checkout@v4
         with:
@@ -47,7 +54,8 @@ jobs:
           MAIL_RELAY_TOKEN: ${{ secrets.MAIL_RELAY_TOKEN }}
           GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-        run: python radar.py publish-pending
+          PUBLISH_NOW: ${{ inputs.now && '1' || '' }}
+        run: python radar.py publish-pending ${PUBLISH_NOW:+--now}
 
       - name: Save state
         if: always()

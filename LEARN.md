@@ -120,7 +120,8 @@ python3 radar.py learn-submit out/learn.json
 
 看到「✅ 已提交」就完成了。**每次运行只交稿一次。**
 
-> **交稿时已经过了 7:03**：不要等定时发布，按 `PUBLISH_CHECK.md` 的第 3〜5 步，**立刻触发发布流程并确认写进网站了**（只能触发 `publish.yml`，ref 只能是 `main`）。7:03 之前交稿的不用做。预览模式的交稿也不用做。
+> **交稿之后**，执行一次 `python3 radar.py publish-status`：最后一行是 `NEED_PUBLISH=no`（平时都是这样）就什么都不用做，6:56 的发布任务会让它在 7:00 准时写进网站。
+> 是 `NEED_PUBLISH=yes`（交稿太晚，6:50 以后才交）的话，按 `PUBLISH_CHECK.md` 的第 3〜5 步，**立刻触发发布流程并确认写进网站了**（只能触发 `publish.yml`，ref 只能是 `main`）。预览模式的交稿不用做这一步。
 
 ### 8. 结束
 
