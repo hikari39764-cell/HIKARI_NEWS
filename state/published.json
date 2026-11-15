@@ -753,6 +753,19 @@
    "source": "X で話題（Togetter）",
    "note": "作品発表のスライドを、AIとHTMLで素早く作って直す使い方のヒント",
    "reminded": []
+  },
+  {
+   "id": "4ad9da288cf7c8ec",
+   "url": "https://www.4gamer.net/games/902/G090227/20261115002/",
+   "title": "「レインボーシックス シージ」の作り方：メタ分析から生まれるオペレーターと、ライブ運営の判断",
+   "category": "planner",
+   "importance": 3,
+   "date": "2026-11-16",
+   "slot": "learn",
+   "deadline": null,
+   "source": "4Gamer.net",
+   "note": "企画に活かせる視点：役割の空き枠から新要素を考える",
+   "reminded": []
   }
  ],
  "batches": [
@@ -838,6 +851,13 @@
    "slot": "22",
    "date": "2026-11-15",
    "count": 6,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/learn-20261116-learn-063620",
+   "slot": "learn",
+   "date": "2026-11-16",
+   "count": 13,
    "status": "ok"
   }
  ],
@@ -1818,6 +1838,90 @@
    "track": "planner",
    "level": "基礎",
    "q": "RPG の序盤で、すでに事情をよく知っているはずの2人の兵士が「ご存じのとおり、この国は十年前の戦争で…」と、設定をプレイヤー向けに長々と説明し合う。この台詞の問題と、改善の方向と"
+  },
+  {
+   "id": "ebff81e9d5ef",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "constexpr int size = 8; のように、変数に constexpr を付けたときについて正しいのは？"
+  },
+  {
+   "id": "fff44c76d75b",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "応用",
+   "q": "次のコードの「ここで name を使う」で起きる問題として正しいのは？"
+  },
+  {
+   "id": "5c077985db98",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "発展",
+   "q": "アップロードヒープ上の定数バッファを、毎フレーム CPU から書き換えて使う。Map / Unmap の扱いとして正しいのは？"
+  },
+  {
+   "id": "1301d6ec8334",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "フリップモデルのスワップチェーン（IDXGISwapChain3）で、いま描画先にすべきバックバッファの「インデックス」を返すメソッドは？"
+  },
+  {
+   "id": "065fbae2038e",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "次のピクセルシェーダーの clip(c.a - 0.5f) の動作として正しいのは？"
+  },
+  {
+   "id": "601181c5e901",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "応用",
+   "q": "レンダーターゲット全体（1920×1080）に描画するとき、ピクセルシェーダーで float4 pos : SV_Position を受け取る。左上端のピクセルを処理している場合の"
+  },
+  {
+   "id": "c87626a30ddf",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "発展",
+   "q": "全キャラクターが毎フレーム update() の中で「ほかのキャラの現在の状態」を読み、自分の状態を書き換える。配列で先に更新されるキャラのほうが、結果が早く反映されてしまう。「現"
+  },
+  {
+   "id": "6efd5745afab",
+   "topic": "math",
+   "track": "programmer",
+   "level": "応用",
+   "q": "始点 O、方向 D のレイと、法線 N・平面上の点 P0 の平面の交点は、t = dot(N, P0 − O) / dot(N, D) で求める。dot(N, D) が 0 のとき"
+  },
+  {
+   "id": "6452a58908a1",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "応用",
+   "q": "100万個のパーティクルについて、毎フレーム全件の x 座標「だけ」を走査する処理がある（ほかのフィールドは読まない）。メモリ配置（AoS と SoA）の比較として正しいのは？"
+  },
+  {
+   "id": "587a6502bc80",
+   "topic": "biz",
+   "track": "planner",
+   "level": "基礎",
+   "q": "運営型ゲームの指標で、「DAU ÷ MAU」（その日に遊んだ人数 ÷ その月に遊んだ人数）は、何を見るために使う？"
+  },
+  {
+   "id": "7ef24eeae554",
+   "topic": "narrative",
+   "track": "planner",
+   "level": "発展",
+   "q": "シナリオが選択肢で分岐しても、途中で同じ場面に合流させる構造（ブランチ＆ボトルネック）を使う主な利点は？"
+  },
+  {
+   "id": "0aab50030632",
+   "topic": "ux",
+   "track": "planner",
+   "level": "発展",
+   "q": "ポーズメニューに項目が20個並んでいて、プレイヤーが目的の項目を選ぶのに時間がかかっている。「ヒックの法則」の考え方から、最も適切な改善は？"
   }
  ],
  "themes": [
@@ -1832,16 +1936,20 @@
   {
    "date": "2026-11-15",
    "title": "地図に載っていない場所"
+  },
+  {
+   "date": "2026-11-16",
+   "title": "いつもの道具、別の使い道"
   }
  ],
  "reports": [],
  "idea_counts": {
-  "genre": 22,
-  "mechanic": 22,
-  "theme": 22,
-  "constraint": 22,
-  "feeling": 20,
-  "prompt": 20
+  "genre": 27,
+  "mechanic": 27,
+  "theme": 27,
+  "constraint": 27,
+  "feeling": 25,
+  "prompt": 25
  },
  "last_daily_mail": "2026-11-15"
 }
