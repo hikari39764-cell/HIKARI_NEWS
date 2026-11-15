@@ -558,6 +558,123 @@
    "source": "Game Developer",
    "note": "AIを使うなら同意と条件をどう整えるか。業界の実例から考え方が学べる",
    "reminded": []
+  },
+  {
+   "id": "f50ecadf9938819c",
+   "url": "https://gpuopen.com/learn/amd-directx12-agility-sdk-october-2026/",
+   "title": "DX12の新レイトレ機能をAMDが解説。クラスタ化ジオメトリでAS更新を軽くする",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-15",
+   "slot": "17",
+   "deadline": null,
+   "source": "AMD GPUOpen",
+   "note": "DX12の最新レイトレ機能と、試すための手順が一度に分かる",
+   "reminded": []
+  },
+  {
+   "id": "3a18666ed34b7c18",
+   "url": "https://panoskarabelas.com/blog/posts/finishing_a_game_engine/",
+   "title": "12年かけて自作エンジンを作った開発者が語る「エンジンを完成させる」ということ",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-15",
+   "slot": "17",
+   "deadline": null,
+   "source": "Panos Karabelas（個人ブログ）",
+   "note": "エンジン自作を考えている人が、始める前に読んでおきたい12年分の教訓",
+   "reminded": []
+  },
+  {
+   "id": "02e567371d1a9c30",
+   "url": "https://cgworld.jp/article/202611-zibraai.html",
+   "title": "炎や煙を約1/20〜1/50に圧縮してUEで再生。Zibra AIが語る圧縮と展開の仕組み",
+   "category": "tech",
+   "importance": 3,
+   "date": "2026-11-15",
+   "slot": "17",
+   "deadline": null,
+   "source": "CGWORLD",
+   "note": "大きなVFXデータを実用的なサイズにする発想と、実測の数字が学べる",
+   "reminded": []
+  },
+  {
+   "id": "1365b1c9a157e45f",
+   "url": "https://godotengine.org/article/dev-snapshot-godot-4-8-beta-3/",
+   "title": "Godot 4.8、ベータ3まで到達。VRAM節約のミップストリーミングなどが入る",
+   "category": "tech",
+   "importance": 3,
+   "date": "2026-11-15",
+   "slot": "17",
+   "deadline": null,
+   "source": "Godot Engine公式",
+   "note": "Godotを触っている人が、次の版で何が変わるかを先に知っておける",
+   "reminded": []
+  },
+  {
+   "id": "f352dd7dc818f291",
+   "url": "https://ziva.sh/blogs/godot-automated-playtesting",
+   "title": "Godotゲームの自動プレイテスト、入力とAIの方法を6通り比較",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-15",
+   "slot": "17",
+   "deadline": null,
+   "source": "Ziva（Godot向けAIツールの公式ブログ）",
+   "note": "試すならこう：まずGUTでテストを1本書き、CIで毎回回す",
+   "reminded": []
+  },
+  {
+   "id": "a3ee72ce276ebe05",
+   "url": "https://qiita.com/joinclass/items/8c40b05a48487aa588c0",
+   "title": "Claude Codeを並列で動かすと設定が壊れる。mkdirロックで止める方法",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-15",
+   "slot": "17",
+   "deadline": null,
+   "source": "Qiita",
+   "note": "試すならこう：mkdirロックで、並列実行の書き込み競合を実験してみる",
+   "reminded": []
+  },
+  {
+   "id": "208d2244dde41b7d",
+   "url": "https://fabscene.com/new/interview/solidcraft-open-source-cad-ai-1-5m-downloads-brennen-herbruck/",
+   "title": "AIと作って5週間で150万DL。個人開発CAD「SolidCraft」のAI活用術",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-15",
+   "slot": "17",
+   "deadline": null,
+   "source": "FabScene（ファブシーン）",
+   "note": "試すならこう：指示書を1枚書き、AIの出力は必ず動かして確かめる",
+   "reminded": []
+  },
+  {
+   "id": "b4c0fcf3556849a8",
+   "url": "https://zenn.dev/pivotmedia/articles/risk-based-testing-for-uat",
+   "title": "AIで増え続けるテストケースを、影響度×発生確率で絞る。ゲームのQAにも使える考え方",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-15",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（PIVOT）",
+   "note": "試すならこう：バグを影響度で分け、今回の変更に関係する所だけ重点的に回す",
+   "reminded": []
+  },
+  {
+   "id": "f0efecf85778cfb7",
+   "url": "https://www.gamedeveloper.com/design/formal-abstract-design-tools",
+   "title": "ゲームデザインの共通言語を提案した名論文「Formal Abstract Design Tools」",
+   "category": "classic",
+   "importance": 4,
+   "date": "2026-11-15",
+   "slot": "17",
+   "deadline": null,
+   "source": "Game Developer（Doug Church氏、1999年）",
+   "note": "25年以上たっても使える、ゲームを分析する3つの物差し",
+   "reminded": []
   }
  ],
  "batches": [
@@ -627,6 +744,13 @@
   {
    "branch": "claude/inbox-20261115-10-091624",
    "slot": "10",
+   "date": "2026-11-15",
+   "count": 9,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261115-17-161627",
+   "slot": "17",
    "date": "2026-11-15",
    "count": 9,
    "status": "ok"
@@ -780,6 +904,27 @@
    "level": "応用",
    "area": "cpp",
    "theme": "コンパイル時計算",
+   "date": "2026-11-15"
+  },
+  {
+   "term": "パイプラインステートオブジェクト（PSO）",
+   "level": "基礎",
+   "area": "dx12",
+   "theme": "PSO（パイプラインステート）と事前キャッシュ",
+   "date": "2026-11-15"
+  },
+  {
+   "term": "パイプラインライブラリ",
+   "level": "発展",
+   "area": "dx12",
+   "theme": "PSO（パイプラインステート）と事前キャッシュ",
+   "date": "2026-11-15"
+  },
+  {
+   "term": "PSOの並列プリロードと無効化対策",
+   "level": "応用",
+   "area": "dx12",
+   "theme": "PSO（パイプラインステート）と事前キャッシュ",
    "date": "2026-11-15"
   }
  ],
