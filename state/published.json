@@ -870,6 +870,110 @@
    "source": "80 Level",
    "note": "スマホでゲームを売るなら知りたい、手数料と「アプリ外決済」の現在地",
    "reminded": []
+  },
+  {
+   "id": "db7aadc4d96e49b1",
+   "url": "https://unity.com/blog/ares-interactive-live-service-games",
+   "title": "クライアント更新なしで運営する。Unityのライブオペ設計、2作品の裏側",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-16",
+   "slot": "17",
+   "deadline": null,
+   "source": "Unity Blog",
+   "note": "運営データをビルドの外に出す設計。学べるのは「止められる機能」の作り方",
+   "reminded": []
+  },
+  {
+   "id": "703777948ca60a49",
+   "url": "https://godotengine.org/article/godot-showcase-sovereign-tower/",
+   "title": "セーブを「分けて持つ」と巻き戻しゲームは作れる。『Sovereign Tower』のGodot開発",
+   "category": "tech",
+   "importance": 3,
+   "date": "2026-11-16",
+   "slot": "17",
+   "deadline": null,
+   "source": "Godot Engine公式（Showcase）",
+   "note": "巻き戻しの肝は「何を戻して何を残すか」。セーブ分割の考え方",
+   "reminded": []
+  },
+  {
+   "id": "9e138bb4923dacb1",
+   "url": "https://www.gamedeveloper.com/design/what-rami-ismail-learned-with-his-return-to-game-development",
+   "title": "「2週間で面白くなる」が通じない。ラミ・イスマイルが復帰作で見つけた新しい測り方",
+   "category": "tech",
+   "importance": 3,
+   "date": "2026-11-16",
+   "slot": "17",
+   "deadline": null,
+   "source": "Game Developer",
+   "note": "ジャンルが変わると「面白さの測り方」も変わる。企画前に読みたい一本",
+   "reminded": []
+  },
+  {
+   "id": "fa4b0c2c0bf75dc1",
+   "url": "https://zenn.dev/kent_code/articles/5892898be90cac",
+   "title": "AIの長い回答で「分かったつもり」になるのを防ぐ。CLAUDE.mdに足す8つのルール",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-16",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（kent_code さん）",
+   "note": "試すならこうする：CLAUDE.mdに「結論3行・詳細はノートへ」を足す",
+   "reminded": []
+  },
+  {
+   "id": "e63d75ce75129abd",
+   "url": "https://zenn.dev/happy_elements/articles/201519107f93de",
+   "title": "サブエージェントを増やす前に。AnthropicがすすめるSkills中心の設計と移行4ステップ",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-16",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（Happy Elements）",
+   "note": "試すならこうする：10件の評価例を先に書いてから構成を変える",
+   "reminded": []
+  },
+  {
+   "id": "5ffef5d111cd3076",
+   "url": "https://levtech.jp/media/detail_972/",
+   "title": "AIへの指示の99%を声で。タイピングより3倍速いと感じる音声入力の始め方",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-16",
+   "slot": "17",
+   "deadline": null,
+   "source": "レバテックLAB",
+   "note": "試すならこうする：企画の考えを30秒、声でAIに話してみる",
+   "reminded": []
+  },
+  {
+   "id": "96bc4425067118e4",
+   "url": "https://zenn.dev/taka26taka/articles/76bceac9cae8aa",
+   "title": "AIで作ったサイトを1年後に自分でレビュー。見つかったのは設計より「作業の残骸」",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-16",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（たかさん）",
+   "note": "試すならこうする：公開前に「全件出る？規約は？READMEは本当？」を確認",
+   "reminded": []
+  },
+  {
+   "id": "b05c5bb63c1f42af",
+   "url": "https://saint11.art/blog/pixel-art-tutorials/",
+   "title": "ドット絵の定番教材「Pixel Art Tutorials」。512×512のGIFで学ぶアニメ・エフェクト・色",
+   "category": "classic",
+   "importance": 4,
+   "date": "2026-11-16",
+   "slot": "17",
+   "deadline": null,
+   "source": "Saint11（Pedro Medeiros）",
+   "note": "なぜ今でも価値があるか：絵が苦手でも、1枚のGIFで「動き」の作り方が分かる",
+   "reminded": []
   }
  ],
  "batches": [
@@ -967,6 +1071,13 @@
   {
    "branch": "claude/inbox-20261116-10-091632",
    "slot": "10",
+   "date": "2026-11-16",
+   "count": 8,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261116-17-162203",
+   "slot": "17",
    "date": "2026-11-16",
    "count": 8,
    "status": "ok"
@@ -1183,6 +1294,27 @@
    "level": "応用",
    "area": "cpp",
    "theme": "メモリレイアウトとキャッシュ効率",
+   "date": "2026-11-16"
+  },
+  {
+   "term": "コミッテッドリソース",
+   "level": "基礎",
+   "area": "dx12",
+   "theme": "リソースとヒープ（GPUメモリの置き方）",
+   "date": "2026-11-16"
+  },
+  {
+   "term": "プレースドリソース",
+   "level": "発展",
+   "area": "dx12",
+   "theme": "リソースとヒープ（GPUメモリの置き方）",
+   "date": "2026-11-16"
+  },
+  {
+   "term": "メモリエイリアシングとエイリアシングバリア",
+   "level": "応用",
+   "area": "dx12",
+   "theme": "リソースとヒープ（GPUメモリの置き方）",
    "date": "2026-11-16"
   }
  ],
@@ -2083,5 +2215,7 @@
   "feeling": 25,
   "prompt": 25
  },
- "last_daily_mail": "2026-11-15"
+ "last_daily_mail": "2026-11-15",
+ "specials": [],
+ "special_snap": {}
 }
