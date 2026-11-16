@@ -1839,6 +1839,66 @@ def steam_signals() -> dict:
     return out
 
 
+# ---------------------------------------------------------------- 画像（Steam ストアの公式画像だけ）
+STEAM_IMG = re.compile(r"^https://([a-z0-9-]+\.)*(steamstatic\.com|akamaihd\.net)/[^\s\"'<>]+$")
+
+
+def _img(u) -> str | None:
+    """Steam の画像配信サーバーの URL だけを通す（それ以外の画像は使わない）。"""
+    return u if isinstance(u, str) and len(u) < 400 and STEAM_IMG.match(u) else None
+
+
+def _clean_media(m) -> dict | None:
+    if not isinstance(m, dict):
+        return None
+    shots = [{"thumb": _img(s.get("thumb")), "full": _img(s.get("full"))} for s in m.get("shots") or [] if isinstance(s, dict)]
+    out = {"header": _img(m.get("header")), "shots": [s for s in shots if s["thumb"] and s["full"]][:6]}
+    return out if out["header"] or out["shots"] else None
+
+
+def steam_media(appid: int, shots: int = 0) -> dict:
+    """ストアページの見出し画像・スクリーンショット・日本の価格（Steam ストアの公開 API）。"""
+    d = _http_json(f"https://store.steampowered.com/api/appdetails?appids={int(appid)}&cc=jp&l=japanese"
+                   f"&filters=basic,screenshots,price_overview")
+    data = (d.get(str(appid)) or {}).get("data") or {}
+    out = {"header": _img(data.get("header_image"))}
+    if shots:
+        out["shots"] = [{"thumb": _img(s.get("path_thumbnail")), "full": _img(s.get("path_full"))}
+                        for s in (data.get("screenshots") or [])[:shots]]
+        out["shots"] = [s for s in out["shots"] if s["thumb"] and s["full"]]
+    price = data.get("price_overview") or {}
+    if data.get("is_free"):
+        out["price"] = "基本プレイ無料"
+    elif price.get("final_formatted"):
+        out["price"] = str(price["final_formatted"]).replace("¥ ", "¥")[:30]
+    return out
+
+
+def attach_media(sp: dict) -> int:
+    """画像は AI に選ばせない：steam_appid から Steam ストアの公式画像を入れる。失敗しても特集は出す。"""
+    n = 0
+    g = sp["game"]
+    if g.get("steam_appid"):
+        try:
+            m = steam_media(g["steam_appid"], shots=4)
+            g["media"] = _clean_media(m)
+            if m.get("price"):
+                g["price_jp"] = m["price"]
+            n += bool(m.get("header")) + len(m.get("shots") or [])
+        except Exception:   # noqa: BLE001
+            pass
+        time.sleep(.3)
+    for it in sp["ranking"]["items"] + sp["watch"]:
+        if it.get("steam_appid"):
+            try:
+                it["img"] = steam_media(it["steam_appid"]).get("header")
+                n += bool(it["img"])
+            except Exception:   # noqa: BLE001
+                pass
+            time.sleep(.3)
+    return n
+
+
 def _pct(v) -> str:
     return "—" if v is None else f"{'+' if v >= 0 else '−'}{abs(v) * 100:.0f}%"
 
@@ -2034,6 +2094,8 @@ def validate_special(data, strict: bool = True, ctx: dict | None = None) -> dict
         "exercise": _s(g.get("exercise"), 180),
         "terms": _terms(g.get("terms"), errs),
         "sources": _sources(g.get("sources"), "game", errs, 3, True),
+        "media": None if strict else _clean_media(g.get("media")),
+        "price_jp": "" if strict else _s(g.get("price_jp"), 30),
     }
     if not game["player"]["for_whom"]:
         errs.append("game.player.for_whom（どんな人に向いているか）不能为空")
@@ -2075,6 +2137,7 @@ def validate_special(data, strict: bool = True, ctx: dict | None = None) -> dict
             errs.append(f"{w}：appid {a} 不在 special-context 的数据里（数字填不上）。用表里的游戏，或者去掉 steam_appid 并写清来源")
         ranking.append({"rank": k, "title": _s(it.get("title"), 60) or (row or {}).get("name", ""), "steam_appid": a,
                         "url": _s(it.get("url"), 500), "why": why[:160], "tag": tag, "stats": stats,
+                        "img": None if strict else _img(it.get("img")),
                         "sources": _sources(it.get("sources"), w, errs, 1, False)})
     watch = []
     raw_w = data.get("watch") if isinstance(data.get("watch"), list) else []
@@ -2093,6 +2156,7 @@ def validate_special(data, strict: bool = True, ctx: dict | None = None) -> dict
         watch.append({"title": _s(it.get("title"), 60), "steam_appid": int(a) if str(a or "").isdigit() else None,
                       "url": _s(it.get("url"), 500), "why": why[:160],
                       "status": it.get("status") if it.get("status") in WATCH_STATUS else "その他",
+                      "img": None if strict else _img(it.get("img")),
                       "sources": _sources(it.get("sources"), w, errs, 1, False)})
     news = []
     raw_n = data.get("news") if isinstance(data.get("news"), list) else []
@@ -2147,6 +2211,8 @@ def cmd_special_submit(args) -> int:
     except ResultError as e:
         print("❌ 格式有问题，没有提交。请修改后再执行 special-submit：\n" + str(e))
         return 1
+    n_img = attach_media(sp)
+    print(f"🖼 Steam ストアの画像 {n_img} 枚を付けました（steam_appid から自動で取得）")
     now = now_jst()
     payload = {**sp, "date": now.strftime("%Y-%m-%d"), "created_at": now.isoformat(timespec="seconds"),
                "data": {"fetched": (ctx or {}).get("fetched"),
@@ -2185,6 +2251,8 @@ def build_special_embeds(sp: dict, day: date) -> list[dict]:
         desc += f"\n\n📖 [続きはサイトで：作り手の工夫・盗めるポイント・やってみよう]({link})"
     embeds = [{"title": f"🌙 今夜の1本｜{g['title']}"[:256], "url": g["url"], "description": desc[:3000], "color": 0x8E6CFF,
                "footer": {"text": f"{g['developer']} ・ {' / '.join(g['platforms'])} ・ {g['genre']}"[:200]}}]
+    if (g.get("media") or {}).get("header"):
+        embeds[0]["image"] = {"url": g["media"]["header"]}
     lines = []
     for it in sp["ranking"]["items"]:
         stat = rank_stat(it)
@@ -2194,9 +2262,15 @@ def build_special_embeds(sp: dict, day: date) -> list[dict]:
     fetched = (sp.get("data") or {}).get("fetched") or ""
     embeds.append({"title": "📈 急上昇 TOP5", "description": "\n".join(lines)[:4000], "color": 0xFF4F6D,
                    **({"footer": {"text": f"数字：Steam・SteamCharts（{fetched[5:16].replace('T', ' ')} 時点）"}} if fetched else {})})
+    top_img = next((it["img"] for it in sp["ranking"]["items"] if it.get("img")), None)
+    if top_img:
+        embeds[-1]["thumbnail"] = {"url": top_img}
     if sp["watch"]:
         embeds.append({"title": "🌱 期待の新星", "color": 0x3EE08F, "description": "\n".join(
             f"▸ **[{md(w['title'])}]({w['url']})** `{w['status']}`\n└ {md(w['why'][:80])}" for w in sp["watch"])[:2000]})
+        w_img = next((w["img"] for w in sp["watch"] if w.get("img")), None)
+        if w_img:
+            embeds[-1]["thumbnail"] = {"url": w_img}
     if sp["news"]:
         embeds.append({"title": "📰 今日の話題", "color": 0x5865F2, "description": "\n".join(
             f"▸ [{md(n['title'])}]({n['url']})\n└ {md(n['why'][:80])}" for n in sp["news"])[:3000]})
@@ -2211,6 +2285,9 @@ def email_for_special(title: str, sp: dict, day: date) -> tuple[str, str]:
     inner = (f"<p style=\"margin:16px 0 0;font-size:12px;font-weight:800;color:#7a4dff\">🌙 今夜の1本</p>"
              f"<p style=\"margin:4px 0 0;font-size:19px;font-weight:900\"><a href=\"{_h(g['url'])}\" style=\"color:#15161c;text-decoration:none\">{_h(g['title'])}</a></p>"
              f"<p style=\"margin:2px 0;font-size:12px;color:#7a7e8a\">{_h(g['developer'])} ・ {_h(' / '.join(g['platforms']))}</p>"
+             + (f"<img src=\"{_h(g['media']['header'])}\" width=\"460\" alt=\"\" style=\"display:block;width:100%;max-width:460px;height:auto;border-radius:10px;margin:10px 0 0\">"
+                if (g.get("media") or {}).get("header") else "")
+             + 
              f"<p style=\"margin:8px 0;font-size:15px;font-weight:700\">{_h(g['hook'])}</p><p style=\"margin:6px 0;font-size:14px\">{_h(g['summary'])}</p>"
              "<ul style=\"margin:6px 0 6px 18px;padding:0;font-size:14px\">"
              + "".join(f"<li>🎮 {_h(p)}</li>" for p in g["player"]["points"][:2])
@@ -2272,6 +2349,8 @@ def cmd_preview_special(args) -> int:
 
     data = load_branch_json(args.source, "special.json")
     sp = {**validate_special(data, strict=False), "data": data.get("data") or {}}
+    if sp["game"].get("steam_appid") and not sp["game"].get("media"):
+        attach_media(sp)
     day = batch_day(data)
     _moves(sp, (load_state().get("specials") or [None])[-1])
     embeds = build_special_embeds(sp, day)
@@ -2285,7 +2364,12 @@ def cmd_preview_special(args) -> int:
     def block(name: str, part: dict) -> str:
         return (f"<h3>{name}</h3><ol class='pts'>" + "".join(f"<li>{H.escape(p)}</li>" for p in part["points"]) + "</ol>"
                 + "".join(f"<p class='para'>{H.escape(p)}</p>" for p in part["detail"].split("\n\n")))
-    full = (f"<div class='card'><div class='meta'>{H.escape(g['developer'])} ・ {H.escape(' / '.join(g['platforms']))} ・ "
+    media = g.get("media") or {}
+    gallery = ((f"<img src='{H.escape(media['header'])}' style='max-width:460px;width:100%;border-radius:8px'>" if media.get("header") else "")
+               + "".join(f"<a href='{H.escape(x['full'])}'><img src='{H.escape(x['thumb'])}' style='width:200px;margin:4px;border-radius:6px'></a>"
+                         for x in media.get("shots") or []))
+    full = (gallery + f"<div class='card'><div class='meta'>{H.escape(g['developer'])} ・ {H.escape(' / '.join(g['platforms']))} ・ "
+            f"{H.escape(g.get('price_jp') or g['price'] or '')} ・ "
             f"{H.escape(g['release'])} ・ {H.escape(g['genre'])} ・ {H.escape(g['engine'] or '')}</div>"
             f"<h3><a href='{H.escape(g['url'])}'>{H.escape(g['title'])}</a></h3><p><b>{H.escape(g['hook'])}</b></p>"
             f"<p>{H.escape(g['summary'])}</p><p class='meta'>なぜ今：{H.escape(g['why_now'])}</p>"
@@ -2295,7 +2379,8 @@ def cmd_preview_special(args) -> int:
             + f"<h3>✏️ やってみよう</h3><p>{H.escape(g['exercise'])}</p>"
             + ("<dl class='terms'>" + "".join(f"<dt>{H.escape(t['term'])}</dt><dd>{H.escape(t['explain'])}</dd>" for t in g["terms"]) + "</dl>" if g["terms"] else "")
             + "<h3>出典</h3><ul>" + "".join(f"<li>[{s['kind']}] <a href='{H.escape(s['url'])}'>{H.escape(s['title'])}</a></li>" for s in g["sources"]) + "</ul></div>")
-    rank = "".join(f"<div class='card'><b>{it['rank']}. <a href='{H.escape(it['url'])}'>{H.escape(it['title'])}</a></b> "
+    rank = "".join(f"<div class='card'>" + (f"<img src='{H.escape(it['img'])}' style='width:184px;float:right;border-radius:6px'>" if it.get("img") else "")
+                   + f"<b>{it['rank']}. <a href='{H.escape(it['url'])}'>{H.escape(it['title'])}</a></b> "
                    f"［{it['tag']}・{MOVE_MARK.get(it.get('move'), '')}］<div class='meta'>{H.escape(rank_stat(it))}</div>"
                    f"<p>{H.escape(it['why'])}</p></div>" for it in sp["ranking"]["items"])
     watch = "".join(f"<div class='card'><b><a href='{H.escape(w['url'])}'>{H.escape(w['title'])}</a></b>［{w['status']}］"

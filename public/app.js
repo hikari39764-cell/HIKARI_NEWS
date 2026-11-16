@@ -115,6 +115,8 @@ const SX_KIND = { official: "公式", store: "ストア", interview: "インタ�
 const SX_MOVE = { new: ["NEW", "new"], up: ["▲", "up"], down: ["▼", "dn"], same: ["―", "same"] };
 const sxPct = v => `${v >= 0 ? "+" : "−"}${Math.abs(v * 100).toFixed(0)}%`;
 const sxNum = n => n >= 10000 ? `${(n / 10000).toFixed(1)}万` : Number(n).toLocaleString();
+const sxImg = (u, cls, alt = "", w = 460, h = 215) => /^https:\/\/([a-z0-9-]+\.)*(steamstatic\.com|akamaihd\.net)\//.test(u || "")
+  ? `<img class="${cls}" src="${esc(u)}" alt="${esc(alt)}" width="${w}" height="${h}" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : "";
 const sxLink = (u, html, cls = "") => `<a class="${cls}" href="${esc(safeUrl(u))}" target="_blank" rel="noopener noreferrer">${html}</a>`;
 
 // 「今日」のいちばん上に出す入口（今日か昨日の特集があるときだけ）
@@ -125,6 +127,7 @@ function sxBanner() {
     <span class="sx-bt">${ic("ti-moon-stars")}19:00 特集${sp.date === todayStr() ? "" : "（昨日）"}</span>
     <b class="sx-bn">${esc(sp.game.title)}</b><span class="sx-bh">${esc(sp.game.hook)}</span>
     <span class="sx-bk">${ic("ti-trending-up")}急上昇 TOP5 ・ ${ic("ti-news")}今日の話題</span>${ic("ti-arrow-right sx-ba")}
+    ${sxImg(sp.game.media?.header, "sx-bimg")}
   </a>`;
 }
 
@@ -139,7 +142,7 @@ function sxStats(s) {
 
 function sxGameHTML(g) {
   const chips = [["ti-building", g.developer], ["ti-device-gamepad-2", (g.platforms || []).join(" / ")], ["ti-calendar", g.release],
-                 ["ti-category", g.genre], ["ti-coin-yen", g.price], ["ti-cpu", g.engine]]
+                 ["ti-category", g.genre], ["ti-coin-yen", g.price_jp || g.price], ["ti-cpu", g.engine]]
     .filter(c => c[1]).map(([i, t]) => `<span class="sx-chip">${ic(i)}${esc(t)}</span>`).join("");
   const view = (cls, en, ja, icn, part, extra = "") => `<section class="sx-view ${cls} rv">
     <div class="sx-vh"><span class="sx-vtag">${en}</span><h3>${ic(icn)}${ja}</h3></div>
@@ -148,7 +151,8 @@ function sxGameHTML(g) {
   const pl = g.player || {};
   const fit = (pl.for_whom || pl.caution) ? `<div class="sx-fit">${pl.for_whom ? `<p>${ic("ti-heart")}<b>向いている人</b>${esc(pl.for_whom)}</p>` : ""}${pl.caution ? `<p>${ic("ti-alert-triangle")}<b>気をつけたい点</b>${esc(pl.caution)}</p>` : ""}</div>` : "";
   return `<h2 class="sx-h2 rv"><span class="sx-h2n">01</span>${ic("ti-moon-stars")}今夜の1本</h2>
-  <section class="sx-game rv">
+  <section class="sx-game rv ${g.media?.header ? "has-img" : ""}">
+    ${sxImg(g.media?.header, "sx-cover", g.title)}
     <h2 class="sx-title">${esc(g.title)}${g.title_en && g.title_en !== g.title ? `<small>${esc(g.title_en)}</small>` : ""}</h2>
     <p class="sx-hook"><span>${esc(g.hook)}</span></p>
     <div class="sx-chips">${chips}</div>
@@ -157,6 +161,8 @@ function sxGameHTML(g) {
     <div class="sx-links">${sxLink(g.url, `${ic("ti-external-link")}公式・ストア`, "btn")}</div>
     ${g.steam_appid ? `<iframe class="sx-steam" src="https://store.steampowered.com/widget/${Number(g.steam_appid)}/" loading="lazy" title="Steam ストア" referrerpolicy="no-referrer"></iframe>` : ""}
   </section>
+  ${(g.media?.shots || []).length ? `<div class="sx-shots rv">${g.media.shots.map((x, i) =>
+    sxLink(x.full, sxImg(x.thumb, "", `${g.title} のスクリーンショット ${i + 1}`, 600, 338), "sx-shot")).join("")}</div>` : ""}
   <div class="sx-views">
     ${view("pl", "PLAYER'S VIEW", "プレイヤー視点", "ti-device-gamepad-2", pl, fit)}
     ${view("mk", "MAKER'S VIEW", "作り手視点", "ti-tools", g.maker || {})}
@@ -172,8 +178,9 @@ function sxRankHTML(sp) {
   const items = sp.ranking?.items || [];
   const rows = items.map((it, i) => {
     const mv = SX_MOVE[it.move];
-    return `<article class="sx-rk rv ${i === 0 ? "top" : ""}" style="--i:${i + 1}">
-      <span class="sx-rn">${it.rank || i + 1}</span>
+    const img = sxImg(it.img, "sx-rimg", it.title);
+    return `<article class="sx-rk rv ${i === 0 ? "top" : ""} ${img ? "has-img" : ""}" style="--i:${i + 1}">
+      <span class="sx-rn">${it.rank || i + 1}</span>${img ? sxLink(it.url, img, "sx-rimgw") : ""}
       <div class="sx-rb">
         <div class="sx-rt">${sxLink(it.url, esc(it.title))}<span class="sx-tag">${esc(it.tag || "急上昇")}</span>${mv ? `<span class="sx-mv ${mv[1]}">${mv[0]}</span>` : ""}</div>
         ${it.stats ? `<div class="sx-stats">${sxStats(it.stats)}</div>` : ""}
@@ -182,7 +189,7 @@ function sxRankHTML(sp) {
       </div></article>`;
   }).join("");
   const watch = (sp.watch || []).map((w, i) => `<article class="sx-w rv" style="--i:${i + 1}">
-    <span class="sx-ws">${esc(w.status)}</span>${sxLink(w.url, esc(w.title), "sx-wt")}<p>${esc(w.why)}</p></article>`).join("");
+    ${w.img ? sxLink(w.url, sxImg(w.img, "sx-wimg", w.title), "sx-wimgw") : ""}<span class="sx-ws">${esc(w.status)}</span>${sxLink(w.url, esc(w.title), "sx-wt")}<p>${esc(w.why)}</p></article>`).join("");
   return `<h2 class="sx-h2 rv"><span class="sx-h2n">02</span>${ic("ti-trending-up")}急上昇 TOP5</h2>
     ${sp.ranking?.basis ? `<p class="sx-basis rv">${esc(sp.ranking.basis)}</p>` : ""}
     <div class="sx-rks">${rows}</div>
@@ -216,7 +223,7 @@ function viewSpecial() {
     ${sxGameHTML(sp.game || {})}
     ${sxRankHTML(sp)}
     ${sxNewsHTML(sp.news || [])}
-    <p class="sx-note rv">${ic("ti-info-circle")}特集の文章は AI が出典をもとに作成しています。正確な情報は各リンク先でご確認ください。${fetched ? `急上昇の数値は Steam・SteamCharts（${esc(fetched)} 時点）をもとにしています。` : ""}</p>
+    <p class="sx-note rv">${ic("ti-info-circle")}特集の文章は AI が出典をもとに作成しています。正確な情報は各リンク先でご確認ください。${fetched ? `急上昇の数値は Steam・SteamCharts（${esc(fetched)} 時点）をもとにしています。` : ""}画像：Steam ストアページより（© 各権利者）。</p>
   </div>`;
 }
 
