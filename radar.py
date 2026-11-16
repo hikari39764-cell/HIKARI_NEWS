@@ -1560,7 +1560,8 @@ PAGE_CSS = """body{margin:0;background:#1e1f22;color:#dbdee1;font:15px/1.7 "Noto
 .wrap{max-width:900px;margin:0 auto;padding:16px} h1{font-size:18px} h2{font-size:16px;margin-top:32px;color:#fff}
 a{color:#00a8fc;text-decoration:none} .thread{background:#2b2d31;border-radius:8px;padding:16px}
 .tt{font-size:17px;font-weight:700;color:#fff;margin-bottom:12px}
-.embed{background:#232428;border-left:4px solid;border-radius:4px;padding:10px 14px;margin:8px 0}
+.embed{background:#232428;border-left:4px solid;border-radius:4px;padding:10px 14px;margin:8px 0;max-width:520px;overflow:hidden}
+.eth{float:right;max-width:80px;max-height:80px;border-radius:4px;margin:0 0 8px 12px} .eim{display:block;max-width:100%;border-radius:4px;margin-top:12px}
 .et{font-weight:700;color:#fff;margin-bottom:4px} .ed{font-size:14px} .ef{font-size:12px;color:#949ba4;margin-top:6px}
 code,pre{background:#1e1f22;border-radius:4px;font-size:12px} pre{padding:8px;white-space:pre-wrap}
 .card{background:#2b2d31;border-radius:8px;padding:12px 16px;margin:10px 0} .card h3{margin:4px 0;font-size:16px}
@@ -1568,6 +1569,20 @@ code,pre{background:#1e1f22;border-radius:4px;font-size:12px} pre{padding:8px;wh
 ol.pts{margin:10px 0;padding-left:1.4em;color:#f2f56a} ol.pts li span,ol.pts li{color:#dbdee1}
 p.para{line-height:1.9;margin:8px 0} dl.terms{background:#1e1f22;border-radius:6px;padding:8px 12px}
 dl.terms dt{font-weight:700;color:#ffb874} dl.terms dd{margin:2px 0 8px}"""
+
+
+def _embed_html(e: dict) -> str:
+    """プレビュー：Discord の埋め込み 1 つを、本物に近い形で（右上の小さい画像・下の大きい画像も）。"""
+    import html as H
+
+    thumb = (e.get("thumbnail") or {}).get("url")
+    image = (e.get("image") or {}).get("url")
+    return (f'<div class="embed" style="border-color:#{e.get("color", 0x2B2D31):06x}">'
+            + (f'<img class="eth" src="{H.escape(thumb)}" alt="">' if thumb else "")
+            + (f'<div class="et">{H.escape(e["title"])}</div>' if e.get("title") else "")
+            + f'<div class="ed">{_md_to_html(e.get("description", ""))}</div>'
+            + (f'<img class="eim" src="{H.escape(image)}" alt="">' if image else "")
+            + (f'<div class="ef">{H.escape(e["footer"]["text"])}</div>' if e.get("footer") else "") + "</div>")
 
 
 def _md_to_html(text: str) -> str:
@@ -1628,12 +1643,7 @@ def cmd_preview(args) -> int:
     rich = [{**enrich(it, day, slot), "dup": item_id(it["url"]) in known} for it in items]
     cats = [t["id"] for t in CONFIG["tasks"] if any(it["category"] == t["id"] for it in rich)]
     embeds = build_batch_embeds([it for it in rich if not it["dup"]], [], kw, track["name"] if track else "")
-    emb_html = "".join(
-        f'<div class="embed" style="border-color:#{e.get("color", 0x2B2D31):06x}">'
-        + (f'<div class="et">{H.escape(e["title"])}</div>' if e.get("title") else "")
-        + f'<div class="ed">{_md_to_html(e.get("description", ""))}</div>'
-        + (f'<div class="ef">{H.escape(e["footer"]["text"])}</div>' if e.get("footer") else "") + "</div>"
-        for e in embeds)
+    emb_html = "".join(_embed_html(e) for e in embeds)
     rows = "".join(
         f'<div class="card"><div class="meta">{H.escape(it["category_name"])} ・ {"★" * it["importance"]} ・ '
         f'{H.escape(it["source"])}{" ・ ⚠️ 已推送过" if it["dup"] else ""}</div>'
@@ -2354,11 +2364,7 @@ def cmd_preview_special(args) -> int:
     day = batch_day(data)
     _moves(sp, (load_state().get("specials") or [None])[-1])
     embeds = build_special_embeds(sp, day)
-    emb_html = "".join(
-        f'<div class="embed" style="border-color:#{e.get("color", 0x2B2D31):06x}">'
-        + (f'<div class="et">{H.escape(e["title"])}</div>' if e.get("title") else "")
-        + f'<div class="ed">{_md_to_html(e.get("description", ""))}</div>'
-        + (f'<div class="ef">{H.escape(e["footer"]["text"])}</div>' if e.get("footer") else "") + "</div>" for e in embeds)
+    emb_html = "".join(_embed_html(e) for e in embeds)
     g = sp["game"]
 
     def block(name: str, part: dict) -> str:
