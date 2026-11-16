@@ -1561,7 +1561,8 @@ PAGE_CSS = """body{margin:0;background:#1e1f22;color:#dbdee1;font:15px/1.7 "Noto
 a{color:#00a8fc;text-decoration:none} .thread{background:#2b2d31;border-radius:8px;padding:16px}
 .tt{font-size:17px;font-weight:700;color:#fff;margin-bottom:12px}
 .embed{background:#232428;border-left:4px solid;border-radius:4px;padding:10px 14px;margin:8px 0;max-width:520px;overflow:hidden}
-.eth{float:right;max-width:80px;max-height:80px;border-radius:4px;margin:0 0 8px 12px} .ea{font-size:12px;font-weight:700;color:#fff;margin-bottom:4px} .eim{display:block;max-width:100%;border-radius:4px;margin-top:12px}
+.eth{float:right;max-width:80px;max-height:80px;border-radius:4px;margin:0 0 8px 12px} .mails{display:flex;gap:16px;align-items:flex-start;overflow-x:auto}
+iframe.mail{border:1px solid #444;border-radius:8px;background:#f4f1e8;height:1900px} iframe.pc{width:640px} iframe.sp{width:375px} .ea{font-size:12px;font-weight:700;color:#fff;margin-bottom:4px} .eim{display:block;max-width:100%;border-radius:4px;margin-top:12px}
 .et{font-weight:700;color:#fff;margin-bottom:4px} .ed{font-size:14px} .ef{font-size:12px;color:#949ba4;margin-top:6px}
 code,pre{background:#1e1f22;border-radius:4px;font-size:12px} pre{padding:8px;white-space:pre-wrap}
 .card{background:#2b2d31;border-radius:8px;padding:12px 16px;margin:10px 0} .card h3{margin:4px 0;font-size:16px}
@@ -1569,6 +1570,17 @@ code,pre{background:#1e1f22;border-radius:4px;font-size:12px} pre{padding:8px;wh
 ol.pts{margin:10px 0;padding-left:1.4em;color:#f2f56a} ol.pts li span,ol.pts li{color:#dbdee1}
 p.para{line-height:1.9;margin:8px 0} dl.terms{background:#1e1f22;border-radius:6px;padding:8px 12px}
 dl.terms dt{font-weight:700;color:#ffb874} dl.terms dd{margin:2px 0 8px}"""
+
+
+def _mail_preview(html: str, text: str, subject: str) -> str:
+    """プレビュー：メールを PC の幅とスマホの幅で並べて見せる（iframe なのでサイトの CSS の影響を受けない）。"""
+    import html as H
+
+    doc = H.escape(f'<!doctype html><meta charset="utf-8"><body style="margin:0">{html}</body>', quote=True)
+    return (f"<p class='meta'>件名：<b>{H.escape(subject)}</b></p><div class='mails'>"
+            f"<div><p class='meta'>PC（600px）</p><iframe class='mail pc' onload=\"this.style.height=this.contentDocument.documentElement.scrollHeight+'px'\" srcdoc=\"{doc}\"></iframe></div>"
+            f"<div><p class='meta'>スマホ（375px）</p><iframe class='mail sp' onload=\"this.style.height=this.contentDocument.documentElement.scrollHeight+'px'\" srcdoc=\"{doc}\"></iframe></div></div>"
+            f"<details><summary class='meta'>テキスト版（HTML が表示できないメールソフト用）</summary><pre class='rep'>{H.escape(text)}</pre></details>")
 
 
 def _embed_html(e: dict) -> str:
@@ -2300,28 +2312,99 @@ def build_special_embeds(sp: dict, day: date) -> list[dict]:
 
 
 def email_for_special(title: str, sp: dict, day: date) -> tuple[str, str]:
+    """19:00 特集のメール。メールソフト（Gmail・スマホ）で崩れないよう、表（table）と直接書いたスタイルだけで組む。
+    サイトと同じ「夜の紫＋黄色」の見た目で、今夜の1本 → 急上昇 TOP5 → 期待の新星 → 今日の話題 の順。"""
     g = sp["game"]
     link = site_link(f"#/special?d={day.isoformat()}")
-    inner = (f"<p style=\"margin:16px 0 0;font-size:12px;font-weight:800;color:#7a4dff\">🌙 今夜の1本</p>"
-             f"<p style=\"margin:4px 0 0;font-size:19px;font-weight:900\"><a href=\"{_h(g['url'])}\" style=\"color:#15161c;text-decoration:none\">{_h(g['title'])}</a></p>"
-             f"<p style=\"margin:2px 0;font-size:12px;color:#7a7e8a\">{_h(g['developer'])} ・ {_h(' / '.join(g['platforms']))}</p>"
-             + (f"<img src=\"{_h(g['media']['header'])}\" width=\"460\" alt=\"\" style=\"display:block;width:100%;max-width:460px;height:auto;border-radius:10px;margin:10px 0 0\">"
-                if (g.get("media") or {}).get("header") else "")
-             + 
-             f"<p style=\"margin:8px 0;font-size:15px;font-weight:700\">{_h(g['hook'])}</p><p style=\"margin:6px 0;font-size:14px\">{_h(g['summary'])}</p>"
-             "<ul style=\"margin:6px 0 6px 18px;padding:0;font-size:14px\">"
-             + "".join(f"<li>🎮 {_h(p)}</li>" for p in g["player"]["points"][:2])
-             + "".join(f"<li>🛠 {_h(p)}</li>" for p in g["maker"]["points"][:2]) + "</ul>"
-             f"<p style=\"margin:6px 0 0\"><a href=\"{_h(link)}\" style=\"font-size:13px;color:#b06d00;font-weight:700\">続きをサイトで読む →</a></p>"
-             "<p style=\"margin:20px 0 4px;font-size:13px;font-weight:800\">📈 急上昇 TOP5</p>"
-             + "".join(f"<div style=\"font-size:14px;margin:3px 0\"><b>{it['rank']}.</b> <a href=\"{_h(it['url'])}\" style=\"color:#15161c\">{_h(it['title'])}</a>"
-                       f" <span style=\"color:#7a7e8a;font-size:12px\">{_h(rank_stat(it))}</span></div>" for it in sp["ranking"]["items"])
-             + ("<p style=\"margin:18px 0 4px;font-size:13px;font-weight:800\">📰 今日の話題</p>"
-                + "".join(f"<div style=\"font-size:14px;margin:3px 0\">・<a href=\"{_h(n['url'])}\" style=\"color:#15161c\">{_h(n['title'])}</a></div>" for n in sp["news"])
-                if sp["news"] else ""))
-    html = MAIL_WRAP.format(body=_mail_head(title, "19:00 特集") + _mail_box(inner) + _mail_foot())
-    text = "\n".join([title, "", f"🌙 今夜の1本：{g['title']}", g["hook"], g["summary"], link, "", "📈 急上昇 TOP5",
-                      *[f"{it['rank']}. {it['title']}（{rank_stat(it)}）" for it in sp["ranking"]["items"]], "",
+    F = "'Hiragino Sans','Noto Sans JP','Yu Gothic',Meiryo,sans-serif"
+    NUM = "'Arial Black','Helvetica Neue',Arial,sans-serif"
+    T = 'role="presentation" cellpadding="0" cellspacing="0" border="0"'
+
+    def sec(num: str, name: str, color: str) -> str:   # 番号つきの見出し（01 / 02 / 03 / 04）
+        return (f'<tr><td style="padding:30px 0 12px"><table {T}><tr>'
+                f'<td style="font:900 28px/1 {NUM};color:#cfc8b8;padding-right:10px">{num}</td>'
+                f'<td style="background:{color};color:#0b0b0b;font:900 15px/1.4 {F};padding:5px 12px;border:2px solid #0b0b0b">{name}</td>'
+                '</tr></table></td></tr>')
+
+    def img(url, w: int, h: int, style: str = "") -> str:
+        return (f'<img src="{_h(url)}" width="{w}" height="{h}" alt="" '
+                f'style="display:block;width:{w}px;max-width:100%;height:auto;border:0;{style}">') if url else ""
+
+    def view(en: str, ja: str, color: str, num_color: str, pts: list) -> str:
+        rows = "".join(f'<tr><td valign="top" style="font:900 15px/1.75 {NUM};color:{num_color};padding:3px 10px 3px 0">{i:02d}</td>'
+                       f'<td style="font:600 14px/1.75 {F};color:#15161c;padding:3px 0">{_h(p)}</td></tr>' for i, p in enumerate(pts, 1))
+        return (f'<tr><td style="padding-top:12px"><table {T} width="100%" style="background:#ffffff;border:1px solid #e5e0d2;'
+                f'border-top:4px solid {color};border-radius:12px"><tr><td style="padding:14px 18px 12px">'
+                f'<div style="font:800 11px/1.4 {F};letter-spacing:.16em;color:{num_color}">{en}</div>'
+                f'<div style="font:900 16px/1.5 {F};color:#15161c;margin:2px 0 6px">{ja}</div>'
+                f'<table {T}>{rows}</table></td></tr></table></td></tr>')
+
+    meta = " ・ ".join(_h(x) for x in (g["developer"], " / ".join(g["platforms"]), g.get("price_jp") or g["price"]) if x)
+    cover = (g.get("media") or {}).get("header")
+    game = (f'<tr><td><table {T} width="100%" style="background:#1d1638;border:2px solid #0b0b0b;border-radius:16px">'
+            + (f'<tr><td style="padding:0">{img(cover, 596, 279, "width:100%;border-radius:14px 14px 0 0")}</td></tr>' if cover else "")
+            + f'<tr><td style="padding:18px 22px 22px">'
+            f'<div style="font:800 12px/1.4 {F};letter-spacing:.08em;color:#f2f56a">🌙 今夜の1本</div>'
+            f'<div style="font:900 24px/1.35 {F};color:#ffffff;margin-top:4px">{_h(g["title"])}</div>'
+            f'<div style="margin-top:10px;font:800 14px/2 {F}"><span style="background:#f2f56a;color:#0b0b0b;padding:3px 8px">{_h(g["hook"])}</span></div>'
+            f'<div style="font:600 12px/1.6 {F};color:#b9b2dd;margin-top:8px">{meta}</div>'
+            f'<div style="font:400 14px/1.9 {F};color:#e8e4f7;margin-top:10px">{_h(g["summary"])}</div>'
+            '</td></tr></table></td></tr>')
+    game += view("PLAYER'S VIEW", "🎮 プレイヤー視点", "#ffb874", "#d9731f", g["player"]["points"][:3])
+    game += view("MAKER'S VIEW", "🛠 作り手視点", "#e0c400", "#a08a00", g["maker"]["points"][:3])
+    if g.get("steal"):
+        game += (f'<tr><td style="padding-top:12px"><table {T} width="100%" style="background:#fffbe0;border:2px dashed #e0c400;border-radius:12px">'
+                 f'<tr><td style="padding:12px 18px"><div style="font:900 14px/1.6 {F};color:#15161c">💡 ここを盗め</div>'
+                 f'<div style="font:600 14px/1.8 {F};color:#3c3f4a;margin-top:2px">{_h(g["steal"][0])}</div></td></tr></table></td></tr>')
+    game += (f'<tr><td style="padding:16px 0 0" align="center"><a href="{_h(link)}" style="display:inline-block;background:#f2f56a;'
+             f'color:#0b0b0b;font:900 15px/1 {F};padding:14px 26px;border:2px solid #0b0b0b;border-radius:10px;text-decoration:none">'
+             '続きをサイトで読む →</a></td></tr>')
+
+    ranks = ""
+    for it in sp["ranking"]["items"]:
+        stat = rank_stat(it)
+        why = it["why"] if len(it["why"]) <= 90 else it["why"][:88] + "…"
+        ranks += (f'<tr><td style="padding:10px 0;border-bottom:1px solid #ebe6d9"><table {T} width="100%"><tr>'
+                  f'<td width="40" valign="top" style="font:900 30px/1 {NUM};color:{"#e0b400" if it["rank"] == 1 else "#c9c3b5"};padding-top:2px">{it["rank"]}</td>'
+                  + (f'<td width="124" valign="top" style="padding-right:12px">{img(it.get("img"), 120, 56, "border-radius:6px;border:1px solid #d8d2c4")}</td>' if it.get("img") else "")
+                  + f'<td valign="top"><a href="{_h(it["url"])}" style="font:800 15px/1.5 {F};color:#15161c;text-decoration:none">{_h(it["title"])}</a>'
+                  f'<div style="margin-top:4px;font:700 12px/1.6 {F}"><span style="background:#0b0b0b;color:#f2f56a;padding:1px 7px">{_h(it["tag"])}</span>'
+                  + (f' <span style="color:#1f9d5a">{_h(stat)}</span>' if stat else "") + '</div>'
+                  f'<div style="font:400 13px/1.75 {F};color:#3c3f4a;margin-top:4px">{_h(why)}</div></td>'
+                  '</tr></table></td></tr>')
+    watch = ""
+    for w in sp["watch"]:
+        why = w["why"] if len(w["why"]) <= 90 else w["why"][:88] + "…"
+        watch += (f'<tr><td style="padding:10px 0;border-bottom:1px solid #ebe6d9"><table {T} width="100%"><tr>'
+                  + (f'<td width="124" valign="top" style="padding-right:12px">{img(w.get("img"), 120, 56, "border-radius:6px;border:1px solid #d8d2c4")}</td>' if w.get("img") else "")
+                  + f'<td valign="top"><a href="{_h(w["url"])}" style="font:800 15px/1.5 {F};color:#15161c;text-decoration:none">{_h(w["title"])}</a>'
+                  f'<div style="margin-top:4px;font:700 12px/1.6 {F}"><span style="background:#3ee08f;color:#0b0b0b;padding:1px 7px">{_h(w["status"])}</span></div>'
+                  f'<div style="font:400 13px/1.75 {F};color:#3c3f4a;margin-top:4px">{_h(why)}</div></td>'
+                  '</tr></table></td></tr>')
+    news = "".join(f'<tr><td style="padding:10px 0;border-bottom:1px solid #ebe6d9">'
+                   f'<a href="{_h(n["url"])}" style="font:800 15px/1.55 {F};color:#15161c;text-decoration:none">{_h(n["title"])}</a>'
+                   f'<div style="font:600 12px/1.6 {F};color:#7a7e8a">{_h(n["source"])}</div>'
+                   f'<div style="font:400 13px/1.75 {F};color:#3c3f4a;margin-top:3px">💬 {_h(n["why"])}</div></td></tr>' for n in sp["news"])
+
+    head = (f'<tr><td style="background:#0b0b0b;border-radius:16px;padding:18px 22px">'
+            f'<div style="font:900 20px/1.2 {F};color:#f2f56a;letter-spacing:.04em">★ HIKARI NEWS</div>'
+            f'<div style="font:800 14px/1.5 {F};color:#ffffff;margin-top:4px">🌙 19:00 特集 ・ {day.month}/{day.day}（{WEEKDAYS_JA[day.weekday()]}）</div>'
+            f'<div style="font:400 12px/1.5 {F};color:#b8bcc8">今夜の1本・急上昇 TOP5・今日の話題</div></td></tr>')
+    body = (head + sec("01", "今夜の1本", "#c9b8ff") + game
+            + sec("02", "急上昇 TOP5", "#ff8fa3") + ranks
+            + (sec("03", "期待の新星", "#8ff0c0") + watch if watch else "")
+            + (sec("04" if watch else "03", "今日の話題", "#a9b4ff") + news if news else "")
+            + f'<tr><td style="padding:22px 0 0" align="center"><a href="{_h(link)}" style="font:800 13px/1.6 {F};color:#b06d00">'
+            '特集の全文・過去の特集はサイトで →</a></td></tr>'
+            + f'<tr><td>{_mail_foot()}<p style="font:400 11px/1.6 {F};color:#9a9ea8;margin:6px 4px 0">'
+            '画像：Steam ストアページより（© 各権利者）。急上昇の数値は Steam・SteamCharts をもとにしています。</p></td></tr>')
+    html = (f'<div style="background:#f4f1e8;padding:20px 10px;font-family:{F};color:#15161c">'
+            f'<table {T} width="600" align="center" style="width:100%;max-width:600px;margin:0 auto">{body}</table></div>')
+    text = "\n".join([title, "", f"🌙 今夜の1本：{g['title']}", g["hook"], g["summary"], "",
+                      "🎮 プレイヤー視点", *[f"・{p}" for p in g["player"]["points"][:3]], "",
+                      "🛠 作り手視点", *[f"・{p}" for p in g["maker"]["points"][:3]], "", f"続き：{link}", "",
+                      "📈 急上昇 TOP5", *[f"{it['rank']}. {it['title']}（{rank_stat(it)}）\n   {it['url']}" for it in sp["ranking"]["items"]], "",
+                      *(["🌱 期待の新星", *[f"・{w['title']}（{w['status']}）\n  {w['url']}" for w in sp["watch"]], ""] if sp["watch"] else []),
                       "📰 今日の話題", *[f"・{n['title']}\n  {n['url']}" for n in sp["news"]], "",
                       f"配信の停止・設定：{site_link('#/notify')}"])
     return html, text
@@ -2407,7 +2490,8 @@ def cmd_preview_special(args) -> int:
             f"<h2>① Discord 论坛帖子的样子</h2><div class='thread'><div class='tt'>{H.escape(special_title(day, sp))}</div>{emb_html}</div>"
             f"<h2>② 今夜の1本（网站上的全文）</h2>{full}<h2>③ 急上昇 TOP5</h2><p class='meta'>{H.escape(sp['ranking']['basis'])}</p>{rank}"
             f"<h2>④ 期待の新星</h2>{watch}<h2>⑤ 今日の話題</h2>{news}"
-            f"<h2>⑥ AI 的报告</h2><pre class='rep'>{H.escape(sp['report'] or '（なし）')}</pre>")
+            f"<h2>⑥ 邮件的样子（「配信ごと」的人会收到）</h2>{_mail_preview(*email_for_special(special_title(day, sp), sp, day), special_title(day, sp))}"
+            f"<h2>⑦ AI 的报告</h2><pre class='rep'>{H.escape(sp['report'] or '（なし）')}</pre>")
     write_page(f"preview-special-{day}.html", body)
     out = ROOT / "out" / "special_preview.json"   # ローカルの網站（?demo）で特集ページを確認する用
     out.write_text(json.dumps({**sp, "date": day.isoformat()}, ensure_ascii=False), encoding="utf-8")
