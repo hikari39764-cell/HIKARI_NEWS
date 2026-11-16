@@ -2281,17 +2281,21 @@ def build_special_embeds(sp: dict, day: date) -> list[dict]:
         if k == len(items) - 1 and fetched:
             e["footer"] = {"text": f"数字：Steam・SteamCharts（{fetched[5:16].replace('T', ' ')} 時点）"}
         embeds.append(e)
-    if sp["watch"]:
-        embeds.append({"title": "🌱 期待の新星", "color": 0x3EE08F, "description": "\n".join(
-            f"▸ **[{md(w['title'])}]({w['url']})** `{w['status']}`\n└ {md(w['why'][:80])}" for w in sp["watch"])[:2000]})
-        w_img = next((w["img"] for w in sp["watch"] if w.get("img")), None)
-        if w_img:
-            embeds[-1]["thumbnail"] = {"url": w_img}
-    if sp["news"]:
-        embeds.append({"title": "📰 今日の話題", "color": 0x5865F2, "description": "\n".join(
-            f"▸ [{md(n['title'])}]({n['url']})\n└ {md(n['why'][:80])}" for n in sp["news"])[:3000]})
-    if link:
-        embeds.append({"description": f"📖 [特集の全文・過去の特集はサイトで]({link})", "color": 0x2B2D31})
+    # 期待の新星：こちらも 1 本ずつ、それぞれに小さな画像
+    for k, w in enumerate(sp["watch"]):
+        why = w["why"] if len(w["why"]) <= 110 else w["why"][:108] + "…"
+        e = {"title": f"🌱 {w['title']}"[:256], "url": w["url"], "color": 0x3EE08F,
+             "description": f"`{w['status']}`\n{md(why)}"}
+        if w.get("img"):
+            e["thumbnail"] = {"url": w["img"]}
+        if k == 0:
+            e["author"] = {"name": "🌱 期待の新星 ── これから来るかもしれないゲーム"}
+        embeds.append(e)
+    # 今日の話題（画像なし）。サイトへのリンクもここに入れて、1 通の上限（埋め込み 10 個）に収める
+    news = "\n".join(f"▸ [{md(n['title'])}]({n['url']})\n└ {md(n['why'][:80])}" for n in sp["news"])
+    if news or link:
+        embeds.append({"title": "📰 今日の話題" if news else "📖 HIKARI NEWS", "color": 0x5865F2,
+                       "description": (news[:3500] + (f"\n\n📖 [特集の全文・過去の特集はサイトで]({link})" if link else "")).strip()})
     return embeds
 
 
