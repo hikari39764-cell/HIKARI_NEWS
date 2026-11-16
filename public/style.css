@@ -215,26 +215,155 @@ button { font: inherit; color: inherit; }
 .kw { color: var(--lemon); }
 mark { background: color-mix(in srgb, var(--lemon) 35%, transparent); color: inherit; border-radius: 3px; padding: 0 2px; }
 
-/* ============================================================== batches */
-.batch { margin-top: var(--s7); }
-.batch-h { display: flex; align-items: center; gap: var(--s4); cursor: pointer; user-select: none; padding: var(--s2) 0; }
-.batch-h .time {
-  font: 700 46px/1 var(--f-num); letter-spacing: .01em; color: transparent; -webkit-text-stroke: 1.5px var(--muted);
-  transition: color .3s, -webkit-text-stroke-color .3s, text-shadow .3s;
+/* ===================================================== days（日付ごとのまとまり）
+   ペルソナ風のカレンダー：黒いギザギザの札に大きな日付、斜めの曜日。開くと黄色い星形が弾け、
+   日付の数字が下から転がり出て、札が揺れる。中身は時間帯（午前／放課後／夜）ごとに並ぶ。
+   動かすのは transform / opacity だけ。背の高い塊は傾けない（傾けると上下がずれて見える） */
+.days { margin-top: var(--s6); }
+.dgroup { margin-top: var(--s3); }
+.dg-h {
+  position: relative; isolation: isolate; display: flex; align-items: center; gap: var(--s4);
+  min-height: 92px; padding: var(--s3) var(--s2) var(--s3) var(--s5); cursor: pointer; user-select: none; border-radius: 16px;
 }
-.batch-h:hover .time { -webkit-text-stroke-color: var(--lemon); }
-.batch-h.open .time { color: var(--text); -webkit-text-stroke-color: transparent; text-shadow: 3px 3px 0 var(--peach); }
-.batch-h .day { display: flex; flex-direction: column; gap: 2px; }
-.batch-h .day b { font: 800 14px/1.2 var(--f-display); }
-.batch-h .cats { display: flex; gap: 4px; }
-.batch-h .cats .cat-ic { width: 22px; height: 22px; font-size: 12px; border-radius: 7px; }
-.batch-h .rule { flex: 1; height: 2px; background: repeating-linear-gradient(90deg, var(--line-2) 0 6px, transparent 6px 12px); }
-.batch-h .cnt { font: 700 13px var(--f-num); color: var(--muted); }
-.batch-h .chev { transition: transform .4s var(--spring); }
-.batch-h.open .chev { transform: rotate(180deg); }
-.batch-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .5s var(--out); }
-.batch-body > div { overflow: hidden; }
-.batch-h.open + .batch-body { grid-template-rows: 1fr; }
+.dg-h:focus-visible { outline: 2px solid var(--lemon); outline-offset: 2px; }
+.dg-band {
+  position: absolute; z-index: -2; left: 0; top: 14%; bottom: 14%; width: min(560px, 86%);
+  background: repeating-linear-gradient(-55deg, color-mix(in srgb, var(--lemon) 16%, transparent) 0 10px, color-mix(in srgb, var(--lemon) 6%, transparent) 10px 20px);
+  border-left: 6px solid var(--lemon);
+  transform: skewX(-18deg) scaleX(0); transform-origin: left center; transition: transform .5s var(--out);
+}
+.dg-h.open .dg-band { transform: skewX(-18deg) scaleX(1); }
+.dg-fx { position: absolute; inset: 0; z-index: 3; overflow: hidden; border-radius: inherit; pointer-events: none; }
+.dg-fx::after {
+  content: ""; position: absolute; top: -30%; bottom: -30%; left: 0; width: 30%; opacity: 0;
+  background: linear-gradient(100deg, transparent, color-mix(in srgb, var(--lemon) 50%, #fff 25%) 50%, transparent);
+  transform: translateX(-130%) skewX(-20deg);
+}
+.dg-h.dg-flash .dg-fx::after { animation: dgStreak .7s var(--out) .05s; }
+@keyframes dgStreak { 0% { opacity: .9; transform: translateX(-130%) skewX(-20deg); } 100% { opacity: 0; transform: translateX(380%) skewX(-20deg); } }
+
+/* カレンダーの札 */
+.dg-cal {
+  position: relative; isolation: isolate; display: inline-flex; align-items: flex-start; flex-shrink: 0;
+  padding: 8px 18px 6px 14px; transform: rotate(-3deg);
+}
+.dg-plate {   /* 白い縁どりの黒い札（形は固定。アニメーションしない） */
+  position: absolute; z-index: -1; inset: -2px -4px; background: #fff; opacity: .4; transition: opacity .3s;
+  clip-path: polygon(2% 8%, 100% 0, 97% 100%, 0 91%);
+}
+.dg-plate::after { content: ""; position: absolute; inset: 3px 4px; background: #0b0b0b; clip-path: polygon(2% 8%, 100% 0, 97% 100%, 0 91%); }
+.dg-burst {   /* 開くと札の後ろで弾ける黄色い星形 */
+  position: absolute; z-index: -2; inset: -16px -26px -14px -20px; background: var(--lemon);
+  clip-path: polygon(0 34%, 9% 2%, 28% 16%, 47% 0, 63% 14%, 92% 0, 86% 32%, 100% 52%, 88% 68%, 97% 100%, 68% 86%, 46% 100%, 28% 84%, 3% 97%, 11% 64%);
+  transform: scale(0) rotate(-15deg); opacity: 0; transition: transform .45s var(--spring), opacity .2s;
+}
+.dg-h:not(.open):hover .dg-burst { transform: scale(.82) rotate(-10deg); opacity: .25; }
+.dg-h:hover .dg-plate { opacity: .75; }
+.dg-h.open .dg-plate { opacity: 1; }
+.dg-h.open .dg-burst { transform: rotate(-5deg); opacity: 1; }
+.dg-mon { font: 700 22px/1 var(--f-num); color: #fff; margin-top: 6px; white-space: nowrap; }
+.dg-mon i { display: inline-block; margin: 0 1px 0 3px; font-style: normal; font-size: 34px; color: var(--lemon); transform: skewX(-14deg) translateY(4px); }
+.dg-numw { display: inline-block; overflow: hidden; padding: 0 6px 6px 2px; margin-right: -4px; }   /* 数字が下から転がり出る窓 */
+.dg-num {
+  display: inline-block; font: 700 64px/1 var(--f-num); letter-spacing: -.01em;
+  color: transparent; -webkit-text-stroke: 1.5px #c9ccd6;
+}
+.dg-h.open .dg-num { color: #fff; -webkit-text-stroke-color: transparent; text-shadow: 4px 4px 0 var(--peach); }
+.dg-wk {
+  display: inline-flex; flex-direction: column; align-items: center; min-width: 40px; margin: 2px 0 0 6px; padding: 4px 7px 3px;
+  background: var(--ink-4); color: #fff; transform: skewX(-12deg) rotate(7deg);
+}
+.dg-wk b { font: 900 17px/1 var(--f-display); }
+.dg-wk small { margin-top: 2px; font: 700 9px/1 var(--f-num); letter-spacing: .16em; opacity: .75; }
+.dg-h.open .dg-wk { background: #fff; color: #0b0b0b; box-shadow: 3px 3px 0 var(--lemon); }
+.dg-wk.w0, .dg-h.open .dg-wk.w0 { background: #e2404a; color: #fff; }
+.dg-wk.w6, .dg-h.open .dg-wk.w6 { background: #3f74e8; color: #fff; }
+.dg-tag {
+  padding: 4px 10px 3px; background: var(--ink-4); color: var(--text); font: 700 12px/1 var(--f-num); letter-spacing: .14em;
+  transform: skewX(-14deg) rotate(-4deg);
+}
+.dg-tag.today { background: var(--hot); color: #fff; }
+.dg-slots { display: flex; gap: 5px; }
+.dg-slot { --tc: var(--lemon); padding: 3px 9px; border: 1px solid var(--line-2); color: var(--muted); font: 800 11px/1.3 var(--f-display); transform: skewX(-12deg); }
+.dg-slot.t17, .bs-tod.t17 { --tc: var(--peach); }
+.dg-slot.t22, .bs-tod.t22 { --tc: #9aa8ff; }
+.dg-h.open .dg-slot { color: var(--text); border-color: var(--tc); box-shadow: inset 3px 0 0 var(--tc); }
+.dg-h .rule { flex: 1; min-width: 16px; height: 2px; background: repeating-linear-gradient(90deg, var(--line-2) 0 6px, transparent 6px 12px); }
+.dg-h .cnt { font: 600 12px var(--f-body); color: var(--muted); white-space: nowrap; }
+.dg-h .cnt b { margin-right: 2px; font: 700 22px/1 var(--f-num); color: var(--text); }
+.dg-h .chev { transition: transform .4s var(--spring); }
+.dg-h.open .chev { transform: rotate(180deg); }
+
+/* 開く瞬間の演出（.dg-flash は 1.6 秒後に外す）。
+   どれも「その場」で起きる：要素を動かして元に戻す（ずれて見える）演出は使わない。
+   光る・左から伸びる・その場で弾ける・数字が窓の中でめくれる、だけ */
+.dg-cal::after {   /* 札が白く光る（フラッシュ） */
+  content: ""; position: absolute; z-index: 1; inset: -2px -4px; background: #fff; opacity: 0; pointer-events: none;
+  clip-path: polygon(2% 8%, 100% 0, 97% 100%, 0 91%);
+}
+.dg-h.dg-flash .dg-cal::after { animation: calFlash .5s var(--out); }
+@keyframes calFlash { from { opacity: .95; } to { opacity: 0; } }
+.dg-h.dg-flash .dg-num { animation: numFlip .45s var(--out) .05s backwards; }   /* 数字の窓（overflow: hidden）の中だけで動く */
+@keyframes numFlip { from { transform: translateY(100%); } }
+.dg-h.dg-flash .dg-mon { animation: dgFade .3s ease .08s backwards; }
+.dg-h.dg-flash .dg-wk { animation: wkPop .45s var(--spring) .12s backwards; }
+@keyframes wkPop { from { opacity: 0; transform: skewX(-12deg) rotate(7deg) scale(0); } }
+.dg-h.dg-flash .dg-tag { animation: tagPop .4s var(--spring) .18s backwards; }
+@keyframes tagPop { from { opacity: 0; transform: skewX(-14deg) rotate(-4deg) scale(0); } }
+.dg-slot { transform-origin: left center; }
+.dg-h.dg-flash .dg-slot { animation: slotWipe .35s var(--out) backwards; animation-delay: calc(var(--k) * 60ms + .18s); }
+@keyframes slotWipe { from { opacity: 0; transform: skewX(-12deg) scaleX(0); } }
+@keyframes dgFade { from { opacity: 0; } }
+
+/* 中身：左に縦のタイムライン、時間帯ごとに丸い点 */
+.dg-body { display: none; position: relative; margin: var(--s2) 0 var(--s5) 34px; padding-left: var(--s5); }
+.dg-h.open + .dg-body { display: block; }
+.dg-body::before { content: ""; position: absolute; left: 0; top: 8px; bottom: 10px; width: 2px; background: linear-gradient(var(--lemon), color-mix(in srgb, var(--lemon) 8%, transparent)); transform-origin: top; }
+.bsub { position: relative; }
+.bsub + .bsub { margin-top: var(--s5); }
+.bsub::before {
+  content: ""; position: absolute; left: calc(-1 * var(--s5) - 6px); top: 13px; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--ink); border: 3px solid var(--lemon);
+}
+.bsub-h { display: flex; align-items: center; gap: var(--s3); padding: var(--s1) var(--s2) 0 0; }
+.bs-tod {
+  --tc: var(--lemon);
+  display: inline-flex; flex-direction: column; align-items: flex-start; padding: 4px 12px 4px 10px;
+  background: #0b0b0b; color: #fff; border-left: 4px solid var(--tc); transform: skewX(-12deg);
+}
+.bs-tod b { font: 900 15px/1.1 var(--f-display); }
+.bs-tod small { font: 700 9px/1.2 var(--f-num); letter-spacing: .16em; color: var(--tc); }
+.bsub-clock { font: 700 20px/1 var(--f-num); letter-spacing: .02em; }
+.bsub-h .cats { display: flex; gap: 4px; }
+.bsub-h .cats .cat-ic { width: 22px; height: 22px; font-size: 12px; border-radius: 7px; }
+.bsub-h .rule { flex: 1; height: 1px; background: var(--line); }
+.bsub-h .cnt { font: 700 14px var(--f-num); color: var(--muted); }
+.bsub-h .cnt small { margin-left: 2px; font: 600 11px var(--f-body); }
+.bsub .rows { padding-left: 0; }
+/* 中身の演出：タイムラインが上から描かれ、点がその場で弾け、時間帯の札が左から伸びる。
+   記事は位置を変えずにフェードし、左から黄色い光が走る */
+.dg-body.dg-play::before { animation: dgLine .6s var(--out); }
+@keyframes dgLine { from { transform: scaleY(0); } }
+.dg-body.dg-play .bsub-h { animation: dgFade .3s ease backwards; animation-delay: calc(var(--k) * 110ms + 60ms); }
+.dg-body.dg-play .bsub::before { animation: dotPop .4s var(--spring) backwards; animation-delay: calc(var(--k) * 110ms + 60ms); }
+@keyframes dotPop { from { transform: scale(0); } }
+.bs-tod { transform-origin: left center; }
+.dg-body.dg-play .bs-tod { animation: todWipe .4s var(--out) backwards; animation-delay: calc(var(--k) * 110ms + 80ms); }
+@keyframes todWipe { from { transform: skewX(-12deg) scaleX(0); } }
+.dg-body.dg-play .rv.row, .dg-body.dg-play .rv.ladder { animation: dgFade .3s ease backwards; animation-delay: calc(min(var(--i), 12) * 40ms + 140ms); }
+.dg-body.dg-play .rv.row::after, .dg-body.dg-play .rv.ladder::after {
+  content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--lemon) 30%, transparent), color-mix(in srgb, var(--lemon) 6%, transparent) 70%, transparent);
+  transform-origin: left center; transform: scaleX(0); opacity: 0;
+  animation: rowSweep .6s var(--out) backwards; animation-delay: calc(min(var(--i), 12) * 40ms + 140ms);
+}
+@keyframes rowSweep { 0% { transform: scaleX(0); opacity: 1; } 55% { transform: scaleX(1); opacity: .8; } 100% { transform: scaleX(1); opacity: 0; } }
+.more-days { text-align: center; margin-top: var(--s7); }
+:root[data-theme="light"] .bsub::before { border-color: #d4b800; }
+:root[data-theme="light"] .dg-body::before { background: linear-gradient(#d4b800, color-mix(in srgb, #d4b800 10%, transparent)); }
+:root[data-theme="light"] .dg-band { border-left-color: #e0c400; }
+:root[data-theme="light"] .dg-plate { background: #0b0b0b; opacity: .7; }
+:root[data-theme="light"] .dg-h.open .dg-plate { opacity: 1; }
 
 /* ================================================================= rows */
 .rows { display: flex; flex-direction: column; gap: var(--s3); padding: var(--s4) var(--s2) var(--s2); }
@@ -579,8 +708,14 @@ textarea { min-height: 90px; resize: vertical; }
   .drawer .band .b-top { padding-right: 190px; min-height: 40px; }
   .drawer .tb { right: 12px; top: 14px; gap: 4px; }
   .drawer .tb .ib { width: 36px; height: 36px; font-size: 17px; }
-  .batch-h .time { font-size: 36px; }
-  .batch-h .cats { display: none; }
+  .dg-h { gap: var(--s3); min-height: 78px; padding-left: var(--s4); }
+  .dg-num { font-size: 48px; }
+  .dg-mon { font-size: 17px; }
+  .dg-mon i { font-size: 26px; }
+  .dg-slots, .bsub-h .cats { display: none; }
+  .dg-band { width: 92%; }
+  .dg-body { margin-left: 18px; padding-left: var(--s4); }
+  .bsub::before { left: calc(-1 * var(--s4) - 6px); }
   .ph .when { display: none; }
 }
 

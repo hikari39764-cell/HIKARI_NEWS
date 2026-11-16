@@ -22,42 +22,87 @@ function viewToday() {
   const items = S.items.filter(it => !isSection(it));          // 分区のニュースは各分区に表示
   const lads = ladders().filter(g => ["10", "17", "22"].includes(g.slot));
   if (!items.length && !lads.length) return `<div class="page">${emptyHTML("まだ記事がありません", "次の便（10:00 / 17:00 / 22:00）をお待ちください")}</div>`;
-  const dates = [...new Set([...items.map(it => it.date), ...lads.map(g => g.date)])].sort().reverse().slice(0, 4);
+  const allDates = [...new Set([...items.map(it => it.date), ...lads.map(g => g.date)])].sort().reverse();
+  const dates = allDates.slice(0, S.dayLimit || DAYS_SHOWN);
   const latest = items.filter(it => it.date === dates[0]);
   const top = [...(latest.length ? latest : items)].sort((a, b) => b.importance - a.importance || kwOf(b).length - kwOf(a).length)[0];
 
-  const groups = [];
-  for (const d of dates) for (const slot of ["22", "17", "10"]) {
-    const its = items.filter(it => it.date === d && String(it.slot) === slot && it !== top).sort((a, b) => b.importance - a.importance);
-    const kws = lads.filter(g => g.date === d && g.slot === slot);
-    if (its.length || kws.length) groups.push({ key: `${d}-${slot}`, d, slot, its, kws });
-  }
-  const batches = groups.map((g, gi) => {
-    const open = P.open.has(g.key) || (gi === 0 && !P.open.has("closed:" + g.key));
-    const day = new Date(g.d + "T00:00:00");
-    const dayLbl = g.d === todayStr() ? "今日" : `${day.getMonth() + 1}/${day.getDate()}（${WEEK[day.getDay()]}）`;
-    const cats = [...new Set(g.its.map(it => it.category))];
-    return `<section class="batch rv" style="--i:${gi + 1}">
-      <div class="batch-h ${open ? "open" : ""}" data-batch="${g.key}" role="button" tabindex="0" aria-expanded="${open}">
-        <span class="time">${SLOT_LABEL[g.slot]}</span>
-        <span class="day"><b>${dayLbl}</b><span class="cats">${cats.map(c => catIc(c)).join("")}${g.kws.length ? `<span class="cat-ic" style="--cat:var(--lemon)" data-tip="技術キーワード">${ic("ti-key")}</span>` : ""}</span></span>
-        <span class="rule"></span><span class="cnt">${g.its.length}</span>${ic("ti-chevron-down chev")}
-      </div>
-      <div class="batch-body"><div>
-        ${g.its.length ? `<div class="rows">${g.its.map((it, i) => rowHTML(it, i)).join("")}</div>` : ""}
-        ${g.kws.map((k, i) => ladderHTML(k, g.its.length + i)).join("")}
-      </div></div>
+  // 日付ごとにまとめる（その日の中は 22:00 → 17:00 → 10:00 の便）
+  const days = dates.map(d => ({ d, bs: ["22", "17", "10"].map(slot => ({
+    slot,
+    its: items.filter(it => it.date === d && String(it.slot) === slot && it !== top).sort((a, b) => b.importance - a.importance),
+    kws: lads.filter(g => g.date === d && g.slot === slot),
+  })).filter(b => b.its.length || b.kws.length) })).filter(x => x.bs.length);
+
+  const dayList = days.map((g, gi) => {
+    const key = "day:" + g.d;
+    const open = P.open.has(key) || (gi === 0 && !P.open.has("closed:" + key));
+    return `<section class="dgroup rv" style="--i:${gi + 1}">${dayHeadHTML(g, key, open)}
+      <div class="dg-body">${g.bs.map((b, bi) => {
+        const cats = [...new Set(b.its.map(it => it.category))];
+        return `<div class="bsub" style="--k:${bi}">
+          <div class="bsub-h"><span class="bs-tod t${b.slot}"><b>${TOD[b.slot].ja}</b><small>${TOD[b.slot].en}</small></span><span class="bsub-clock">${SLOT_LABEL[b.slot]}</span>
+            <span class="cats">${cats.map(c => catIc(c)).join("")}${b.kws.length ? `<span class="cat-ic" style="--cat:var(--lemon)" data-tip="技術キーワード">${ic("ti-key")}</span>` : ""}</span>
+            <span class="rule"></span><span class="cnt">${b.its.length}<small>件</small></span></div>
+          ${b.its.length ? `<div class="rows">${b.its.map((it, i) => rowHTML(it, i)).join("")}</div>` : ""}
+          ${b.kws.map((k, i) => ladderHTML(k, b.its.length + i)).join("")}
+        </div>`;
+      }).join("")}</div>
     </section>`;
   }).join("");
+  const more = allDates.length > dates.length || S.loadMore;
 
   const d0 = new Date(dates[0] + "T00:00:00");
   return `<div class="page">
     ${pageHead("ti-sun", "今日のヒカリ", `<span class="when">${ic("ti-calendar")}${d0.getMonth() + 1}/${d0.getDate()} ${WEEK[d0.getDay()]}${S.updated ? ` ・ ${ic("ti-refresh")}${esc(String(S.updated).slice(11, 16))}` : ""}</span>`)}
     <div class="grid2">
-      <div>${top ? heroHTML(top) : ""}${batches}${S.loadMore ? `<p style="text-align:center;margin-top:48px"><button class="btn plain" id="older">${ic("ti-history")}もっと前</button></p>` : ""}</div>
+      <div>${top ? heroHTML(top) : ""}<div class="days">${dayList}</div>${more ? `<p class="more-days"><button class="btn plain" id="older">${ic("ti-history")}もっと前の日</button></p>` : ""}</div>
       ${sideHTML(items)}
     </div>
   </div>`;
+}
+
+const DAYS_SHOWN = 4;          // 「今日」に並べる日数（「もっと前の日」で 4 日ずつ増える）
+const WEEK_EN = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+// 便の呼び方：ペルソナの「時間帯」のように
+const TOD = { "10": { ja: "午前", en: "MORNING" }, "17": { ja: "放課後", en: "AFTER SCHOOL" }, "22": { ja: "夜", en: "EVENING" } };
+
+// 日付の見出し：ペルソナ風のカレンダー（黒いギザギザの札に大きな日付、斜めの曜日、開くと黄色の星形が弾ける）
+function dayHeadHTML(g, key, open) {
+  const day = new Date(g.d + "T00:00:00"), dow = day.getDay();
+  const yest = new Date(Date.now() - 864e5).toLocaleDateString("sv-SE");
+  const tag = g.d === todayStr() ? "TODAY" : g.d === yest ? "YESTERDAY" : "";
+  const total = g.bs.reduce((n, b) => n + b.its.length, 0);
+  return `<div class="dg-h ${open ? "open" : ""}" data-day="${key}" role="button" tabindex="0" aria-expanded="${open}"
+      aria-label="${day.getMonth() + 1}月${day.getDate()}日（${WEEK[dow]}） ${total}件">
+    <span class="dg-band" aria-hidden="true"></span><span class="dg-fx" aria-hidden="true"></span>
+    <span class="dg-cal" aria-hidden="true">
+      <span class="dg-burst"></span><span class="dg-plate"></span>
+      <span class="dg-mon">${day.getMonth() + 1}<i>/</i></span>
+      <span class="dg-numw"><span class="dg-num">${day.getDate()}</span></span>
+      <span class="dg-wk w${dow}"><b>${WEEK[dow]}</b><small>${WEEK_EN[dow]}</small></span>
+    </span>
+    ${tag ? `<span class="dg-tag ${tag === "TODAY" ? "today" : ""}" aria-hidden="true">${tag}</span>` : ""}
+    <span class="dg-slots" aria-hidden="true">${g.bs.map((b, i) => `<span class="dg-slot t${b.slot}" style="--k:${i}">${TOD[b.slot].ja}</span>`).join("")}</span>
+    <span class="rule"></span><span class="cnt"><b>${total}</b>件</span>${ic("ti-chevron-down chev")}
+  </div>`;
+}
+
+function toggleDay(h) {
+  const key = h.dataset.day, open = !h.classList.contains("open"), body = h.nextElementSibling;
+  h.classList.toggle("open", open); h.setAttribute("aria-expanded", open);
+  if (open) { P.open.add(key); P.open.delete("closed:" + key); } else { P.open.delete(key); P.open.add("closed:" + key); }
+  P.save();
+  if (!open || REDUCED) return;
+  // 開く演出：札が光って日付がめくれ、その日の時間帯と記事がその場で順に現れる（位置はずらさない）。
+  // 記事はスクロール用の「下から浮かぶ」演出を使わない（.in.done にして、.dg-play の演出だけにする）
+  const rows = $$(".row, .ladder", body);
+  h.classList.remove("dg-flash"); body.classList.remove("dg-play");
+  rows.forEach((r, i) => { r.style.setProperty("--i", i); r.classList.add("in", "done"); });
+  void h.offsetWidth;   // 1 回だけ読み直して、演出を最初から
+  h.classList.add("dg-flash"); body.classList.add("dg-play");
+  clearTimeout(h._fx);
+  h._fx = setTimeout(() => { h.classList.remove("dg-flash"); body.classList.remove("dg-play"); }, 1600);   // 演出が止まる環境でも必ず見えるように外す
 }
 
 function sideHTML(items) {
@@ -534,7 +579,7 @@ function markRead(id) {
 
 /* ================================================================ events */
 document.addEventListener("click", async e => {
-  const t = e.target.closest("[data-bm],[data-read],[data-toggle-read],[data-copy],[data-rmkw],[data-kw],[data-chance],[data-open-btn],[data-open],[data-close],[data-close-pal],[data-batch],[data-f],[data-act],[data-rep-del],[data-contact-del],[data-ck],[data-sub],[data-mode],[data-wh],[data-login],#freset,#older,#pal-list li,#pal-all,#totop");
+  const t = e.target.closest("[data-bm],[data-read],[data-toggle-read],[data-copy],[data-rmkw],[data-kw],[data-chance],[data-open-btn],[data-open],[data-close],[data-close-pal],[data-day],[data-f],[data-act],[data-rep-del],[data-contact-del],[data-ck],[data-sub],[data-mode],[data-wh],[data-login],#freset,#older,#pal-list li,#pal-all,#totop");
   if (t?.disabled) return;
   if (!t) return;
   if (t.matches("[data-login]")) { S.api.login?.(); return; }
@@ -572,14 +617,8 @@ document.addEventListener("click", async e => {
     closeDetail();
   } else if (t.matches("[data-close-pal]")) {
     closePal();
-  } else if (t.dataset.batch) {
-    const key = t.dataset.batch, open = !t.classList.contains("open");
-    t.classList.toggle("open", open); t.setAttribute("aria-expanded", open);
-    if (open) {
-      P.open.add(key); P.open.delete("closed:" + key);
-      $$(".row, .ladder", t.nextElementSibling).forEach((r, i) => { r.style.setProperty("--i", i); r.classList.remove("in", "done"); r._seen = 0; void r.offsetWidth; r.classList.add("in"); });
-    } else { P.open.delete(key); P.open.add("closed:" + key); }
-    P.save();
+  } else if (t.dataset.day) {
+    toggleDay(t);
   } else if (t.dataset.f) {
     const k = t.dataset.f, v = t.dataset.v, cur = { ...F_DEF, ...S.params };
     if (k === "cats") { const s = new Set(cur.cats.split(",").filter(Boolean)); s.has(v) ? s.delete(v) : s.add(v); setParams({ cats: [...s].join(",") }); }
@@ -588,8 +627,11 @@ document.addEventListener("click", async e => {
     $$("[data-f]").forEach(b => b.classList.toggle("on", b.dataset.f === "cats" ? c.cats.split(",").includes(b.dataset.v) : c[b.dataset.f] === b.dataset.v));
   } else if (t.id === "freset") {
     S.params = {}; history.replaceState(null, "", "#/search"); redraw();
-  } else if (t.id === "older" && S.loadMore) {
-    t.disabled = true; await S.loadMore(); redraw();
+  } else if (t.id === "older") {   // 「もっと前の日」：4 日ずつ増やす。手元の記事で足りなければ、もっと古い記事を読む
+    t.disabled = true;
+    const want = (S.dayLimit || DAYS_SHOWN) + DAYS_SHOWN;
+    if (S.loadMore && new Set(S.items.filter(it => !isSection(it)).map(it => it.date)).size < want) await S.loadMore();
+    S.dayLimit = want; redraw();
   } else if (t.matches("#pal-list li") && palHits[t.dataset.i]) {
     palGo(palHits[t.dataset.i]);
   } else if (t.id === "pal-all") {
@@ -658,7 +700,7 @@ document.addEventListener("keydown", e => {
     if (e.key === "ArrowUp") { e.preventDefault(); palMove(-1); }
     if (e.key === "Enter" && palHits[palSel]) { e.preventDefault(); palGo(palHits[palSel]); }
   }
-  if (e.key === "Enter" && e.target.dataset?.batch) e.target.click();
+  if ((e.key === "Enter" || e.key === " ") && e.target.dataset?.day) { e.preventDefault(); e.target.click(); }
 });
 
 // ヒーローのカーソル追従の光
