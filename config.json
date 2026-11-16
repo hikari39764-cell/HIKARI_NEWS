@@ -11,7 +11,7 @@
   },
   "reminder_days": [7, 3, 0],
   "weekly_digest": { "weekday": 6, "slot": "22" },
-  "special": { "enabled": true, "live": false, "hour": 19, "label": "19:00", "min_peak": 2000, "ranking_size": 5 },
+  "special": { "enabled": true, "live": true, "hour": 19, "label": "19:00", "min_peak": 2000, "ranking_size": 5 },
 
   "keyword_tracks": {
     "10": { "area": "cpp", "name": "C++", "focus": "ゲーム・エンジン開発で使う C++：値と参照、所有権とスマートポインタ、ムーブ、RAII、テンプレート、STL コンテナとアロケータ、並行処理、メモリレイアウト、設計パターンなど" },

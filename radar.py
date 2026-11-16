@@ -1478,7 +1478,7 @@ def cmd_publish_pending(args) -> int:
     notes, failed = [], False
 
     jobs = [(b, fn) for prefix, fn in ((INBOX_PREFIX, publish_batch), (LEARN_PREFIX, publish_learn),
-                                       (SPECIAL_PREFIX, publish_special))
+                                       (SPECIAL_PREFIX, publish_special), (SITE_PREFIX, publish_special_site))
             for b in pending_branches(prefix)]
     jobs.sort(key=lambda j: due_at(j[0]) or now)   # 公开时间早的先发
     for branch, fn in jobs:
@@ -1709,6 +1709,7 @@ def cmd_preview_learn(args) -> int:
 
 SPECIAL = CONFIG.get("special", {})
 SPECIAL_PREFIX = "claude/special-"
+SITE_PREFIX = "claude/site-special-"   # 特集を網站にだけ先に出す（Discord・メールは 19:00 の本番の分岐で）
 SPECIAL_CTX = ROOT / "out" / "special_ctx.json"
 HTTP_HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; news-research-bot/1.0)"}
 SOURCE_KINDS = ("official", "store", "interview", "talk", "postmortem", "review", "article", "video")
@@ -1950,6 +1951,12 @@ def rank_stat(it: dict) -> str:
 
 def cmd_special_context(args) -> int:
     now = now_jst()
+    tag = now.strftime("%Y%m%d")
+    already = [br for br in pending_branches(SPECIAL_PREFIX) if f"-{tag}-" in br]
+    if already or any(str(b.get("slot")) == "special" for b in _published_today()):
+        print(f"✅ 今天（{now:%Y-%m-%d}）的 19:00 特集已经交稿或发布了"
+              + (f"（{already[0]}）" if already else "") + "。按照 SPECIAL.md，什么都不用做，直接结束。")
+        return 3
     state = load_state()
     print(f"# 19:00 特集の材料（{now:%Y-%m-%d %H:%M} JST）\n\n读者：{CONFIG['reader']}\n")
     print("## 已经介绍过的游戏（「今夜の1本」不要重复）")
@@ -2447,6 +2454,18 @@ def publish_special(branch: str, state: dict, store, dry_run: bool) -> str:
             f"新星 {len(sp['watch'])} 款、话题 {len(sp['news'])} 条" + (f"\n　{mask_emails(note)}" if note else ""))
 
 
+def publish_special_site(branch: str, state: dict, store, dry_run: bool) -> str:
+    """特集を網站にだけ先に載せる（Discord・メールには送らない。19:00 の本番の分岐が送る）。"""
+    data = json.loads(git("show", f"origin/{branch}:inbox/special.json"))  # 只当作数据读取
+    sp = {**validate_special(data, strict=False), "data": data.get("data") or {}}
+    day = batch_day(data)
+    _moves(sp, (state.get("specials") or [None])[-1])
+    if not dry_run:
+        store.add_special(day.isoformat(), {**sp, "date": day.isoformat()})
+    state["batches"].append({"branch": branch, "slot": "special_site", "date": day.isoformat(), "count": 1, "status": "ok"})
+    return f"🌐 {day} 的 19:00 特集「{sp['game']['title']}」已先放到网站上（Discord・邮件在 19:00 推送）"
+
+
 def cmd_preview_special(args) -> int:
     import html as H
 
@@ -2517,11 +2536,14 @@ def _batch_label(b: dict) -> str:
     slot = str(b.get("slot"))
     if slot == "special":
         return f"{SPECIAL.get('label', '19:00')} 特集"
+    if slot == "special_site":
+        return f"{SPECIAL.get('label', '19:00')} 特集（网站先行）"
     return "学习内容" if slot == "learn" else CONFIG["slots"].get(slot, {}).get("label", slot)
 
 
 def pending_all() -> list[str]:
-    return pending_branches(INBOX_PREFIX) + pending_branches(LEARN_PREFIX) + pending_branches(SPECIAL_PREFIX)
+    return (pending_branches(INBOX_PREFIX) + pending_branches(LEARN_PREFIX) + pending_branches(SPECIAL_PREFIX)
+            + pending_branches(SITE_PREFIX))
 
 
 def cmd_publish_status(args) -> int:
