@@ -2560,7 +2560,7 @@ def cmd_publish_status(args) -> int:
     print("\n## 已交稿、还没发布的分支")
     for br in pending:
         due = due_at(br)
-        when = f"{due:%H:%M} 公开" if due else "公开时间不明"
+        when = f"{due:%H:%M} 公开" if due else ("马上发布（特集先放到网站）" if br.startswith(SITE_PREFIX) else "公开时间不明")
         print(f"- {br}（{when}" + ("）" if br in ready else "，现在还早，不用管）"))
     if not pending:
         print("- （没有）")
