@@ -1561,7 +1561,7 @@ PAGE_CSS = """body{margin:0;background:#1e1f22;color:#dbdee1;font:15px/1.7 "Noto
 a{color:#00a8fc;text-decoration:none} .thread{background:#2b2d31;border-radius:8px;padding:16px}
 .tt{font-size:17px;font-weight:700;color:#fff;margin-bottom:12px}
 .embed{background:#232428;border-left:4px solid;border-radius:4px;padding:10px 14px;margin:8px 0;max-width:520px;overflow:hidden}
-.eth{float:right;max-width:80px;max-height:80px;border-radius:4px;margin:0 0 8px 12px} .eim{display:block;max-width:100%;border-radius:4px;margin-top:12px}
+.eth{float:right;max-width:80px;max-height:80px;border-radius:4px;margin:0 0 8px 12px} .ea{font-size:12px;font-weight:700;color:#fff;margin-bottom:4px} .eim{display:block;max-width:100%;border-radius:4px;margin-top:12px}
 .et{font-weight:700;color:#fff;margin-bottom:4px} .ed{font-size:14px} .ef{font-size:12px;color:#949ba4;margin-top:6px}
 code,pre{background:#1e1f22;border-radius:4px;font-size:12px} pre{padding:8px;white-space:pre-wrap}
 .card{background:#2b2d31;border-radius:8px;padding:12px 16px;margin:10px 0} .card h3{margin:4px 0;font-size:16px}
@@ -1577,8 +1577,10 @@ def _embed_html(e: dict) -> str:
 
     thumb = (e.get("thumbnail") or {}).get("url")
     image = (e.get("image") or {}).get("url")
+    author = (e.get("author") or {}).get("name")
     return (f'<div class="embed" style="border-color:#{e.get("color", 0x2B2D31):06x}">'
             + (f'<img class="eth" src="{H.escape(thumb)}" alt="">' if thumb else "")
+            + (f'<div class="ea">{H.escape(author)}</div>' if author else "")
             + (f'<div class="et">{H.escape(e["title"])}</div>' if e.get("title") else "")
             + f'<div class="ed">{_md_to_html(e.get("description", ""))}</div>'
             + (f'<img class="eim" src="{H.escape(image)}" alt="">' if image else "")
@@ -2263,18 +2265,22 @@ def build_special_embeds(sp: dict, day: date) -> list[dict]:
                "footer": {"text": f"{g['developer']} ・ {' / '.join(g['platforms'])} ・ {g['genre']}"[:200]}}]
     if (g.get("media") or {}).get("header"):
         embeds[0]["image"] = {"url": g["media"]["header"]}
-    lines = []
-    for it in sp["ranking"]["items"]:
-        stat = rank_stat(it)
-        why = it["why"] if len(it["why"]) <= 70 else it["why"][:68] + "…"
-        lines.append(f"**{it['rank']}.** {MOVE_MARK.get(it.get('move'), '')} **[{md(it['title'])}]({it['url']})** `{it['tag']}`\n"
-                     f"└ {(stat + ' ・ ') if stat else ''}{md(why)}")
+    # 急上昇 TOP5：1 本ずつ別の埋め込みにして、それぞれに小さな画像を付ける（Discord は埋め込み 1 つに小画像 1 枚まで）
     fetched = (sp.get("data") or {}).get("fetched") or ""
-    embeds.append({"title": "📈 急上昇 TOP5", "description": "\n".join(lines)[:4000], "color": 0xFF4F6D,
-                   **({"footer": {"text": f"数字：Steam・SteamCharts（{fetched[5:16].replace('T', ' ')} 時点）"}} if fetched else {})})
-    top_img = next((it["img"] for it in sp["ranking"]["items"] if it.get("img")), None)
-    if top_img:
-        embeds[-1]["thumbnail"] = {"url": top_img}
+    items = sp["ranking"]["items"]
+    for k, it in enumerate(items):
+        stat = rank_stat(it)
+        why = it["why"] if len(it["why"]) <= 110 else it["why"][:108] + "…"
+        e = {"title": f"{it['rank']}位　{MOVE_MARK.get(it.get('move'), '')} {it['title']}"[:256], "url": it["url"],
+             "description": f"`{it['tag']}`" + (f"　**{stat}**" if stat else "") + f"\n{md(why)}",
+             "color": 0xF1C40F if it["rank"] == 1 else 0xFF4F6D}
+        if it.get("img"):
+            e["thumbnail"] = {"url": it["img"]}
+        if k == 0:
+            e["author"] = {"name": "📈 急上昇 TOP5 ── いま伸びているゲーム"}
+        if k == len(items) - 1 and fetched:
+            e["footer"] = {"text": f"数字：Steam・SteamCharts（{fetched[5:16].replace('T', ' ')} 時点）"}
+        embeds.append(e)
     if sp["watch"]:
         embeds.append({"title": "🌱 期待の新星", "color": 0x3EE08F, "description": "\n".join(
             f"▸ **[{md(w['title'])}]({w['url']})** `{w['status']}`\n└ {md(w['why'][:80])}" for w in sp["watch"])[:2000]})
