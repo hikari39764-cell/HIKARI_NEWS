@@ -974,6 +974,149 @@
    "source": "Saint11（Pedro Medeiros）",
    "note": "なぜ今でも価値があるか：絵が苦手でも、1枚のGIFで「動き」の作り方が分かる",
    "reminded": []
+  },
+  {
+   "id": "d05073970d18b720",
+   "url": "https://automaton-media.com/articles/newsjp/20261116-479523/",
+   "title": "たった97KBの海底3Dデモ「Abyssal Garden」、素材ゼロで全部その場で生成",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-16",
+   "slot": "22",
+   "deadline": null,
+   "source": "AUTOMATON（Reddit・GitHubで話題）",
+   "note": "素材ゼロでここまで作れる。生成のコツとAIへの指示の型が学べる",
+   "reminded": []
+  },
+  {
+   "id": "f3276276077c790c",
+   "url": "https://automaton-media.com/articles/newsjp/20261116-479415/",
+   "title": "自作ゲームのレビュー用キーが「鍵屋」に流出、開発者が自腹で買って流出元を特定",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-16",
+   "slot": "22",
+   "deadline": null,
+   "source": "AUTOMATON（元はReddit r/IndieDev）",
+   "note": "発売前に知っておきたい、レビュー用キーの配り方と守り方",
+   "reminded": []
+  },
+  {
+   "id": "aecd9ef3b1a4636c",
+   "url": "https://automaton-media.com/articles/newsjp/20261116-479456/",
+   "title": "チャット通知のエスケープ漏れで攻撃、放置ゲーム『CivIdle』XSS事件から学ぶ守り方",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-16",
+   "slot": "22",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "小さなゲームでも狙われる。入力表示で確認したいポイントが分かる",
+   "reminded": []
+  },
+  {
+   "id": "0edb8d66fe907dd7",
+   "url": "https://automaton-media.com/articles/newsjp/20261116-479500/",
+   "title": "Steam売上の約70%は「コンソールでも出ている4.1%」の作品、約8万4000本の調査",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-16",
+   "slot": "22",
+   "deadline": null,
+   "source": "AUTOMATON（Venn Studios調査）",
+   "note": "調査の限界まで読むと、数字の使い方が学べる",
+   "reminded": []
+  },
+  {
+   "id": "06e664dbcfce0777",
+   "url": "https://togetter.com/li/2771173",
+   "title": "「バランスが壊れた瞬間は最高に面白い、でもその後は急につまらない」Xの議論",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-16",
+   "slot": "22",
+   "deadline": null,
+   "source": "X で話題（Togetter）",
+   "note": "プレイヤーの本音から、バランス設計とリプレイ性のヒントを探れる",
+   "reminded": []
+  },
+  {
+   "id": "544263fb5289801e",
+   "url": "https://scrapbox.io/keroxp/Zed%E3%81%AE%E3%82%B3%E3%83%B3%E3%83%88%E3%83%AA%E3%83%93%E3%83%A5%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%83%9D%E3%83%AA%E3%82%B7%E3%83%BC%E3%81%8CAI%E6%BF%80%E3%81%8A%E3%81%93%E3%81%AA%E4%BB%B6",
+   "title": "コードエディタZedのAI規則が話題。「LLMは歓迎、でも責任は人間が持つ」とは",
+   "category": "community",
+   "importance": 2,
+   "date": "2026-11-16",
+   "slot": "22",
+   "deadline": null,
+   "source": "はてブで話題（keroxp氏のScrapbox）",
+   "note": "OSSにPRを送る前に知っておきたい、AI時代の作法",
+   "reminded": []
+  },
+  {
+   "id": "1ba904f428e903d6",
+   "url": "https://compe.japandesign.ne.jp/cygames-saga-cc-2026/",
+   "title": "サイゲームス クリエイティブコンテスト2026、大賞100万円・ゲーム部門は11/24必着",
+   "category": "chance",
+   "importance": 5,
+   "date": "2026-11-16",
+   "slot": "22",
+   "deadline": "2026-11-24",
+   "source": "JDN コンペ情報（主催：Cygames）",
+   "note": "参加条件：学生（個人・グループ可）。発表済みの作品でも応募できる",
+   "reminded": []
+  },
+  {
+   "id": "65bf1d150b061fca",
+   "url": "https://compe.japandesign.ne.jp/capcom-games-cgc-2026/",
+   "title": "CAPCOM GAMES COMPETITION、社内エンジンRE ENGINEで作る学生コンペ。最優秀賞500万円",
+   "category": "chance",
+   "importance": 5,
+   "date": "2026-11-16",
+   "slot": "22",
+   "deadline": "2026-11-30",
+   "source": "JDN コンペ情報（主催：カプコン）",
+   "note": "参加条件：日本の学生（18歳以上・最大20名のチーム可）。企画書で応募",
+   "reminded": []
+  },
+  {
+   "id": "80a76fe8f21f4441",
+   "url": "https://compe.japandesign.ne.jp/ibaraki-esports-game-creaters-2026/",
+   "title": "茨城×eスポーツのゲームコンテスト、全国の学生が参加可能。審査員にCC2松山洋氏",
+   "category": "chance",
+   "importance": 4,
+   "date": "2026-11-16",
+   "slot": "22",
+   "deadline": "2026-11-30",
+   "source": "JDN コンペ情報（主催：iBAe）",
+   "note": "参加条件：全国の学生（個人または2〜4名）。未発売のオリジナル作品に限る",
+   "reminded": []
+  },
+  {
+   "id": "0194c99cfe26bb6d",
+   "url": "https://itch.io/jam/tiny-loop-jam-2026",
+   "title": "Tiny Loop Jam 2026、11/20開幕の10日間オンラインジャム。エンジン不問・初心者歓迎",
+   "category": "chance",
+   "importance": 3,
+   "date": "2026-11-16",
+   "slot": "22",
+   "deadline": "2026-11-29",
+   "source": "itch.io（Drozd Studios）",
+   "note": "参加条件：誰でも参加可。個人・チーム・エンジン不問、期間中の新作に限る",
+   "reminded": []
+  },
+  {
+   "id": "d0c8264697c6b11f",
+   "url": "https://dengekionline.com/article/202610/88205",
+   "title": "SQUARE ENIX GAME CONTEST 2026、12/15受付開始・締切2027/3/15。賞金総額10億円",
+   "category": "chance",
+   "importance": 3,
+   "date": "2026-11-16",
+   "slot": "22",
+   "deadline": "2027-03-15",
+   "source": "電撃オンライン（公式：gc2026.jp.square-enix.com）",
+   "note": "参加条件：日本在住で未発売のオリジナル作品。学生かどうかの条件は公式ページに記載なし",
+   "reminded": []
   }
  ],
  "batches": [
@@ -1087,6 +1230,13 @@
    "slot": "special",
    "date": "2026-11-16",
    "count": 5,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261116-22-212107",
+   "slot": "22",
+   "date": "2026-11-16",
+   "count": 11,
    "status": "ok"
   }
  ],
@@ -1322,6 +1472,27 @@
    "level": "応用",
    "area": "dx12",
    "theme": "リソースとヒープ（GPUメモリの置き方）",
+   "date": "2026-11-16"
+  },
+  {
+   "term": "スレッドグループとnumthreads",
+   "level": "基礎",
+   "area": "shader",
+   "theme": "コンピュートシェーダーの基本",
+   "date": "2026-11-16"
+  },
+  {
+   "term": "SV_DispatchThreadID",
+   "level": "発展",
+   "area": "shader",
+   "theme": "コンピュートシェーダーの基本",
+   "date": "2026-11-16"
+  },
+  {
+   "term": "groupsharedとGroupMemoryBarrierWithGroupSync",
+   "level": "応用",
+   "area": "shader",
+   "theme": "コンピュートシェーダーの基本",
    "date": "2026-11-16"
   }
  ],
@@ -2222,7 +2393,7 @@
   "feeling": 25,
   "prompt": 25
  },
- "last_daily_mail": "2026-11-15",
+ "last_daily_mail": "2026-11-16",
  "specials": [
   {
    "date": "2026-11-16",
