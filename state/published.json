@@ -766,6 +766,110 @@
    "source": "4Gamer.net",
    "note": "企画に活かせる視点：役割の空き枠から新要素を考える",
    "reminded": []
+  },
+  {
+   "id": "48c48cb9fcbee1f5",
+   "url": "https://zenn.dev/ubie_dev/articles/45501469c9c044",
+   "title": "Ubieの社内エージェント基盤、安全のカギは「資格情報をサンドボックスに置かない」設計",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-16",
+   "slot": "10",
+   "deadline": null,
+   "source": "Zenn（Ubie）",
+   "note": "AIに仕事を任せる時の「安全な設計」を、実在の社内基盤で学べる",
+   "reminded": []
+  },
+  {
+   "id": "a88bddb17214a029",
+   "url": "https://huggingface.co/blog/ibm-granite/llmon-an-llm-native-markup-language-now-in-granite",
+   "title": "プロンプトインジェクションに強い「LLMON」、命令とデータをトークンで区別する新しい書き方",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-16",
+   "slot": "10",
+   "deadline": null,
+   "source": "Hugging Face Blog（IBM Granite）",
+   "note": "AI NPCや社内ツールを作るなら知っておきたい、インジェクション対策の新しい発想",
+   "reminded": []
+  },
+  {
+   "id": "679187892d1c9134",
+   "url": "https://qiita.com/kentasatomi/items/06ccfbf7f6a2a24883ff",
+   "title": "Claude Codeに「同じ調査を繰り返させない」ためのメモの残し方、確認済みと仮説を分ける",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-16",
+   "slot": "10",
+   "deadline": null,
+   "source": "Qiita",
+   "note": "AIに同じ失敗や調べ直しをさせない、メモの「書き方」が分かる",
+   "reminded": []
+  },
+  {
+   "id": "1f1ac57335862937",
+   "url": "https://www.itmedia.co.jp/business/articles/2611/16/news031.html",
+   "title": "メルカリ、画面づくりが「2日→数十分」に。でも200画面超の確認が追いつかない",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-16",
+   "slot": "10",
+   "deadline": null,
+   "source": "ITmedia ビジネスオンライン",
+   "note": "「作るのは速くなった、確認が追いつかない」という現場のリアルな悩み",
+   "reminded": []
+  },
+  {
+   "id": "de1b04aef2180495",
+   "url": "https://jakub.jankiewicz.org/blog/ai-code-open-source/",
+   "title": "「AIが書いたコードは全てオープンソースにすべき」、1000票超のHN議論の論点を整理",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-16",
+   "slot": "10",
+   "deadline": null,
+   "source": "jakub.jankiewicz.org（Hacker News 1000pt超）",
+   "note": "AIで書いたコードを作品に入れる前に知りたい、権利の論点が分かる",
+   "reminded": []
+  },
+  {
+   "id": "14107f4ef4f33055",
+   "url": "https://automaton-media.com/articles/reportjp/hogwarts-legacy-dlss5-20261115-479361/",
+   "title": "『ホグワーツ・レガシー』で見る「DLSS 5」、AIが光と素材感を後から描き直す",
+   "category": "industry",
+   "importance": 4,
+   "date": "2026-11-16",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "AIが「描画の最後の仕上げ」を担う時代、見た目と負荷はどう変わる？",
+   "reminded": []
+  },
+  {
+   "id": "f78e5ac0b6783db6",
+   "url": "https://www.4gamer.net/games/036/G003691/20261113042/",
+   "title": "『GTA VI』発売直前、開発体制は2400人から約4700人へ。規模から読む13年ぶりの新作",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-16",
+   "slot": "10",
+   "deadline": null,
+   "source": "4Gamer.net",
+   "note": "13年ぶりの超大作が、どんな規模と判断で作られたかを数字で知れる",
+   "reminded": []
+  },
+  {
+   "id": "77e1c2246c4d3e77",
+   "url": "https://80.lv/articles/epic-is-taking-apple-s-27-web-fee-to-the-supreme-court",
+   "title": "EpicがAppleの「27%のWeb手数料」を最高裁へ。個人でも関係する「アプリ外決済」の行方",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-16",
+   "slot": "10",
+   "deadline": null,
+   "source": "80 Level",
+   "note": "スマホでゲームを売るなら知りたい、手数料と「アプリ外決済」の現在地",
+   "reminded": []
   }
  ],
  "batches": [
@@ -858,6 +962,13 @@
    "slot": "learn",
    "date": "2026-11-16",
    "count": 13,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261116-10-091632",
+   "slot": "10",
+   "date": "2026-11-16",
+   "count": 8,
    "status": "ok"
   }
  ],
@@ -1052,6 +1163,27 @@
    "area": "shader",
    "theme": "座標変換",
    "date": "2026-11-15"
+  },
+  {
+   "term": "アライメントとパディング",
+   "level": "基礎",
+   "area": "cpp",
+   "theme": "メモリレイアウトとキャッシュ効率",
+   "date": "2026-11-16"
+  },
+  {
+   "term": "AoSとSoA",
+   "level": "発展",
+   "area": "cpp",
+   "theme": "メモリレイアウトとキャッシュ効率",
+   "date": "2026-11-16"
+  },
+  {
+   "term": "偽共有とキャッシュライン分離",
+   "level": "応用",
+   "area": "cpp",
+   "theme": "メモリレイアウトとキャッシュ効率",
+   "date": "2026-11-16"
   }
  ],
  "quiz": [
