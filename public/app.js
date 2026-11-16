@@ -3,7 +3,7 @@ import { logoSVG } from "./logo.js";
 import { SDK, REDUCED, $, $$, esc, safeUrl, todayStr, daysUntil, norm, ic, hash, AREAS, CAT_ICON, SLOT_LABEL, WEEK,
          P, S, setData, setLearn, catOf, catColor, catIc, isSection, byId, itemText, kwOf, sortNew, level, dlBadge, hl,
          metaLine, bmBtn, rowHTML, heroHTML, emptyHTML, pageHead, toast, burst, countUp, copyText, paraHTML, store } from "./core.js";
-import { initStarfield, showDrawer, closeDrawer } from "./fx.js";
+import { initStarfield, initCursorTrail, showDrawer, closeDrawer } from "./fx.js";
 import { viewProg, viewPlan, afterLearn, todayLearnSide, ladders, ladderHTML, kwHits, openKw, rankBox } from "./learn.js";
 
 /* =========================================================================
@@ -911,6 +911,7 @@ $("#open-pal kbd").textContent = /Mac|iPhone|iPad/.test(navigator.platform) ? "â
 $("#wipe-mark").innerHTML = logoSVG({ full: false });
 $("#theme").innerHTML = ic(document.documentElement.dataset.theme === "light" ? "ti-sun" : "ti-moon-stars");
 initStarfield();
+initCursorTrail();
 const isLocal = ["localhost", "127.0.0.1"].includes(location.hostname);
 if (isLocal && (new URLSearchParams(location.search).has("demo") || !firebaseConfig.apiKey)) startDemo();
 else if (firebaseConfig.apiKey) startFirebase();

@@ -9,6 +9,50 @@
 import { REDUCED, COARSE, $ } from "./core.js";
 
 /* =============================================================== 星屑 */
+// マウスの拖尾：動かすと小さな星とキラキラがこぼれ、回りながら小さくなって消える。クリックでぱっと弾ける。
+// 使い回しの 28 個の要素を Web Animations（transform / opacity）で動かすだけ。マウスの端末・動きを減らさない設定のときだけ
+export function initCursorTrail() {
+  if (REDUCED || COARSE || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  const box = document.createElement("div");
+  box.className = "cur-trail"; box.setAttribute("aria-hidden", "true");
+  const POOL = 28, pool = [];
+  for (let i = 0; i < POOL; i++) {
+    const s = document.createElement("i");
+    s.className = `c${i % 3}${i % 4 === 1 ? " sp" : ""}`;
+    box.appendChild(s); pool.push(s);
+  }
+  document.body.appendChild(box);
+  let k = 0, lx = -1, ly = -1, last = 0;
+  const EASE = "cubic-bezier(.25, .6, .45, 1)";
+  function spawn(x, y, pop) {
+    const s = pool[k++ % POOL];
+    for (const a of s.getAnimations()) a.cancel();
+    const sc = pop ? .7 + Math.random() * .6 : .45 + Math.random() * .55;
+    const ang = Math.random() * Math.PI * 2, dist = pop ? 26 + Math.random() * 30 : 0;
+    const dx = pop ? Math.cos(ang) * dist : (Math.random() - .5) * 16;
+    const dy = pop ? Math.sin(ang) * dist : 8 + Math.random() * 18;   // こぼれた星は少し下へ落ちる
+    const rot = (Math.random() - .5) * 280, x0 = x - 7, y0 = y - 7;
+    s.animate([   // 最初の 3 割は明るいまま少し動き、そのあと回りながら小さくなって消える
+      { transform: `translate(${x0}px, ${y0}px) rotate(0deg) scale(${sc})`, opacity: 1 },
+      { transform: `translate(${x0 + dx * .5}px, ${y0 + dy * .4}px) rotate(${rot * .4}deg) scale(${sc * .9})`, opacity: 1, offset: .32 },
+      { transform: `translate(${x0 + dx}px, ${y0 + dy}px) rotate(${rot}deg) scale(0)`, opacity: 0 },
+    ], { duration: pop ? 700 : 650 + Math.random() * 300, easing: EASE });
+  }
+  addEventListener("pointermove", e => {
+    if (e.pointerType !== "mouse") return;
+    const x = e.clientX, y = e.clientY;
+    if (lx < 0) { lx = x; ly = y; return; }
+    if (Math.hypot(x - lx, y - ly) < 14 || e.timeStamp - last < 22) return;   // 14px 動くごと、多くても 1 秒に 45 個
+    lx = x; ly = y; last = e.timeStamp;
+    spawn(x, y, false);
+  }, { passive: true });
+  addEventListener("pointerdown", e => {
+    if (e.pointerType !== "mouse" || e.button !== 0) return;
+    for (let i = 0; i < 7; i++) spawn(e.clientX, e.clientY, true);
+  }, { passive: true });
+  document.addEventListener("mouseleave", () => { lx = -1; });
+}
+
 export function initStarfield() {
   if (REDUCED) return;
   const cv = document.createElement("canvas");
