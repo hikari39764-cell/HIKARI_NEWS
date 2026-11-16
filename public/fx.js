@@ -12,7 +12,7 @@ import { REDUCED, COARSE, $ } from "./core.js";
 // マウスの拖尾：動かすと小さな星とキラキラがこぼれ、回りながら小さくなって消える。クリックでぱっと弾ける。
 // 使い回しの 28 個の要素を Web Animations（transform / opacity）で動かすだけ。マウスの端末・動きを減らさない設定のときだけ
 export function initCursorTrail() {
-  if (REDUCED || COARSE || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  if (COARSE || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
   const box = document.createElement("div");
   box.className = "cur-trail"; box.setAttribute("aria-hidden", "true");
   const POOL = 28, pool = [];
@@ -25,6 +25,7 @@ export function initCursorTrail() {
   let k = 0, lx = -1, ly = -1, last = 0;
   const EASE = "cubic-bezier(.25, .6, .45, 1)";
   function spawn(x, y, pop) {
+    if (REDUCED) return;   // 特効オフ
     const s = pool[k++ % POOL];
     for (const a of s.getAnimations()) a.cancel();
     const sc = pop ? .7 + Math.random() * .6 : .45 + Math.random() * .55;
@@ -53,8 +54,7 @@ export function initCursorTrail() {
   document.addEventListener("mouseleave", () => { lx = -1; });
 }
 
-export function initStarfield() {
-  if (REDUCED) return;
+export function initStarfield() {   // 特効オフの間は描かない（右上のボタンでいつでも戻せるよう、仕組みは用意しておく）
   const cv = document.createElement("canvas");
   cv.id = "starfield"; cv.setAttribute("aria-hidden", "true");
   document.body.prepend(cv);
@@ -97,7 +97,7 @@ export function initStarfield() {
 
   function frame(t) {
     requestAnimationFrame(frame);
-    if (document.hidden || scrimEl?.classList.contains("on")) { last = t; return; }   // 詳細パネル表示中は止める（ぼかしの再計算を減らす）
+    if (REDUCED || document.hidden || scrimEl?.classList.contains("on")) { last = t; return; }   // 詳細パネル表示中は止める（ぼかしの再計算を減らす）
     const dt = Math.min(3, (t - last) / 16.67); last = t;
     const light = document.documentElement.dataset.theme === "light";
     const pal = light ? PAL.light : PAL.dark;

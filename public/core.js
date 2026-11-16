@@ -5,7 +5,17 @@
 import { logoSVG } from "./logo.js";
 
 export const SDK = "https://www.gstatic.com/firebasejs/10.12.2";
-export const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+// 特効（アニメーション）のオン・オフ。右上のボタンで切り替え、端末に保存する。
+// 何も選んでいなければ、OS の「動きを減らす」設定に合わせる。
+// REDUCED は let で export しているので、切り替えると読み込んでいる全モジュールの値がその場で変わる
+export const SYS_REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const FX_PREF = (() => { try { return localStorage.getItem("fx"); } catch { return null; } })();
+export let REDUCED = FX_PREF ? FX_PREF === "off" : SYS_REDUCED;
+export function setFx(on) {
+  REDUCED = !on;
+  document.documentElement.dataset.fx = on ? "on" : "off";
+  try { localStorage.setItem("fx", on ? "on" : "off"); } catch {}
+}
 export const COARSE = matchMedia("(pointer: coarse)").matches;
 
 export const $ = (s, el = document) => el.querySelector(s);

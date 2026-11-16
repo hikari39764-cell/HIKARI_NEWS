@@ -406,6 +406,67 @@ function kwAll() {
   return KWC;
 }
 
+/* ------------------------------------------------- キーワードの分類（図鑑の「棚」）
+   同じテーマの 3 つ（基礎・発展・応用）を 1 組として、テーマ名と用語から内容別の棚に自動で分ける。
+   いちばん多くことばが当てはまった棚に入れる（テーマ名は 3 点、用語は 2 点、説明は 1 点）。データに cat があればそれを使う */
+const W = s => s.split("|");
+export const KW_CATS = {
+  cpp: [
+    { id: "mem", name: "メモリ・所有権", icon: "ti-database", w: W("ポインタ|pointer|unique_ptr|shared_ptr|weak_ptr|スマートポインタ|所有権|ownership|raii|アロケータ|allocator|寿命|lifetime|デリータ|deleter|メモリリーク|leak|参照カウント|new|delete|ダングリング") },
+    { id: "value", name: "値・ムーブ・参照", icon: "ti-arrows-exchange", w: W("ムーブ|move|右辺値|rvalue|左辺値|lvalue|コピー|copy|参照|reference|値カテゴリ|forward|完全転送|値渡し|const") },
+    { id: "compile", name: "テンプレート・コンパイル時", icon: "ti-template", w: W("テンプレート|template|constexpr|consteval|constinit|コンパイル時|compile-time|コンセプト|concept|sfinae|型推論|decltype|auto|可変長|variadic|型特性|type_traits") },
+    { id: "class", name: "クラス設計", icon: "ti-box-model", w: W("クラス|class|継承|inheritance|仮想|virtual|ポリモーフィズム|polymorph|vtable|インターフェース|interface|コンストラクタ|constructor|デストラクタ|destructor|演算子|operator|カプセル化|コンポジション") },
+    { id: "stl", name: "標準ライブラリ", icon: "ti-books", w: W("stl|vector|unordered_map|map|コンテナ|container|algorithm|アルゴリズム|string_view|optional|variant|span|イテレータ|iterator|ranges|標準ライブラリ|std::function|ラムダ|lambda") },
+    { id: "perf", name: "パフォーマンス・キャッシュ", icon: "ti-gauge", w: W("キャッシュ|cache|アライメント|alignment|パディング|padding|aos|soa|データ指向|data-oriented|simd|偽共有|false sharing|最適化|optimiz|インライン|inline|分岐予測|メモリレイアウト|ホットパス") },
+    { id: "thread", name: "並行処理", icon: "ti-git-merge", w: W("スレッド|thread|atomic|アトミック|mutex|ミューテックス|ロック|lock|並行|並列|concurren|parallel|ジョブ|job|メモリオーダー|memory order|競合|race|コルーチン|coroutine|非同期|async") },
+    { id: "tool", name: "ビルド・デバッグ", icon: "ti-bug", w: W("ビルド|build|コンパイラ|compiler|リンク|linker|未定義動作|undefined behavior|デバッグ|debug|サニタイザ|sanitizer|プロファイ|profil|ヘッダ|header|モジュール|module|警告|warning|アサート|assert") },
+  ],
+  dx12: [
+    { id: "bind", name: "リソースバインディング", icon: "ti-link", w: W("ディスクリプタ|descriptor|ルートシグネチャ|root signature|バインド|bind|cbv|srv|uav|定数バッファ|constant buffer|ルート定数|root constant") },
+    { id: "sync", name: "同期・コマンド", icon: "ti-arrows-sort", w: W("フェンス|fence|バリア|barrier|同期|sync|コマンド|command|キュー|queue|コマンドアロケータ|フレーム管理|フレームごと|スワップチェーン|swap chain|present|遷移|transition") },
+    { id: "pipe", name: "パイプライン・PSO", icon: "ti-route", w: W("パイプライン|pipeline|pso|パイプラインステート|ラスタライザ|rasterizer|ブレンド|blend|深度|depth|ステンシル|stencil|インプットレイアウト|input layout|シェーダーステージ") },
+    { id: "mem", name: "GPU メモリ・リソース", icon: "ti-database", w: W("リソース|resource|バッファ|buffer|テクスチャ|texture|ヒープ|heap|アップロード|upload|readback|コミット|committed|placed|メモリ|memory|vram|サブリソース") },
+    { id: "engine", name: "エンジン設計", icon: "ti-building-factory-2", w: W("エンジン|engine|ecs|エンティティ|entity|コンポーネント|component|シーン|scene|ゲームループ|game loop|レンダーグラフ|render graph|フレームグラフ|frame graph|アセット|asset|カリング|culling") },
+    { id: "new", name: "レイトレーシング・最新機能", icon: "ti-sparkles", w: W("レイトレ|ray|dxr|メッシュシェーダー|mesh shader|vrs|可変レート|ワークグラフ|work graph|サンプラーフィードバック|sampler feedback|directstorage|アップスケール|upscal|dlss|fsr") },
+    { id: "perf", name: "最適化・デバッグ", icon: "ti-gauge", w: W("最適化|optimiz|プロファイ|profil|pix|デバッグ|debug|gpu 時間|timing|ボトルネック|bottleneck|デバイスロスト|device removed|検証レイヤー|debug layer") },
+  ],
+  shader: [
+    { id: "basic", name: "HLSL の基本", icon: "ti-code", w: W("hlsl|文法|syntax|セマンティクス|semantic|float4|cbuffer|構造体|struct|組み込み関数|intrinsic|入出力|エントリポイント|コンパイル|dxc") },
+    { id: "math", name: "座標変換・数学", icon: "ti-math-function", w: W("座標|coordinate|変換|transform|行列|matrix|mul|ベクトル|vector|内積|dot|外積|cross|正規化|normalize|クリップ|clip|ビューポート|viewport|sv_position|射影|projection|補間|lerp") },
+    { id: "light", name: "ライティング", icon: "ti-bulb", w: W("ライティング|lighting|ライト|light|法線|normal|ランバート|lambert|フォン|phong|鏡面|specular|拡散|diffuse|pbr|brdf|影|shadow|反射|reflect|フレネル|fresnel") },
+    { id: "tex", name: "テクスチャ・サンプリング", icon: "ti-photo", w: W("テクスチャ|texture|uv|サンプラー|sampler|sample|ミップ|mip|フィルタ|filter|ノーマルマップ|normal map|アトラス|atlas|アドレスモード") },
+    { id: "post", name: "ポストエフェクト", icon: "ti-wand", w: W("ポストエフェクト|ポストプロセス|post|ブルーム|bloom|トーンマッピング|tone mapping|ぼかし|blur|被写界深度|ssao|taa|アンチエイリアス|anti-alias|カラーグレーディング|color grading|ビネット") },
+    { id: "compute", name: "コンピュートシェーダー", icon: "ti-cpu", w: W("コンピュート|compute|スレッドグループ|thread group|numthreads|dispatch|groupshared|共有メモリ|wave|ウェーブ|アトミック|atomic") },
+    { id: "perf", name: "シェーダーの最適化", icon: "ti-gauge", w: W("最適化|optimiz|分岐|branch|精度|precision|half|min16float|帯域|bandwidth|alu|オーバードロー|overdraw|命令数|レジスタ") },
+  ],
+};
+const KW_ETC = { id: "etc", name: "そのほか", icon: "ti-dots" };
+const kwRe = new Map();
+function kwHitCount(text, words) {
+  let n = 0;
+  for (const w of words) {
+    if (/^[\x00-\x7f]+$/.test(w)) {   // 英語は単語の頭から（news の new などを拾わない）
+      let re = kwRe.get(w);
+      if (!re) { re = new RegExp("(^|[^a-z0-9_])" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")); kwRe.set(w, re); }
+      if (re.test(text)) n++;
+    } else if (text.includes(w)) n++;
+  }
+  return n;
+}
+function kwCatOf(g) {
+  const cats = KW_CATS[g.area] || [];
+  const given = g.items.map(k => k.cat).filter(c => cats.some(x => x.id === c));
+  if (given.length) return given.sort((a, b) => given.filter(x => x === b).length - given.filter(x => x === a).length)[0];
+  const theme = norm(g.theme), terms = norm(g.items.map(k => `${k.term} ${k.en || ""}`).join(" ")), ex = norm(g.items.map(k => k.explain || "").join(" "));
+  let best = "etc", top = 0;
+  for (const c of cats) {
+    const sc = kwHitCount(theme, c.w) * 3 + kwHitCount(terms, c.w) * 2 + kwHitCount(ex, c.w);
+    if (sc > top) { top = sc; best = c.id; }
+  }
+  return best;
+}
+const kwCatMeta = (a, id) => (KW_CATS[a] || []).find(c => c.id === id) || KW_ETC;
+
 // 3つ1組（基礎 → 発展 → 応用）のまとまり。新しい順
 export function ladders(a = "") {
   const g = new Map();
@@ -416,7 +477,7 @@ export function ladders(a = "") {
     g.get(id).items.push(k);
   }
   const L = [...g.values()];
-  L.forEach(x => x.items.sort((p, q) => (KW_LV[p.level]?.n || 9) - (KW_LV[q.level]?.n || 9)));
+  L.forEach(x => { x.items.sort((p, q) => (KW_LV[p.level]?.n || 9) - (KW_LV[q.level]?.n || 9)); x.cat = kwCatOf(x); });
   const so = s => ({ "10": "1", "17": "2", "22": "3" }[s] || "0");
   return L.sort((p, q) => q.date.localeCompare(p.date) || so(q.slot).localeCompare(so(p.slot)));
 }
@@ -451,7 +512,7 @@ export function openKw(key, fromEl, point) {
       </div>
       <aside class="dside">
         ${k.link ? `<a class="btn big wide dz" style="--d:3" href="${esc(safeUrl(k.link))}" target="_blank" rel="noopener noreferrer">${ic("ti-book-2")}ドキュメント</a>` : ""}
-        <a class="btn plain wide dz" style="--d:4" href="#/prog?t=kw&area=${esc(k.area)}&k=${encodeURIComponent(key)}" data-close>${ic("ti-books")}図鑑で見る</a>
+        <a class="btn plain wide dz" style="--d:4" href="#/prog?t=kw&area=${esc(k.area)}${g ? "&cat=" + esc(g.cat) : ""}&k=${encodeURIComponent(key)}" data-close>${ic("ti-books")}図鑑で見る</a>
         ${g && g.items.length > 1 ? `<section class="dsec dz" style="--d:5"><h3 class="sh">${ic("ti-stairs")}${esc(g.theme || "ステップで覚える")}</h3>
           ${g.items.map(x => `<a class="mini ${x.key === key ? "cur" : ""}" data-la="kw" data-key="${esc(x.key)}">${kwLevel(x.level)}<span class="t">${esc(x.term)}</span></a>`).join("")}</section>` : ""}
       </aside>
@@ -480,10 +541,24 @@ function kwTab() {
   const all = kwAll(), inArea = all.filter(k => !cur || k.area === cur);
   const known = inArea.filter(k => P.kwKnown.has(k.key)).length, p = inArea.length ? known / inArea.length : 0;
   const tab = (id, icon, name, n) => `<a class="${cur === id ? "on" : ""}" href="#/prog?t=kw${id ? "&area=" + id : ""}">${ic(icon)}<span>${esc(name)}</span><span class="n">${n}</span></a>`;
+  const curCat = S.params.cat || "";
+  const shelves = kwShelves(cur);
+  const tile = (href, on, ac, icon, name, n, k) => `<a class="kwc ${on ? "on" : ""}" href="${href}" style="--ac:${ac}">
+      <span class="kwc-ic">${ic(icon)}</span><span class="kwc-name"><b>${esc(name)}</b></span>
+      <span class="kwc-bar"><span class="t-bar"><i style="width:${n ? (k / n * 100).toFixed(0) : 0}%"></i></span><small>${k}/${n}</small></span></a>`;
+  const shelfTile = sh => tile(`#/prog?t=kw&area=${sh.area}&cat=${sh.id}`, curCat === sh.id && cur === sh.area, area(sh.area).color, sh.icon, sh.name, sh.n, sh.known);
+  // 分野を選んでいるとき：その分野の棚だけ（先頭に「すべての棚」）。「すべて」のとき：分野ごとに小見出しを付けて並べる
+  const shelfNav = !shelves.length ? "" : cur
+    ? `<nav class="kwc-grid rv" style="--i:3" aria-label="分類">
+        ${tile(`#/prog?t=kw&area=${cur}`, !curCat, area(cur).color, "ti-layout-grid", "すべての棚", inArea.length, known)}${shelves.map(shelfTile).join("")}</nav>`
+    : `<nav class="kwc-areas rv" style="--i:3" aria-label="分類">${Object.keys(AREAS).filter(a => shelves.some(sh => sh.area === a)).map(a =>
+        `<div class="kwc-area" style="--ac:${area(a).color}"><a class="kwc-al" href="#/prog?t=kw&area=${a}">${ic(area(a).icon)}${esc(area(a).name)}</a>
+          <div class="kwc-grid">${shelves.filter(sh => sh.area === a).map(shelfTile).join("")}</div></div>`).join("")}</nav>`;
   return `<div class="kw-top rv" style="--i:2">
       <div class="kw-prog" data-tip="覚えたキーワード"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" class="bg"/><circle cx="22" cy="22" r="18" class="fg" style="stroke-dashoffset:${C_SM}" data-off="${(C_SM * (1 - p)).toFixed(1)}"/></svg><span><b>${known}</b><small>/${inArea.length}</small></span></div>
       <nav class="seg">${tab("", "ti-layout-grid", "すべて", all.length)}${Object.entries(AREAS).map(([id, A]) => tab(id, A.icon, A.name, all.filter(k => k.area === id).length)).join("")}</nav>
     </div>
+    ${shelfNav}
     <div class="kw-tools rv" style="--i:3">
       <div class="sbar sm">${ic("ti-search")}<input type="search" id="kwq" value="${esc(S.params.q || "")}" placeholder="用語・英語名で探す" autocomplete="off"></div>
       <div class="seg">${[["", "ti-list", "すべて"], ["todo", "ti-circle-dashed", "まだ"], ["known", "ti-circle-check", "覚えた"]].map(([v, icon, l]) =>
@@ -492,10 +567,22 @@ function kwTab() {
     <div id="kw-list">${kwListHTML()}</div>`;
 }
 
+// 棚の一覧：分野ごとに、キーワードがある棚だけ（並びは KW_CATS の順、最後に「そのほか」）
+function kwShelves(cur) {
+  const L = ladders(cur), out = [];
+  for (const a of cur ? [cur] : Object.keys(AREAS)) {
+    for (const c of [...(KW_CATS[a] || []), KW_ETC]) {
+      const items = L.filter(g => g.area === a && g.cat === c.id).flatMap(g => g.items);
+      if (items.length) out.push({ area: a, id: c.id, name: c.name, icon: c.icon, n: items.length, known: items.filter(k => P.kwKnown.has(k.key)).length });
+    }
+  }
+  return out;
+}
+
 function kwListHTML() {
-  const cur = AREAS[S.params.area] ? S.params.area : "", f = S.params.f || "";
+  const cur = AREAS[S.params.area] ? S.params.area : "", f = S.params.f || "", curCat = S.params.cat || "";
   const terms = norm(S.params.q || "").split(/\s+/).filter(Boolean);
-  const groups = ladders(cur).map(g => ({ ...g, items: g.items.filter(k => {
+  const groups = ladders(cur).filter(g => !curCat || g.cat === curCat).map(g => ({ ...g, items: g.items.filter(k => {
     if (f === "known" && !P.kwKnown.has(k.key)) return false;
     if (f === "todo" && P.kwKnown.has(k.key)) return false;
     return !terms.length || terms.every(w => norm([k.term, k.en, k.explain, k.use, g.theme].join(" ")).includes(w));
@@ -504,12 +591,20 @@ function kwListHTML() {
     return kwAll().length ? emptyHTML("見つかりませんでした", "ことばを短くしてみてください")
       : emptyHTML("キーワードはまだありません", "毎回の配信（10:00 / 17:00 / 22:00）で 3 つずつ増えます");
   }
-  return groups.map((g, gi) => {
-    const A = area(g.area), when = [md(g.date), SLOT_LABEL[g.slot] && g.slot !== "learn" ? SLOT_LABEL[g.slot] : ""].filter(Boolean).join(" ");
-    return `<section class="kw-group rv in" style="--i:${Math.min(gi, 8)};--ac:${A.color}">
-      <div class="kg-h"><span class="ld-ic">${ic(A.icon)}</span><div><small>${esc(A.name)}${when ? ` ・ ${esc(when)}` : ""}</small><b>${esc(g.theme || "キーワード")}</b></div></div>
-      <div class="kw-cards">${g.items.map(kwCard).join("")}</div>
-    </section>`;
+  // 棚ごとに見出しを立てて、その中にテーマの組（新しい順）を並べる
+  let gi = 0;
+  return kwShelves(cur).filter(sh => !curCat || sh.id === curCat).map(sh => {
+    const inShelf = groups.filter(g => g.area === sh.area && g.cat === sh.id);
+    if (!inShelf.length) return "";
+    const A = area(sh.area), n = inShelf.reduce((m, g) => m + g.items.length, 0);
+    return `<h3 class="kwc-h" style="--ac:${A.color}"><span class="kwc-hi">${ic(sh.icon)}</span>${esc(sh.name)}${cur ? "" : `<small>${esc(A.name)}</small>`}<span class="n">${n} 語</span></h3>`
+      + inShelf.map(g => {
+        const when = [md(g.date), SLOT_LABEL[g.slot] && g.slot !== "learn" ? SLOT_LABEL[g.slot] : ""].filter(Boolean).join(" ");
+        return `<section class="kw-group rv in" style="--i:${Math.min(gi++, 8)};--ac:${A.color}">
+          <div class="kg-h"><span class="ld-ic">${ic(A.icon)}</span><div><small>${esc(A.name)}${when ? ` ・ ${esc(when)}` : ""}</small><b>${esc(g.theme || "キーワード")}</b></div></div>
+          <div class="kw-cards">${g.items.map(kwCard).join("")}</div>
+        </section>`;
+      }).join("");
   }).join("");
 }
 

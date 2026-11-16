@@ -1,6 +1,6 @@
 import { firebaseConfig } from "./firebase-config.js";
 import { logoSVG } from "./logo.js";
-import { SDK, REDUCED, $, $$, esc, safeUrl, todayStr, daysUntil, norm, ic, hash, AREAS, CAT_ICON, SLOT_LABEL, WEEK,
+import { SDK, REDUCED, setFx, $, $$, esc, safeUrl, todayStr, daysUntil, norm, ic, hash, AREAS, CAT_ICON, SLOT_LABEL, WEEK,
          P, S, setData, setLearn, catOf, catColor, catIc, isSection, byId, itemText, kwOf, sortNew, level, dlBadge, hl,
          metaLine, bmBtn, rowHTML, heroHTML, emptyHTML, pageHead, toast, burst, countUp, copyText, paraHTML, store } from "./core.js";
 import { initStarfield, initCursorTrail, showDrawer, closeDrawer } from "./fx.js";
@@ -858,6 +858,20 @@ $("#theme").addEventListener("click", e => {
     document.startViewTransition(apply);
   } else apply();
 });
+// 特効のオン・オフ（星空・マウスの拖尾・画面の切り替えやカードの演出・スクロールで浮かぶ動き）
+function paintFx() {
+  const b = $("#fx-toggle"), on = !REDUCED;
+  b.innerHTML = ic(on ? "ti-stars" : "ti-stars-off");
+  b.classList.toggle("off", !on);
+  b.setAttribute("aria-pressed", on);
+  b.dataset.tip = on ? "特効：オン（クリックでオフ）" : "特効：オフ（クリックでオン）";
+}
+$("#fx-toggle").addEventListener("click", () => {
+  setFx(REDUCED);   // いまオフならオンに、オンならオフに
+  paintFx();
+  $$(".rv:not(.in)").forEach(el => el.classList.add("in", "done"));   // 浮かぶ前の要素も、すぐ見えるように
+  toast(REDUCED ? "ti-stars-off" : "ti-stars", REDUCED ? "特効をオフにしました（動きを減らします）" : "特効をオンにしました");
+});
 window.addEventListener("hashchange", () => { closeDetail(); render(); });
 window.addEventListener("resize", moveIndicator);
 
@@ -1042,6 +1056,7 @@ $("#brand-logo").innerHTML = logoSVG({ full: false });
 $("#open-pal kbd").textContent = /Mac|iPhone|iPad/.test(navigator.platform) ? "⌘K" : "Ctrl K";
 $("#wipe-mark").innerHTML = logoSVG({ full: false });
 $("#theme").innerHTML = ic(document.documentElement.dataset.theme === "light" ? "ti-sun" : "ti-moon-stars");
+paintFx();
 initStarfield();
 initCursorTrail();
 const isLocal = ["localhost", "127.0.0.1"].includes(location.hostname);
