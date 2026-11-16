@@ -38,7 +38,7 @@ import time
 import unicodedata
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import quote, urlsplit, urlunsplit
 
 ROOT = Path(__file__).parent
 CONFIG = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
@@ -110,7 +110,8 @@ def match_keywords(item: dict) -> list[str]:
 
 
 STATE_DEFAULT = {"items": [], "batches": [], "last_weekly": None, "warned": [],
-                 "keywords": [], "quiz": [], "themes": [], "reports": [], "idea_counts": {}}
+                 "keywords": [], "quiz": [], "themes": [], "reports": [], "idea_counts": {},
+                 "specials": [], "special_snap": {}}
 
 
 def load_state() -> dict:
@@ -127,6 +128,7 @@ def save_state(state: dict) -> None:
     state["keywords"] = state["keywords"][-2000:]
     state["quiz"] = state["quiz"][-6000:]
     state["themes"] = state["themes"][-400:]
+    state["specials"] = state["specials"][-400:]
     STATE_PATH.parent.mkdir(exist_ok=True)
     STATE_PATH.write_text(json.dumps(state, ensure_ascii=False, indent=1), encoding="utf-8")
 
@@ -960,10 +962,19 @@ def email_for_batch(title: str, items: list[dict], kw: dict | None, area_name: s
     return html, "\n".join(text)
 
 
-def email_for_day(day: date, items: list[dict], kws: list[dict]) -> tuple[str, str]:
+def email_for_day(day: date, items: list[dict], kws: list[dict], special: dict | None = None) -> tuple[str, str]:
     """1 日 1 回まとめ（22 時ごろ）のメール。"""
     title = f"{day.month}/{day.day}（{WEEKDAYS_JA[day.weekday()]}）のまとめ"
     inner, text = "", [title, ""]
+    if special:
+        link = site_link(f"#/special?d={day.isoformat()}")
+        inner += (f"<div style=\"margin-top:16px;padding:14px 16px;background:#efe9ff;border-radius:12px\">"
+                  f"<div style=\"font-size:12px;font-weight:800;color:#7a4dff\">🌙 19:00 特集・今夜の1本</div>"
+                  f"<div style=\"font-size:16px;font-weight:900;margin-top:2px\">{_h(special.get('title'))}</div>"
+                  f"<div style=\"font-size:14px\">{_h(special.get('hook'))}</div>"
+                  f"<div style=\"font-size:13px;color:#5c6070;margin-top:4px\">📈 急上昇：{_h(' / '.join(x.get('title', '') for x in special.get('top5', [])))}</div>"
+                  f"<a href=\"{_h(link)}\" style=\"font-size:13px;color:#b06d00;font-weight:700\">特集を読む →</a></div>")
+        text += [f"🌙 19:00 特集：{special.get('title')}", str(special.get('hook') or ''), link, ""]
     for slot in ("10", "17", "22"):
         group = sorted((it for it in items if str(it.get("slot")) == slot), key=lambda x: -int(x.get("importance") or 3))
         if not group:
@@ -1179,9 +1190,10 @@ def daily_mail(state: dict, store, now: datetime, dry_run: bool) -> str | None:
     items = [it for it in state["items"] if it.get("date") == today and str(it.get("slot")) in CONFIG["slots"]
              and not TASKS.get(it.get("category"), {}).get("section")]
     kws = [k for k in state.get("keywords", []) if k.get("date") == today]
-    if not to or not (items or kws):
+    special = next((s for s in state.get("specials", []) if s.get("date") == today), None)
+    if not to or not (items or kws or special):
         return None
-    html, text = email_for_day(now.date(), items, kws)
+    html, text = email_for_day(now.date(), items, kws, special)
     return "📮 1 日まとめメール：" + send_emails(to, f"📰 HIKARI NEWS {now.month}/{now.day} のまとめ", html, text, dry_run)
 
 
@@ -1419,6 +1431,14 @@ def missing_batch_warnings(state: dict, now: datetime) -> list[str]:
         if now >= due and not got and key not in state["warned"]:
             state["warned"].append(key)
             out.append(f"⚠️ {today} 的学习内容（题目・お題・分区新闻）还没收到，夜间任务可能失败了。")
+    sp = CONFIG.get("special", {})
+    if sp.get("live"):
+        due = now.replace(hour=int(sp.get("hour", 19)), minute=40, second=0, microsecond=0)
+        key = f"{today}-special"
+        got = any(b["date"] == today and b["slot"] == "special" for b in state["batches"])
+        if now >= due and not got and key not in state["warned"]:
+            state["warned"].append(key)
+            out.append(f"⚠️ {today} 的 19:00 特集还没收到，特集任务可能失败了。请到 https://claude.ai/code/routines 查看运行记录。")
     return out
 
 
@@ -1434,6 +1454,8 @@ def due_at(branch: str) -> datetime | None:
     tag = m.group(2)
     if tag == "learn":
         hour = int(LEARN.get("hour", 7))
+    elif tag == "special":
+        hour = int(CONFIG.get("special", {}).get("hour", 19))
     elif tag in CONFIG["slots"]:
         hour = int(tag)
     else:
@@ -1455,7 +1477,8 @@ def cmd_publish_pending(args) -> int:
     store = None if args.dry_run else open_store()
     notes, failed = [], False
 
-    jobs = [(b, fn) for prefix, fn in ((INBOX_PREFIX, publish_batch), (LEARN_PREFIX, publish_learn))
+    jobs = [(b, fn) for prefix, fn in ((INBOX_PREFIX, publish_batch), (LEARN_PREFIX, publish_learn),
+                                       (SPECIAL_PREFIX, publish_special))
             for b in pending_branches(prefix)]
     jobs.sort(key=lambda j: due_at(j[0]) or now)   # 公开时间早的先发
     for branch, fn in jobs:
@@ -1655,6 +1678,642 @@ def cmd_preview_learn(args) -> int:
 # ======================================================================
 
 # ======================================================================
+# 19:00 特集：今夜の 1 本（ゲーム紹介）＋ 急上昇 TOP5・期待の新星 ＋ 今日の話題
+#   研究端：special-context（Steam・SteamCharts の数値）→ out/special.json → special-check → special-submit
+#   発布端：publish_special（Discord は短い版、網站は全文、受け取り設定の人へも配信）
+# ======================================================================
+
+SPECIAL = CONFIG.get("special", {})
+SPECIAL_PREFIX = "claude/special-"
+SPECIAL_CTX = ROOT / "out" / "special_ctx.json"
+HTTP_HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; news-research-bot/1.0)"}
+SOURCE_KINDS = ("official", "store", "interview", "talk", "postmortem", "review", "article", "video")
+MAKER_KINDS = ("interview", "talk", "postmortem")
+RANK_TAGS = ("急上昇", "新作", "復活", "話題", "セール", "大型更新")
+WATCH_STATUS = ("近日発売", "新作", "早期アクセス", "体験版あり", "その他")
+
+
+def _http_json(url: str, tries: int = 2):
+    import urllib.request
+
+    last = None
+    for _ in range(tries):
+        try:
+            req = urllib.request.Request(url, headers=HTTP_HEADERS)
+            with urllib.request.urlopen(req, timeout=25) as r:
+                return json.loads(r.read().decode("utf-8"))
+        except Exception as e:   # noqa: BLE001
+            last = e
+            time.sleep(1.5)
+    raise RuntimeError(f"{urlsplit(url).netloc}：{str(last)[:120]}")
+
+
+def _steam_search(filt: str, count: int = 25) -> list[dict]:
+    """Steam ストアの一覧（売上上位・人気の新作・近日発売の人気作）。appid は画像の URL から取る。"""
+    data = _http_json(f"https://store.steampowered.com/search/results/?query&start=0&count={count}"
+                      f"&filter={filt}&cc=jp&l=japanese&json=1")
+    out = []
+    for i, it in enumerate(data.get("items") or [], 1):
+        m = re.search(r"/apps/(\d+)/", str(it.get("logo") or ""))
+        if m:
+            out.append({"appid": int(m.group(1)), "name": str(it.get("name") or ""), "pos": i})
+    return out
+
+
+def _steam_items(appids: list[int]) -> dict[int, dict]:
+    """名前・開発元・発売日を 50 件ずつまとめて取る（Steam ストアの公開 API。鍵は不要）。"""
+    info: dict[int, dict] = {}
+    for i in range(0, len(appids), 50):
+        q = json.dumps({"ids": [{"appid": a} for a in appids[i:i + 50]],
+                        "context": {"language": "japanese", "country_code": "JP"},
+                        "data_request": {"include_basic_info": True, "include_release": True}}, separators=(",", ":"))
+        data = _http_json("https://api.steampowered.com/IStoreBrowseService/GetItems/v1/?input_json=" + quote(q))
+        for it in data.get("response", {}).get("store_items", []):
+            rel = it.get("release") or {}
+            ts = rel.get("steam_release_date") or rel.get("original_release_date")
+            info[int(it["appid"])] = {
+                "name": str(it.get("name") or ""), "type": it.get("type"),
+                "dev": ", ".join(d.get("name", "") for d in (it.get("basic_info") or {}).get("developers", []))[:80],
+                "release": datetime.fromtimestamp(int(ts), JST).date().isoformat() if ts else None,
+                "coming_soon": bool(rel.get("is_coming_soon")),
+            }
+        time.sleep(.3)
+    return info
+
+
+def _charts(appid: int) -> dict | None:
+    """SteamCharts の 1 時間ごとの同時接続数から、24 時間ピークと伸び率を出す。
+    d1 = 直近 24 時間のピーク ÷ その前の 24 時間のピーク、w1 = 直近 7 日の平均 ÷ その前の 7 日の平均。"""
+    try:
+        pts = [p for p in _http_json(f"https://steamcharts.com/app/{appid}/chart-data.json", tries=1)
+               if isinstance(p, list) and len(p) == 2 and p[1] is not None]
+    except Exception:   # noqa: BLE001
+        return None
+    if not pts:
+        return None
+    now_ms, day = pts[-1][0], 24 * 3600 * 1000
+
+    def win(a: int, b: int) -> list[float]:
+        return [n for t, n in pts if now_ms - b * day < t <= now_ms - a * day]
+
+    l24, p24, l7, p7 = win(0, 1), win(1, 2), win(0, 7), win(7, 14)
+    peak = max(l24) if l24 else None
+    d1 = peak / max(p24) - 1 if peak and p24 and max(p24) > 0 else None
+    w1 = (sum(l7) / len(l7)) / (sum(p7) / len(p7)) - 1 if l7 and p7 and sum(p7) > 0 else None
+    return {"peak24": int(peak) if peak else None, "d1": d1, "w1": w1}
+
+
+def _momentum(r: dict) -> float | None:
+    """伸びの強さ。小さすぎるゲーム（24 時間ピークが min_peak 未満）は数に入れない。"""
+    if not r.get("peak24") or r["peak24"] < SPECIAL.get("min_peak", 2000):
+        return None
+    w1, d1 = r.get("w1"), r.get("d1")
+    if w1 is None and d1 is None:
+        return None
+    cap = lambda v: max(-.9, min(v, 3.0)) if v is not None else 0.0   # noqa: E731
+    score = (.6 * cap(w1) + .4 * cap(d1)) if w1 is not None else cap(d1)
+    if r.get("top_rank") and r.get("last_week_rank"):   # 同時接続ランキングで大きく順位を上げた
+        score += max(0, min(r["last_week_rank"] - r["top_rank"], 50)) / 100
+    return round(score, 3)
+
+
+def steam_signals() -> dict:
+    """特集の「急上昇」「期待の新星」の材料：Steam 公式の一覧と SteamCharts の推移。失敗しても途中までの結果を返す。"""
+    out = {"fetched": now_jst().isoformat(timespec="minutes"), "rows": [], "upcoming": [],
+           "topsellers": [], "popularnew": [], "errors": []}
+    try:
+        most = _http_json("https://api.steampowered.com/ISteamChartsService/GetMostPlayedGames/v1/")["response"]["ranks"]
+    except Exception as e:   # noqa: BLE001
+        most = []
+        out["errors"].append(f"同時接続ランキング：{e}")
+    for key, filt in (("topsellers", "topsellers"), ("popularnew", "popularnew"), ("upcoming", "popularcomingsoon")):
+        try:
+            out[key] = _steam_search(filt)
+        except Exception as e:   # noqa: BLE001
+            out["errors"].append(f"{filt}：{e}")
+        time.sleep(.3)
+    top = {int(m["appid"]): m for m in most[:100]}
+    cand = list(dict.fromkeys([*top, *(x["appid"] for x in out["topsellers"]), *(x["appid"] for x in out["popularnew"])]))[:150]
+    try:
+        info = _steam_items(cand + [x["appid"] for x in out["upcoming"]])
+    except Exception as e:   # noqa: BLE001
+        info = {}
+        out["errors"].append(f"ゲーム情報：{e}")
+    for x in out["upcoming"]:
+        i = info.get(x["appid"], {})
+        x.update({"name": i.get("name") or x["name"], "dev": i.get("dev", ""), "release": i.get("release")})
+    names = {x["appid"]: x["name"] for x in out["topsellers"] + out["popularnew"]}
+    today, ok, streak = now_jst().date(), 0, 0
+    for a in cand:
+        i = info.get(a, {})
+        if i.get("type") not in (None, 0):   # 0 = ゲーム（ツール・動画などは除く）
+            continue
+        # SteamCharts が記録していないゲーム（出たばかりの新作など）は 404。続けて 10 回失敗したら止める
+        c = _charts(a) if streak < 10 else None
+        ok, streak = (ok + 1, 0) if c else (ok, streak + 1)
+        m = top.get(a, {})
+        lw = m.get("last_week_rank")
+        peak = (c or {}).get("peak24") or m.get("peak_in_game")
+        now_players = None
+        if not peak:   # 推移のデータがない：今の同時接続数だけ Steam 公式から取る
+            try:
+                now_players = _http_json(f"https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid={a}",
+                                         tries=1)["response"].get("player_count")
+            except Exception:   # noqa: BLE001
+                pass
+        row = {"appid": a, "name": i.get("name") or names.get(a) or f"app {a}", "dev": i.get("dev", ""),
+               "release": i.get("release"), "top_rank": m.get("rank"), "last_week_rank": lw if lw and lw > 0 else None,
+               "peak24": peak, "now": now_players, "d1": (c or {}).get("d1"), "w1": (c or {}).get("w1")}
+        age = (today - date.fromisoformat(row["release"])).days if row["release"] else None
+        row["new"] = age is not None and 0 <= age <= 30
+        row["evergreen"] = bool(row["top_rank"] and row["top_rank"] <= 60 and not row["new"]
+                                and row["w1"] is not None and abs(row["w1"]) < .12)
+        row["score"] = _momentum(row)
+        out["rows"].append(row)
+        time.sleep(.25)
+    if not ok:
+        out["errors"].append("SteamCharts に接続できないため、伸び率がありません（今の同時接続数と順位の変化だけで判断する）")
+    elif streak >= 10:
+        out["errors"].append("SteamCharts が途中から応答しなくなったため、伸び率は一部のゲームだけ")
+    out["rows"].sort(key=lambda r: -(r["score"] if r["score"] is not None else -9))
+    return out
+
+
+def _pct(v) -> str:
+    return "—" if v is None else f"{'+' if v >= 0 else '−'}{abs(v) * 100:.0f}%"
+
+
+def _num(n) -> str:
+    if not n:
+        return "—"
+    return f"{n / 10000:.1f}万" if n >= 10000 else f"{n:,}"
+
+
+def rank_stat(it: dict) -> str:
+    """順位の数字（プログラムが Steam・SteamCharts から入れたもの）を 1 行に。"""
+    s = it.get("stats") or {}
+    parts = []
+    if s.get("w1") is not None:
+        parts.append(f"7日 {_pct(s['w1'])}")
+    if s.get("d1") is not None:
+        parts.append(f"24h {_pct(s['d1'])}")
+    if s.get("peak24"):
+        parts.append(f"ピーク {_num(s['peak24'])}人")
+    elif s.get("now"):
+        parts.append(f"同時接続 {_num(s['now'])}人")
+    return " ・ ".join(parts)
+
+
+def cmd_special_context(args) -> int:
+    now = now_jst()
+    state = load_state()
+    print(f"# 19:00 特集の材料（{now:%Y-%m-%d %H:%M} JST）\n\n读者：{CONFIG['reader']}\n")
+    print("## 已经介绍过的游戏（「今夜の1本」不要重复）")
+    print("、".join(s.get("title", "") for s in state.get("specials", [])[-120:]) or "（无）")
+    last = (state.get("specials") or [None])[-1]
+    if last:
+        print(f"\n## 上一次（{last.get('date')}）的急上昇 TOP5（用来判断 ↑↓ NEW，不要连续几天都是同一批）")
+        print(" / ".join(x.get("title", "") for x in last.get("top5", [])) or "（无）")
+
+    print("\n正在读取 Steam・SteamCharts 的数据（1〜3 分钟）…", flush=True)
+    sig = steam_signals()
+    SPECIAL_CTX.parent.mkdir(exist_ok=True)
+    SPECIAL_CTX.write_text(json.dumps(sig, ensure_ascii=False), encoding="utf-8")
+    for e in sig["errors"]:
+        print(f"⚠️ {e}")
+
+    rows = [r for r in sig["rows"] if r["score"] is not None and not r["evergreen"]]
+    print("\n## 急上昇の候補（伸び率の高い順。24 时间峰值不到 "
+          f"{SPECIAL.get('min_peak', 2000)} 人的、常年霸榜没在涨的已排除）")
+    print("appid | 名前 | 7日（本周平均÷上周平均） | 24h（峰值对比） | 24h 峰值 | 同时在线排名（上周→现在） | 发售日 | 标记")
+    for r in rows[:30]:
+        rk = f"{r['last_week_rank'] or '圏外'}→{r['top_rank']}" if r["top_rank"] else "—"
+        print(f"{r['appid']} | {r['name']} | {_pct(r['w1'])} | {_pct(r['d1'])} | {_num(r['peak24'])} | {rk} | "
+              f"{r['release'] or '?'} | {'新作' if r['new'] else ''}")
+    fresh = [r for r in sig["rows"] if r["new"] and r["score"] is None]
+    if fresh:
+        print("\n## 发售不到 30 天、还没有涨幅数据的新作（可以作为「新作」放进 TOP5，数字只有当前在线人数）")
+        for r in fresh:
+            print(f"{r['appid']} | {r['name']} | 发售 {r['release']} | 在线人数 {_num(r['now'] or r['peak24'])} | "
+                  f"同时在线排名 {r['top_rank'] or '圏外'}")
+    ever = [r["name"] for r in sig["rows"] if r["evergreen"]]
+    if ever:
+        print(f"\n## 常年霸榜、这周没有明显变化（不要放进 TOP5）\n{'、'.join(ever[:40])}")
+
+    prev = state.get("special_snap") or {}
+    old_up = set(prev.get("upcoming", []))
+    print("\n## 近日发售的人气作（Steam「近日発売の人気作」排序。「期待の新星」的候选）")
+    for x in sig["upcoming"][:20]:
+        mark = " 🆕 今天新进榜" if old_up and x["appid"] not in old_up else ""
+        print(f"{x['pos']}. {x['name']}（appid {x['appid']}・{x.get('dev') or '?'}・{x.get('release') or '发售日未定'}）{mark}")
+    old_ts = set(prev.get("topsellers", []))
+    print("\n## Steam 日本区热销榜")
+    for x in sig["topsellers"][:15]:
+        mark = " 🆕" if old_ts and x["appid"] not in old_ts else ""
+        print(f"{x['pos']}. {x['name']}（appid {x['appid']}）{mark}")
+    print("\n## 人气新作（Steam「人気の新作」）")
+    print("、".join(f"{x['name']}（{x['appid']}）" for x in sig["popularnew"][:20]) or "（无）")
+
+    today = now.date().isoformat()
+    news = [it for it in state["items"] if it.get("date") == today and it.get("category") not in SECTIONS]
+    print("\n## 今天已经发布的新闻（「今日の話題」可以从这里选，也可以自己再找）")
+    print("\n".join(f"- [{it.get('source', '')}] {it.get('title', '')}\n  {it['url']}" for it in news) or "（无）")
+    print(f"\n（数据已保存到 {SPECIAL_CTX.relative_to(ROOT)}，special-check / special-submit 会用它自动填入数字）")
+    return 0
+
+
+def _s(v, n: int) -> str:
+    return str(v or "").strip()[:n]
+
+
+def _sources(raw, where: str, errs: list, need: int, kinds: bool) -> list:
+    if not isinstance(raw, list):
+        errs.append(f"{where}：sources 必须是数组")
+        return []
+    out = []
+    for k, s in enumerate(raw, 1):
+        url = s.get("url") if isinstance(s, dict) else s
+        if not is_url(url):
+            errs.append(f"{where}：第 {k} 个来源的 url 不对")
+            continue
+        if kinds:
+            kind = s.get("kind") if isinstance(s, dict) else None
+            if kind not in SOURCE_KINDS:
+                errs.append(f"{where}：第 {k} 个来源的 kind 必须是 {list(SOURCE_KINDS)} 之一")
+            out.append({"title": _s(s.get("title") if isinstance(s, dict) else "", 120) or urlsplit(url).netloc,
+                        "url": url.strip(), "kind": kind if kind in SOURCE_KINDS else "article"})
+        else:
+            out.append(url.strip())
+    if len(out) < need:
+        errs.append(f"{where}：来源至少要 {need} 个")
+    return out[:8]
+
+
+def _paras(text, where: str, errs: list, lo: int, hi: int, pmax: int) -> str:
+    t = str(text or "").replace("\r\n", "\n").strip()
+    ps = [re.sub(r"[ \t]+\n", "\n", p).strip() for p in re.split(r"\n[ \t]*\n", t) if p.strip()]
+    if not lo <= len(t) <= hi:
+        errs.append(f"{where}：要 {lo}〜{hi} 字，现在是 {len(t)} 字")
+    if not 2 <= len(ps) <= pmax:
+        errs.append(f"{where}：要分成 2〜{pmax} 段（段与段之间空一行）")
+    if any(len(p) > 340 for p in ps):
+        errs.append(f"{where}：每段最多 340 字")
+    if t and not JA_CHARS.search(t):
+        errs.append(f"{where}：必须用日文写")
+    return "\n\n".join(ps)[:hi + 200]
+
+
+def _points(raw, where: str, errs: list, lo: int, hi: int, each: int) -> list:
+    pts = [str(p).strip() for p in raw if str(p).strip()] if isinstance(raw, list) else []
+    if not lo <= len(pts) <= hi:
+        errs.append(f"{where}：要写 {lo}〜{hi} 条，现在是 {len(pts)} 条")
+    if any(len(p) > each for p in pts):
+        errs.append(f"{where}：每条最多 {each} 字")
+    return [p[:each + 20] for p in pts[:hi]]
+
+
+def _terms(raw, errs: list) -> list:
+    if raw is None:
+        return []
+    if not isinstance(raw, list) or len(raw) > 3:
+        errs.append("game.terms 是最多 3 个的数组")
+        raw = raw[:3] if isinstance(raw, list) else []
+    out = []
+    for k, t in enumerate(raw, 1):
+        term = _s(t.get("term"), 60) if isinstance(t, dict) else ""
+        explain = _s(t.get("explain"), 200) if isinstance(t, dict) else ""
+        if not term or not explain or len(term) > 40 or len(explain) > 160:
+            errs.append(f"game.terms 第 {k} 个：term（最多 40 字）和 explain（最多 160 字）都要写")
+            continue
+        out.append({"term": term, "explain": explain})
+    return out
+
+
+def validate_special(data, strict: bool = True, ctx: dict | None = None) -> dict:
+    """特集の原稿を検査して整える。strict=False（発布端）は足りない所があっても止めない。
+    急上昇 TOP5 の数字は AI に書かせず、ctx（special-context が取った数値）から入れる。"""
+    errors: list[str] = []
+    errs = errors if strict else []
+    if not isinstance(data, dict):
+        raise ResultError("最外层必须是 JSON 对象")
+    g = data.get("game") if isinstance(data.get("game"), dict) else {}
+    if not g:
+        errors.append("game（今夜の1本）不能为空")
+
+    def need(key: str, n: int, where: str = "game") -> str:
+        v = _s(g.get(key), n + 40)
+        if not v:
+            errs.append(f"{where}.{key} 不能为空")
+        elif len(v) > n:
+            errs.append(f"{where}.{key} 最多 {n} 字")
+        return v[:n]
+
+    plats = [_s(p, 30) for p in g.get("platforms") or [] if _s(p, 30)] if isinstance(g.get("platforms"), list) else []
+    if not plats:
+        errs.append("game.platforms 要写平台（数组）")
+    appid = g.get("steam_appid")
+    appid = int(appid) if isinstance(appid, (int, str)) and str(appid).isdigit() else None
+    if not is_url(g.get("url")):
+        errs.append("game.url 要写官方网站或商店页面的 URL")
+    player = g.get("player") if isinstance(g.get("player"), dict) else {}
+    maker = g.get("maker") if isinstance(g.get("maker"), dict) else {}
+    summary = need("summary", 260)
+    if summary and len(summary) < 80:
+        errs.append("game.summary 至少 80 字")
+    game = {
+        "title": need("title", 80), "title_en": _s(g.get("title_en"), 80), "developer": need("developer", 80),
+        "platforms": plats[:6], "release": need("release", 40), "genre": need("genre", 40),
+        "price": _s(g.get("price"), 30), "engine": _s(g.get("engine"), 40), "steam_appid": appid,
+        "url": _s(g.get("url"), 500), "hook": need("hook", 60), "why_now": _s(g.get("why_now"), 140), "summary": summary,
+        "player": {"points": _points(player.get("points"), "game.player.points", errs, 3, 4, 90),
+                   "detail": _paras(player.get("detail"), "game.player.detail", errs, 200, 1000, 5),
+                   "for_whom": _s(player.get("for_whom"), 120), "caution": _s(player.get("caution"), 120)},
+        "maker": {"points": _points(maker.get("points"), "game.maker.points", errs, 3, 4, 90),
+                  "detail": _paras(maker.get("detail"), "game.maker.detail", errs, 300, 1400, 6)},
+        "steal": _points(g.get("steal"), "game.steal（盗めるポイント）", errs, 2, 3, 110),
+        "exercise": _s(g.get("exercise"), 180),
+        "terms": _terms(g.get("terms"), errs),
+        "sources": _sources(g.get("sources"), "game", errs, 3, True),
+    }
+    if not game["player"]["for_whom"]:
+        errs.append("game.player.for_whom（どんな人に向いているか）不能为空")
+    if len(game["exercise"]) < 20:
+        errs.append("game.exercise（やってみよう）至少 20 字")
+    if strict and not any(s["kind"] in MAKER_KINDS for s in game["sources"]):
+        errs.append("game.sources 里至少要有 1 个 interview / talk / postmortem（作り手視点的依据）")
+
+    rows = {r["appid"]: r for r in (ctx or {}).get("rows", [])}
+    rk = data.get("ranking") if isinstance(data.get("ranking"), dict) else {}
+    items = rk.get("items") if isinstance(rk.get("items"), list) else []
+    if len(items) != SPECIAL.get("ranking_size", 5):
+        errs.append(f"ranking.items 要正好 {SPECIAL.get('ranking_size', 5)} 款，现在是 {len(items)} 款")
+    ranking = []
+    for k, it in enumerate(items[:5], 1):
+        if not isinstance(it, dict):
+            errs.append(f"ranking 第 {k} 款不是对象")
+            continue
+        w = f"ranking 第 {k} 款"
+        a = it.get("steam_appid")
+        a = int(a) if isinstance(a, (int, str)) and str(a).isdigit() else None
+        row = rows.get(a)
+        if strict and row and row.get("evergreen"):
+            errs.append(f"{w}（{row['name']}）是常年霸榜、这周没在涨的游戏，换成真正在升温的")
+        why = _s(it.get("why"), 200)
+        if not 30 <= len(why) <= 160:
+            errs.append(f"{w}：why（为什么在涨）要 30〜160 字")
+        if not is_url(it.get("url")):
+            errs.append(f"{w}：url 不对")
+        tag = it.get("tag") if it.get("tag") in RANK_TAGS else "急上昇"
+        stat_keys = ("peak24", "now", "d1", "w1", "top_rank", "last_week_rank", "release")
+        if row:   # 研究端：special-context の数値を入れる（AI が書いた数字は使わない）
+            stats = {k2: row.get(k2) for k2 in stat_keys}
+        elif not strict and isinstance(it.get("stats"), dict):   # 発布端：交稿のときに入れた数値をそのまま使う
+            stats = {k2: it["stats"].get(k2) for k2 in stat_keys if isinstance(it["stats"].get(k2), (int, float, str, type(None)))}
+        else:
+            stats = None
+        if strict and a and ctx and not row:
+            errs.append(f"{w}：appid {a} 不在 special-context 的数据里（数字填不上）。用表里的游戏，或者去掉 steam_appid 并写清来源")
+        ranking.append({"rank": k, "title": _s(it.get("title"), 60) or (row or {}).get("name", ""), "steam_appid": a,
+                        "url": _s(it.get("url"), 500), "why": why[:160], "tag": tag, "stats": stats,
+                        "sources": _sources(it.get("sources"), w, errs, 1, False)})
+    watch = []
+    raw_w = data.get("watch") if isinstance(data.get("watch"), list) else []
+    if not 1 <= len(raw_w) <= 3:
+        errs.append(f"watch（期待の新星）要 1〜3 款，现在是 {len(raw_w)} 款")
+    for k, it in enumerate(raw_w[:3], 1):
+        if not isinstance(it, dict):
+            continue
+        w = f"watch 第 {k} 款"
+        why = _s(it.get("why"), 200)
+        if not 30 <= len(why) <= 160:
+            errs.append(f"{w}：why（为什么有潜力）要 30〜160 字")
+        if not is_url(it.get("url")):
+            errs.append(f"{w}：url 不对")
+        a = it.get("steam_appid")
+        watch.append({"title": _s(it.get("title"), 60), "steam_appid": int(a) if str(a or "").isdigit() else None,
+                      "url": _s(it.get("url"), 500), "why": why[:160],
+                      "status": it.get("status") if it.get("status") in WATCH_STATUS else "その他",
+                      "sources": _sources(it.get("sources"), w, errs, 1, False)})
+    news = []
+    raw_n = data.get("news") if isinstance(data.get("news"), list) else []
+    if not 3 <= len(raw_n) <= 5:
+        errs.append(f"news（今日の話題）要 3〜5 条，现在是 {len(raw_n)} 条")
+    for k, it in enumerate(raw_n[:5], 1):
+        if not isinstance(it, dict) or not is_url(it.get("url")):
+            errs.append(f"news 第 {k} 条：url 不对")
+            continue
+        w = f"news 第 {k} 条"
+        summ, why = _s(it.get("summary"), 240), _s(it.get("why"), 180)
+        if not 40 <= len(summ) <= 200:
+            errs.append(f"{w}：summary 要 40〜200 字")
+        if not 20 <= len(why) <= 140:
+            errs.append(f"{w}：why（为什么是话题）要 20〜140 字")
+        news.append({"title": _s(it.get("title"), 120), "url": _s(it.get("url"), 500), "id": item_id(it["url"]),
+                     "source": _s(it.get("source"), 40), "summary": summ[:200], "why": why[:140]})
+    if errors:
+        raise ResultError("\n".join(errors))
+    basis = _s(rk.get("basis"), 200) or ("Steam の同時接続数（SteamCharts）の伸び率をもとに、"
+                                         "定番の上位作品を除いて、伸びている理由が確認できたものを選びました。")
+    return {"game": game, "ranking": {"basis": basis, "items": ranking}, "watch": watch, "news": news,
+            "report": _s(data.get("report"), 3000)}
+
+
+def _special_ctx() -> dict | None:
+    try:
+        return json.loads(SPECIAL_CTX.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
+def cmd_special_check(args) -> int:
+    ctx = _special_ctx()
+    try:
+        sp = validate_special(read_json(args.file), True, ctx)
+    except ResultError as e:
+        print("❌ 格式有问题，请修改后再检查：\n" + str(e))
+        return 1
+    print(f"✅ 格式正确：今夜の1本「{sp['game']['title']}」、急上昇 {len(sp['ranking']['items'])} 款、"
+          f"期待の新星 {len(sp['watch'])} 款、今日の話題 {len(sp['news'])} 条"
+          + ("" if ctx else "\n⚠️ 没有找到 special-context 的数据，排名的数字会是空的。请先执行 special-context"))
+    for it in sp["ranking"]["items"]:
+        print(f"  {it['rank']}. {it['title']}　{rank_stat(it) or '（没有数字）'}")
+    return 0
+
+
+def cmd_special_submit(args) -> int:
+    ctx = _special_ctx()
+    try:
+        sp = validate_special(read_json(args.file), True, ctx)
+    except ResultError as e:
+        print("❌ 格式有问题，没有提交。请修改后再执行 special-submit：\n" + str(e))
+        return 1
+    now = now_jst()
+    payload = {**sp, "date": now.strftime("%Y-%m-%d"), "created_at": now.isoformat(timespec="seconds"),
+               "data": {"fetched": (ctx or {}).get("fetched"),
+                        "upcoming": [x["appid"] for x in (ctx or {}).get("upcoming", [])][:25],
+                        "topsellers": [x["appid"] for x in (ctx or {}).get("topsellers", [])][:25]}}
+    prefix = PREVIEW_PREFIX if args.preview else SPECIAL_PREFIX
+    branch = push_branch(prefix, "special", "special.json", payload,
+                         f"special: {payload['date']} {sp['game']['title'][:40]}")
+    where = "预览分支（不会发到 Discord）" if args.preview else f"分支（{SPECIAL.get('label', '19:00')} 准时发布）"
+    print(f"✅ 已提交 19:00 特集到{where} {branch}")
+    return 0
+
+
+def special_title(day: date, sp: dict) -> str:
+    return f"🌙 {day.month}/{day.day}（{WEEKDAYS_JA[day.weekday()]}）19:00 特集｜{sp['game']['title']}"
+
+
+def _moves(sp: dict, prev: dict | None) -> None:
+    """前回の TOP5 と比べて ↑↓→ NEW を付ける。"""
+    before = {(x.get("appid") or x.get("title")): i for i, x in enumerate((prev or {}).get("top5", []), 1)}
+    for it in sp["ranking"]["items"]:
+        p = before.get(it.get("steam_appid") or it["title"])
+        it["move"] = "new" if p is None else "up" if p > it["rank"] else "down" if p < it["rank"] else "same"
+
+
+MOVE_MARK = {"new": "🆕", "up": "⬆", "down": "⬇", "same": "➡"}
+
+
+def build_special_embeds(sp: dict, day: date) -> list[dict]:
+    g, site = sp["game"], CONFIG.get("site_url", "").rstrip("/")
+    link = f"{site}/#/special?d={day.isoformat()}" if site else ""
+    desc = (f"**{md(g['hook'])}**\n{md(g['summary'])}\n\n🎮 **プレイヤー視点**\n"
+            + "\n".join(f"▸ {md(p)}" for p in g["player"]["points"][:2])
+            + "\n\n🛠 **作り手視点**\n" + "\n".join(f"▸ {md(p)}" for p in g["maker"]["points"][:2]))
+    if link:
+        desc += f"\n\n📖 [続きはサイトで：作り手の工夫・盗めるポイント・やってみよう]({link})"
+    embeds = [{"title": f"🌙 今夜の1本｜{g['title']}"[:256], "url": g["url"], "description": desc[:3000], "color": 0x8E6CFF,
+               "footer": {"text": f"{g['developer']} ・ {' / '.join(g['platforms'])} ・ {g['genre']}"[:200]}}]
+    lines = []
+    for it in sp["ranking"]["items"]:
+        stat = rank_stat(it)
+        why = it["why"] if len(it["why"]) <= 70 else it["why"][:68] + "…"
+        lines.append(f"**{it['rank']}.** {MOVE_MARK.get(it.get('move'), '')} **[{md(it['title'])}]({it['url']})** `{it['tag']}`\n"
+                     f"└ {(stat + ' ・ ') if stat else ''}{md(why)}")
+    fetched = (sp.get("data") or {}).get("fetched") or ""
+    embeds.append({"title": "📈 急上昇 TOP5", "description": "\n".join(lines)[:4000], "color": 0xFF4F6D,
+                   **({"footer": {"text": f"数字：Steam・SteamCharts（{fetched[5:16].replace('T', ' ')} 時点）"}} if fetched else {})})
+    if sp["watch"]:
+        embeds.append({"title": "🌱 期待の新星", "color": 0x3EE08F, "description": "\n".join(
+            f"▸ **[{md(w['title'])}]({w['url']})** `{w['status']}`\n└ {md(w['why'][:80])}" for w in sp["watch"])[:2000]})
+    if sp["news"]:
+        embeds.append({"title": "📰 今日の話題", "color": 0x5865F2, "description": "\n".join(
+            f"▸ [{md(n['title'])}]({n['url']})\n└ {md(n['why'][:80])}" for n in sp["news"])[:3000]})
+    if link:
+        embeds.append({"description": f"📖 [特集の全文・過去の特集はサイトで]({link})", "color": 0x2B2D31})
+    return embeds
+
+
+def email_for_special(title: str, sp: dict, day: date) -> tuple[str, str]:
+    g = sp["game"]
+    link = site_link(f"#/special?d={day.isoformat()}")
+    inner = (f"<p style=\"margin:16px 0 0;font-size:12px;font-weight:800;color:#7a4dff\">🌙 今夜の1本</p>"
+             f"<p style=\"margin:4px 0 0;font-size:19px;font-weight:900\"><a href=\"{_h(g['url'])}\" style=\"color:#15161c;text-decoration:none\">{_h(g['title'])}</a></p>"
+             f"<p style=\"margin:2px 0;font-size:12px;color:#7a7e8a\">{_h(g['developer'])} ・ {_h(' / '.join(g['platforms']))}</p>"
+             f"<p style=\"margin:8px 0;font-size:15px;font-weight:700\">{_h(g['hook'])}</p><p style=\"margin:6px 0;font-size:14px\">{_h(g['summary'])}</p>"
+             "<ul style=\"margin:6px 0 6px 18px;padding:0;font-size:14px\">"
+             + "".join(f"<li>🎮 {_h(p)}</li>" for p in g["player"]["points"][:2])
+             + "".join(f"<li>🛠 {_h(p)}</li>" for p in g["maker"]["points"][:2]) + "</ul>"
+             f"<p style=\"margin:6px 0 0\"><a href=\"{_h(link)}\" style=\"font-size:13px;color:#b06d00;font-weight:700\">続きをサイトで読む →</a></p>"
+             "<p style=\"margin:20px 0 4px;font-size:13px;font-weight:800\">📈 急上昇 TOP5</p>"
+             + "".join(f"<div style=\"font-size:14px;margin:3px 0\"><b>{it['rank']}.</b> <a href=\"{_h(it['url'])}\" style=\"color:#15161c\">{_h(it['title'])}</a>"
+                       f" <span style=\"color:#7a7e8a;font-size:12px\">{_h(rank_stat(it))}</span></div>" for it in sp["ranking"]["items"])
+             + ("<p style=\"margin:18px 0 4px;font-size:13px;font-weight:800\">📰 今日の話題</p>"
+                + "".join(f"<div style=\"font-size:14px;margin:3px 0\">・<a href=\"{_h(n['url'])}\" style=\"color:#15161c\">{_h(n['title'])}</a></div>" for n in sp["news"])
+                if sp["news"] else ""))
+    html = MAIL_WRAP.format(body=_mail_head(title, "19:00 特集") + _mail_box(inner) + _mail_foot())
+    text = "\n".join([title, "", f"🌙 今夜の1本：{g['title']}", g["hook"], g["summary"], link, "", "📈 急上昇 TOP5",
+                      *[f"{it['rank']}. {it['title']}（{rank_stat(it)}）" for it in sp["ranking"]["items"]], "",
+                      "📰 今日の話題", *[f"・{n['title']}\n  {n['url']}" for n in sp["news"]], "",
+                      f"配信の停止・設定：{site_link('#/notify')}"])
+    return html, text
+
+
+def publish_special(branch: str, state: dict, store, dry_run: bool) -> str:
+    data = json.loads(git("show", f"origin/{branch}:inbox/special.json"))  # 只当作数据读取
+    sp = {**validate_special(data, strict=False), "data": data.get("data") or {}}
+    day = batch_day(data)
+    if any(s.get("date") == day.isoformat() for s in state.get("specials", [])):
+        state["batches"].append({"branch": branch, "slot": "special", "date": day.isoformat(), "count": 0, "status": "ok (dup)"})
+        return f"⚠️ {day} 的 19:00 特集已经发过了，这次的稿跳过"
+    prev = (state.get("specials") or [None])[-1]
+    _moves(sp, prev)
+    title = special_title(day, sp)
+    embeds = build_special_embeds(sp, day)
+    post_forum_thread(title, embeds, dry_run)
+    note = ""
+    if store is not None or dry_run:
+        try:
+            subs = store.subscribers() if store is not None else []
+            notes = [deliver_webhooks(subs, store, title, embeds, dry_run)]
+            each = [s["email"] for s in subs if s.get("email_on") and s.get("email_mode") == "each" and s.get("email")]
+            if each:
+                html, text = email_for_special(title, sp, day)
+                notes.append(send_emails(each, title, html, text, dry_run))
+            note = "；".join(n for n in notes if n)
+        except Exception as e:   # noqa: BLE001  配信の失敗で特集の発布を失敗にしない
+            note = f"⚠️ 受け取り設定の人への配信でエラー：{str(e)[:150]}"
+    if not dry_run:
+        store.add_special(day.isoformat(), {**sp, "date": day.isoformat()})
+    state.setdefault("specials", []).append({
+        "date": day.isoformat(), "title": sp["game"]["title"], "appid": sp["game"]["steam_appid"], "hook": sp["game"]["hook"],
+        "top5": [{"appid": it["steam_appid"], "title": it["title"]} for it in sp["ranking"]["items"]],
+        "watch": [w["title"] for w in sp["watch"]]})
+    state["special_snap"] = {"date": day.isoformat(), **{k: sp["data"].get(k, []) for k in ("upcoming", "topsellers")}}
+    state["batches"].append({"branch": branch, "slot": "special", "date": day.isoformat(),
+                             "count": 1 + len(sp["news"]), "status": "ok"})
+    return (f"🌙 {day} 19:00 特集已发布：「{sp['game']['title']}」、急上昇 {len(sp['ranking']['items'])} 款、"
+            f"新星 {len(sp['watch'])} 款、话题 {len(sp['news'])} 条" + (f"\n　{mask_emails(note)}" if note else ""))
+
+
+def cmd_preview_special(args) -> int:
+    import html as H
+
+    data = load_branch_json(args.source, "special.json")
+    sp = {**validate_special(data, strict=False), "data": data.get("data") or {}}
+    day = batch_day(data)
+    _moves(sp, (load_state().get("specials") or [None])[-1])
+    embeds = build_special_embeds(sp, day)
+    emb_html = "".join(
+        f'<div class="embed" style="border-color:#{e.get("color", 0x2B2D31):06x}">'
+        + (f'<div class="et">{H.escape(e["title"])}</div>' if e.get("title") else "")
+        + f'<div class="ed">{_md_to_html(e.get("description", ""))}</div>'
+        + (f'<div class="ef">{H.escape(e["footer"]["text"])}</div>' if e.get("footer") else "") + "</div>" for e in embeds)
+    g = sp["game"]
+
+    def block(name: str, part: dict) -> str:
+        return (f"<h3>{name}</h3><ol class='pts'>" + "".join(f"<li>{H.escape(p)}</li>" for p in part["points"]) + "</ol>"
+                + "".join(f"<p class='para'>{H.escape(p)}</p>" for p in part["detail"].split("\n\n")))
+    full = (f"<div class='card'><div class='meta'>{H.escape(g['developer'])} ・ {H.escape(' / '.join(g['platforms']))} ・ "
+            f"{H.escape(g['release'])} ・ {H.escape(g['genre'])} ・ {H.escape(g['engine'] or '')}</div>"
+            f"<h3><a href='{H.escape(g['url'])}'>{H.escape(g['title'])}</a></h3><p><b>{H.escape(g['hook'])}</b></p>"
+            f"<p>{H.escape(g['summary'])}</p><p class='meta'>なぜ今：{H.escape(g['why_now'])}</p>"
+            + block("🎮 プレイヤー視点", g["player"]) + f"<p class='meta'>向いている人：{H.escape(g['player']['for_whom'])}"
+            f"<br>注意：{H.escape(g['player']['caution'])}</p>" + block("🛠 作り手視点", g["maker"])
+            + "<h3>💡 ここを盗め</h3><ol>" + "".join(f"<li>{H.escape(s)}</li>" for s in g["steal"]) + "</ol>"
+            + f"<h3>✏️ やってみよう</h3><p>{H.escape(g['exercise'])}</p>"
+            + ("<dl class='terms'>" + "".join(f"<dt>{H.escape(t['term'])}</dt><dd>{H.escape(t['explain'])}</dd>" for t in g["terms"]) + "</dl>" if g["terms"] else "")
+            + "<h3>出典</h3><ul>" + "".join(f"<li>[{s['kind']}] <a href='{H.escape(s['url'])}'>{H.escape(s['title'])}</a></li>" for s in g["sources"]) + "</ul></div>")
+    rank = "".join(f"<div class='card'><b>{it['rank']}. <a href='{H.escape(it['url'])}'>{H.escape(it['title'])}</a></b> "
+                   f"［{it['tag']}・{MOVE_MARK.get(it.get('move'), '')}］<div class='meta'>{H.escape(rank_stat(it))}</div>"
+                   f"<p>{H.escape(it['why'])}</p></div>" for it in sp["ranking"]["items"])
+    watch = "".join(f"<div class='card'><b><a href='{H.escape(w['url'])}'>{H.escape(w['title'])}</a></b>［{w['status']}］"
+                    f"<p>{H.escape(w['why'])}</p></div>" for w in sp["watch"])
+    news = "".join(f"<div class='card'><b><a href='{H.escape(n['url'])}'>{H.escape(n['title'])}</a></b>（{H.escape(n['source'])}）"
+                   f"<p>{H.escape(n['summary'])}</p><p class='meta'>💬 {H.escape(n['why'])}</p></div>" for n in sp["news"])
+    body = (f"<h1>19:00 特集 预览（没有发送到 Discord）</h1><p>{day}</p>"
+            f"<h2>① Discord 论坛帖子的样子</h2><div class='thread'><div class='tt'>{H.escape(special_title(day, sp))}</div>{emb_html}</div>"
+            f"<h2>② 今夜の1本（网站上的全文）</h2>{full}<h2>③ 急上昇 TOP5</h2><p class='meta'>{H.escape(sp['ranking']['basis'])}</p>{rank}"
+            f"<h2>④ 期待の新星</h2>{watch}<h2>⑤ 今日の話題</h2>{news}"
+            f"<h2>⑥ AI 的报告</h2><pre class='rep'>{H.escape(sp['report'] or '（なし）')}</pre>")
+    write_page(f"preview-special-{day}.html", body)
+    out = ROOT / "out" / "special_preview.json"   # ローカルの網站（?demo）で特集ページを確認する用
+    out.write_text(json.dumps({**sp, "date": day.isoformat()}, ensure_ascii=False), encoding="utf-8")
+    return 0
+
+
+# ======================================================================
 # 发布检查（定时任务 PUBLISH_CHECK.md 用）：有没有交了稿、却还没发布的分支
 # ======================================================================
 
@@ -1671,12 +2330,18 @@ def _published_today() -> list[dict]:
 
 def _batch_label(b: dict) -> str:
     slot = str(b.get("slot"))
+    if slot == "special":
+        return f"{SPECIAL.get('label', '19:00')} 特集"
     return "学习内容" if slot == "learn" else CONFIG["slots"].get(slot, {}).get("label", slot)
+
+
+def pending_all() -> list[str]:
+    return pending_branches(INBOX_PREFIX) + pending_branches(LEARN_PREFIX) + pending_branches(SPECIAL_PREFIX)
 
 
 def cmd_publish_status(args) -> int:
     now = now_jst()
-    pending = pending_branches(INBOX_PREFIX) + pending_branches(LEARN_PREFIX)
+    pending = pending_all()
     ready = [br for br in pending if is_ready(br, now)]
     done = _published_today()
     print(f"# 发布状态（{now:%Y-%m-%d %H:%M} 日本时间）\n\n## 今天已经发布的批次")
@@ -1696,6 +2361,10 @@ def cmd_publish_status(args) -> int:
             if now >= now.replace(hour=int(s), minute=0, second=0, microsecond=0) - EARLY_WINDOW
             and tasks_for(now.date(), s) and not any(str(b.get("slot")) == s for b in done)
             and not any(f"-{s}-" in br for br in pending)]
+    sp_due = now.replace(hour=int(SPECIAL.get("hour", 19)), minute=0, second=0, microsecond=0)
+    if (SPECIAL.get("live") and now >= sp_due - EARLY_WINDOW and not any(str(b.get("slot")) == "special" for b in done)
+            and not any("-special-" in br for br in pending)):
+        late.append(f"{SPECIAL.get('label', '19:00')} 特集")
     if late:
         print(f"\n⚠️ 研究端还没交稿的批次：{'、'.join(late)}（这不是发布的问题，报告里写上即可）")
     print(f"\nNEED_PUBLISH={'yes' if ready else 'no'}")
@@ -1706,7 +2375,7 @@ def cmd_wait_published(args) -> int:
     """触发发布之后，等到待发布的分支都被处理掉（发布端处理完会删除分支），再看有没有失败。
     发布端会等到整点才发，所以最多等到「公开时间 + timeout 秒」。"""
     now = now_jst()
-    watch = {br for br in pending_branches(INBOX_PREFIX) + pending_branches(LEARN_PREFIX) if is_ready(br, now)}
+    watch = {br for br in pending_all() if is_ready(br, now)}
     if not watch:
         print("✅ 没有待发布的分支（已经发布完了）")
         return 0
@@ -1714,7 +2383,7 @@ def cmd_wait_published(args) -> int:
     deadline = max(now, last_due) + timedelta(seconds=args.timeout)
     print(f"等待发布：{', '.join(sorted(watch))}（{last_due:%H:%M} 公开，最多等到 {deadline:%H:%M:%S}）", flush=True)
     while True:
-        left = watch & set(pending_branches(INBOX_PREFIX) + pending_branches(LEARN_PREFIX))
+        left = watch & set(pending_all())
         if not left:
             break
         if now_jst() >= deadline:
@@ -1757,6 +2426,12 @@ def main() -> int:
     sub.add_parser("publish-status", help="发布检查：今天的发布记录和待发布的分支")
     sub.add_parser("wait-published", help="触发发布后，等待并确认分支被处理").add_argument("--timeout", type=int, default=240)
     sub.add_parser("mail-check", help="检查邮件中继（Apps Script）的设置，不发任何邮件")
+    sub.add_parser("special-context", help="19:00 特集的材料（Steam・SteamCharts 的伸び率など）")
+    sub.add_parser("special-check").add_argument("file")
+    p = sub.add_parser("special-submit")
+    p.add_argument("file")
+    p.add_argument("--preview", action="store_true", help="交到预览分支，不发到 Discord")
+    sub.add_parser("preview-special").add_argument("source", help="特集的预览分支（claude/preview-…）或 JSON 文件")
     sub.add_parser("mail-resend", help="把上一次的新闻重新发给开启了邮件的人（只发邮件）").add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
     return {"context": cmd_context, "feeds": cmd_feeds, "community": cmd_community, "check": cmd_check,
@@ -1764,7 +2439,9 @@ def main() -> int:
             "learn-submit": cmd_learn_submit, "publish-pending": cmd_publish_pending,
             "preview": cmd_preview, "preview-learn": cmd_preview_learn,
             "publish-status": cmd_publish_status, "wait-published": cmd_wait_published,
-            "mail-check": cmd_mail_check, "mail-resend": cmd_mail_resend}[args.cmd](args)
+            "mail-check": cmd_mail_check, "mail-resend": cmd_mail_resend,
+            "special-context": cmd_special_context, "special-check": cmd_special_check,
+            "special-submit": cmd_special_submit, "preview-special": cmd_preview_special}[args.cmd](args)
 
 
 if __name__ == "__main__":

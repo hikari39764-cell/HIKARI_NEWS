@@ -56,7 +56,7 @@ function viewToday() {
   return `<div class="page">
     ${pageHead("ti-sun", "今日のヒカリ", `<span class="when">${ic("ti-calendar")}${d0.getMonth() + 1}/${d0.getDate()} ${WEEK[d0.getDay()]}${S.updated ? ` ・ ${ic("ti-refresh")}${esc(String(S.updated).slice(11, 16))}` : ""}</span>`)}
     <div class="grid2">
-      <div>${top ? heroHTML(top) : ""}<div class="days">${dayList}</div>${more ? `<p class="more-days"><button class="btn plain" id="older">${ic("ti-history")}もっと前の日</button></p>` : ""}</div>
+      <div>${top ? heroHTML(top) : ""}${sxBanner()}<div class="days">${dayList}</div>${more ? `<p class="more-days"><button class="btn plain" id="older">${ic("ti-history")}もっと前の日</button></p>` : ""}</div>
       ${sideHTML(items)}
     </div>
   </div>`;
@@ -103,6 +103,121 @@ function toggleDay(h) {
   h.classList.add("dg-flash"); body.classList.add("dg-play");
   clearTimeout(h._fx);
   h._fx = setTimeout(() => { h.classList.remove("dg-flash"); body.classList.remove("dg-play"); }, 1600);   // 演出が止まる環境でも必ず見えるように外す
+}
+
+/* ============================================================ 19:00 特集 */
+function setSpecials(list) {
+  S.specials = list.filter(s => s && s.game && s.date).sort((a, b) => b.date.localeCompare(a.date));
+  $("#nav-special").hidden = !S.specials.length;
+}
+const SX_KIND = { official: "公式", store: "ストア", interview: "インタビュー", talk: "講演", postmortem: "開発記録",
+                  review: "レビュー", article: "記事", video: "動画" };
+const SX_MOVE = { new: ["NEW", "new"], up: ["▲", "up"], down: ["▼", "dn"], same: ["―", "same"] };
+const sxPct = v => `${v >= 0 ? "+" : "−"}${Math.abs(v * 100).toFixed(0)}%`;
+const sxNum = n => n >= 10000 ? `${(n / 10000).toFixed(1)}万` : Number(n).toLocaleString();
+const sxLink = (u, html, cls = "") => `<a class="${cls}" href="${esc(safeUrl(u))}" target="_blank" rel="noopener noreferrer">${html}</a>`;
+
+// 「今日」のいちばん上に出す入口（今日か昨日の特集があるときだけ）
+function sxBanner() {
+  const sp = S.specials[0];
+  if (!sp || !sp.game || daysUntil(sp.date) < -1) return "";
+  return `<a class="sx-banner rv" style="--i:1" href="#/special?d=${esc(sp.date)}">
+    <span class="sx-bt">${ic("ti-moon-stars")}19:00 特集${sp.date === todayStr() ? "" : "（昨日）"}</span>
+    <b class="sx-bn">${esc(sp.game.title)}</b><span class="sx-bh">${esc(sp.game.hook)}</span>
+    <span class="sx-bk">${ic("ti-trending-up")}急上昇 TOP5 ・ ${ic("ti-news")}今日の話題</span>${ic("ti-arrow-right sx-ba")}
+  </a>`;
+}
+
+function sxStats(s) {
+  if (!s) return "";
+  return [
+    s.w1 != null && `<span class="sx-sc ${s.w1 >= 0 ? "up" : "dn"}">${ic("ti-trending-up")}7日 ${sxPct(s.w1)}</span>`,
+    s.d1 != null && `<span class="sx-sc ${s.d1 >= 0 ? "up" : "dn"}">${ic("ti-clock-hour-4")}24h ${sxPct(s.d1)}</span>`,
+    (s.peak24 || s.now) && `<span class="sx-sc">${ic("ti-users")}${s.peak24 ? "ピーク " : ""}${sxNum(s.peak24 || s.now)}人</span>`,
+  ].filter(Boolean).join("");
+}
+
+function sxGameHTML(g) {
+  const chips = [["ti-building", g.developer], ["ti-device-gamepad-2", (g.platforms || []).join(" / ")], ["ti-calendar", g.release],
+                 ["ti-category", g.genre], ["ti-coin-yen", g.price], ["ti-cpu", g.engine]]
+    .filter(c => c[1]).map(([i, t]) => `<span class="sx-chip">${ic(i)}${esc(t)}</span>`).join("");
+  const view = (cls, en, ja, icn, part, extra = "") => `<section class="sx-view ${cls} rv">
+    <div class="sx-vh"><span class="sx-vtag">${en}</span><h3>${ic(icn)}${ja}</h3></div>
+    <ol class="sx-pts">${(part.points || []).map((p, i) => `<li><b>${String(i + 1).padStart(2, "0")}</b><span>${esc(p)}</span></li>`).join("")}</ol>
+    <div class="sx-body">${paraHTML(part.detail)}</div>${extra}</section>`;
+  const pl = g.player || {};
+  const fit = (pl.for_whom || pl.caution) ? `<div class="sx-fit">${pl.for_whom ? `<p>${ic("ti-heart")}<b>向いている人</b>${esc(pl.for_whom)}</p>` : ""}${pl.caution ? `<p>${ic("ti-alert-triangle")}<b>気をつけたい点</b>${esc(pl.caution)}</p>` : ""}</div>` : "";
+  return `<h2 class="sx-h2 rv"><span class="sx-h2n">01</span>${ic("ti-moon-stars")}今夜の1本</h2>
+  <section class="sx-game rv">
+    <h2 class="sx-title">${esc(g.title)}${g.title_en && g.title_en !== g.title ? `<small>${esc(g.title_en)}</small>` : ""}</h2>
+    <p class="sx-hook"><span>${esc(g.hook)}</span></p>
+    <div class="sx-chips">${chips}</div>
+    <p class="sx-sum">${esc(g.summary)}</p>
+    ${g.why_now ? `<p class="sx-why">${ic("ti-sparkles")}<b>なぜ今？</b>${esc(g.why_now)}</p>` : ""}
+    <div class="sx-links">${sxLink(g.url, `${ic("ti-external-link")}公式・ストア`, "btn")}</div>
+    ${g.steam_appid ? `<iframe class="sx-steam" src="https://store.steampowered.com/widget/${Number(g.steam_appid)}/" loading="lazy" title="Steam ストア" referrerpolicy="no-referrer"></iframe>` : ""}
+  </section>
+  <div class="sx-views">
+    ${view("pl", "PLAYER'S VIEW", "プレイヤー視点", "ti-device-gamepad-2", pl, fit)}
+    ${view("mk", "MAKER'S VIEW", "作り手視点", "ti-tools", g.maker || {})}
+  </div>
+  ${(g.steal || []).length ? `<section class="sx-steal rv"><h3 class="sx-h3">${ic("ti-bulb")}ここを盗め</h3><div class="sx-stg">${g.steal.map((s, i) =>
+    `<div class="sx-st"><span class="sx-stn">STEAL ${String(i + 1).padStart(2, "0")}</span><p>${esc(s)}</p></div>`).join("")}</div></section>` : ""}
+  ${g.exercise ? `<section class="sx-ex rv">${ic("ti-pencil")}<div><b>やってみよう</b><p>${esc(g.exercise)}</p></div></section>` : ""}
+  ${(g.terms || []).length ? `<dl class="terms sx-terms rv">${g.terms.map(t => `<div><dt>${esc(t.term)}</dt><dd>${esc(t.explain)}</dd></div>`).join("")}</dl>` : ""}
+  ${(g.sources || []).length ? `<ul class="sx-src rv">${g.sources.map(s => `<li><span class="sx-kind k-${esc(s.kind)}">${SX_KIND[s.kind] || "記事"}</span>${sxLink(s.url, esc(s.title))}</li>`).join("")}</ul>` : ""}`;
+}
+
+function sxRankHTML(sp) {
+  const items = sp.ranking?.items || [];
+  const rows = items.map((it, i) => {
+    const mv = SX_MOVE[it.move];
+    return `<article class="sx-rk rv ${i === 0 ? "top" : ""}" style="--i:${i + 1}">
+      <span class="sx-rn">${it.rank || i + 1}</span>
+      <div class="sx-rb">
+        <div class="sx-rt">${sxLink(it.url, esc(it.title))}<span class="sx-tag">${esc(it.tag || "急上昇")}</span>${mv ? `<span class="sx-mv ${mv[1]}">${mv[0]}</span>` : ""}</div>
+        ${it.stats ? `<div class="sx-stats">${sxStats(it.stats)}</div>` : ""}
+        <p>${esc(it.why)}</p>
+        ${(it.sources || []).length ? `<div class="sx-rs">${it.sources.slice(0, 3).map((u, k) => sxLink(u, `${ic("ti-link")}出典${k + 1}`)).join("")}</div>` : ""}
+      </div></article>`;
+  }).join("");
+  const watch = (sp.watch || []).map((w, i) => `<article class="sx-w rv" style="--i:${i + 1}">
+    <span class="sx-ws">${esc(w.status)}</span>${sxLink(w.url, esc(w.title), "sx-wt")}<p>${esc(w.why)}</p></article>`).join("");
+  return `<h2 class="sx-h2 rv"><span class="sx-h2n">02</span>${ic("ti-trending-up")}急上昇 TOP5</h2>
+    ${sp.ranking?.basis ? `<p class="sx-basis rv">${esc(sp.ranking.basis)}</p>` : ""}
+    <div class="sx-rks">${rows}</div>
+    ${watch ? `<h3 class="sx-h3 rv">${ic("ti-plant-2")}期待の新星</h3><div class="sx-wg">${watch}</div>` : ""}`;
+}
+
+function sxNewsHTML(news) {
+  if (!news.length) return "";
+  return `<h2 class="sx-h2 rv"><span class="sx-h2n">03</span>${ic("ti-news")}今日の話題</h2>
+    <div class="sx-news">${news.map((n, i) => {
+      const here = byId(n.id);   // サイトに載っている記事なら、その解説を開く
+      return `<article class="sx-n rv" style="--i:${i + 1}" ${here ? `data-open="${esc(n.id)}"` : ""}>
+        <div class="sx-nt">${here ? `<b>${esc(n.title)}</b>` : sxLink(n.url, esc(n.title))}<small>${esc(n.source)}</small></div>
+        <p>${esc(n.summary)}</p><p class="sx-nw">${ic("ti-message-circle")}${esc(n.why)}</p></article>`;
+    }).join("")}</div>`;
+}
+
+function viewSpecial() {
+  const list = S.specials;
+  if (!list.length) return `<div class="page">${pageHead("ti-moon-stars", "19:00 特集")}${emptyHTML("まだ特集がありません", "毎日 19:00 に、ゲーム紹介・急上昇ランキング・今日の話題をお届けします")}</div>`;
+  const sp = list.find(s => s.date === S.params.d) || list[0];
+  const d = new Date(sp.date + "T00:00:00");
+  const fetched = String(sp.data?.fetched || "").slice(5, 16).replace("T", " ");
+  const dates = list.slice(0, 14).map(s => {
+    const x = new Date(s.date + "T00:00:00");
+    return `<a class="sx-date ${s === sp ? "on" : ""}" href="#/special?d=${esc(s.date)}"><b>${x.getMonth() + 1}/${x.getDate()}</b><small>${esc(s.game?.title || "")}</small></a>`;
+  }).join("");
+  return `<div class="page sx">
+    ${pageHead("ti-moon-stars", "19:00 特集", `<span class="when">${ic("ti-calendar")}${d.getMonth() + 1}/${d.getDate()} ${WEEK[d.getDay()]}</span>`)}
+    ${list.length > 1 ? `<nav class="sx-dates rv" style="--i:1" aria-label="過去の特集">${dates}</nav>` : ""}
+    ${sxGameHTML(sp.game || {})}
+    ${sxRankHTML(sp)}
+    ${sxNewsHTML(sp.news || [])}
+    <p class="sx-note rv">${ic("ti-info-circle")}特集の文章は AI が出典をもとに作成しています。正確な情報は各リンク先でご確認ください。${fetched ? `急上昇の数値は Steam・SteamCharts（${esc(fetched)} 時点）をもとにしています。` : ""}</p>
+  </div>`;
 }
 
 function sideHTML(items) {
@@ -417,7 +532,7 @@ async function webhookAction(kind) {
   if (await saveSub({ webhook: url, webhook_on: true }, "保存しました。次の配信から届きます")) redraw();
 }
 
-const VIEWS = { today: viewToday, search: viewSearch, prog: viewProg, plan: viewPlan, chance: viewChance, saved: viewSaved, admin: viewAdmin, about: viewAbout, notify: viewNotify };
+const VIEWS = { today: viewToday, special: viewSpecial, search: viewSearch, prog: viewProg, plan: viewPlan, chance: viewChance, saved: viewSaved, admin: viewAdmin, about: viewAbout, notify: viewNotify };
 function parseHash() {
   const [path, qs] = location.hash.replace(/^#\/?/, "").split("?");
   return { route: VIEWS[path] ? path : "today", params: Object.fromEntries(new URLSearchParams(qs || "")) };
@@ -429,7 +544,7 @@ function render() {
   const { route, params } = parseHash();
   if (route === "admin" && !S.isAdmin) { location.hash = "#/today"; return; }
   const changed = route !== S.route;
-  const moved = changed || params.t !== S.params.t || params.run !== S.params.run || params.id !== S.params.id;
+  const moved = changed || params.t !== S.params.t || params.run !== S.params.run || params.id !== S.params.id || params.d !== S.params.d;
   S.route = route; S.params = params;
   const draw = () => {
     $("#view").innerHTML = VIEWS[route]();
@@ -778,6 +893,9 @@ async function startDemo() {
   const [d, seed, sec] = await Promise.all([get("../samples/demo_site.json"), get("../samples/seed_learn.json"), get("../samples/demo_sections.json"), intro()]);
   setData([...(d.items || []), ...(sec.items || [])], d.meta || {});
   setLearn(demoLearn(seed, sec));
+  let sp = await get("../out/special_preview.json");
+  if (!sp.game) sp = await get("../samples/demo_special.json");
+  setSpecials(sp.game ? [sp] : []);
   enterApp();
 }
 
@@ -864,6 +982,13 @@ async function startFirebase() {
     } catch (err) { console.warn("learn", err); }
   }
 
+  async function loadSpecials() {   // 19:00 特集（新しい順に 30 日分）
+    try {
+      const snap = await F.getDocs(F.query(F.collection(db, "specials"), F.orderBy("date", "desc"), F.limit(30)));
+      setSpecials(snap.docs.map(d => ({ ...d.data(), createdAt: null })));
+    } catch (err) { console.warn("specials", err); }
+  }
+
   async function syncProgress(uid) {   // ドリルの記録・ノートなどを端末間で同期
     const ref = F.doc(db, "users", uid, "progress", "main");
     try { const s = await F.getDoc(ref); if (s.exists()) P.merge(s.data()); } catch (err) { console.warn("progress", err); }
@@ -901,7 +1026,7 @@ async function startFirebase() {
 
   // 記事と学習データはログインしていなくても読める
   try {
-    await Promise.all([loadItems(), loadLearn(), introDone]);
+    await Promise.all([loadItems(), loadLearn(), loadSpecials(), introDone]);
     enterApp();
   } catch (err) { console.error(err); showGate("error", err.code || err.message); }
 }

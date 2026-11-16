@@ -117,6 +117,7 @@ export const S = {
   items: [], cats: DEFAULT_CATS, keywords: [], updated: null, isAdmin: false, ready: false,
   loadMore: null, adminApi: null, api: {}, route: null, params: {},
   learn: { kw: {}, quiz: {}, ideas: {}, daily: null, themes: [] },
+  specials: [],
 };
 
 export function setData(items, meta = {}) {

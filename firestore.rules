@@ -26,6 +26,13 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // 19:00 特集（1 日 1 件）。誰でも読める。書き込みは発布端（サービスアカウント）だけ
+    match /specials/{day} {
+      allow get: if true;
+      allow list: if request.query.limit <= 60;
+      allow write: if false;
+    }
+
     // 学習コンテンツ（キーワード図鑑・問題集・アイデア辞書・お題）：読むだけ
     match /learn/{id} {
       allow get: if true;

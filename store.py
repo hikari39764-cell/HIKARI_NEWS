@@ -55,6 +55,9 @@ class JsonStore:
     def add_keywords(self, area, entries):
         self._bundle(f"kw_{area}").extend(entries)
 
+    def add_special(self, day, doc):
+        self.data.setdefault("specials", {})[day] = doc
+
     def items_by_ids(self, ids):
         want = set(ids)
         return [it for it in self.data["items"] if it.get("id") in want]
@@ -145,6 +148,10 @@ class FirestoreStore:
 
     def add_keywords(self, area, entries):
         self._append(f"kw_{area}", entries)
+
+    def add_special(self, day, doc):
+        """19:00 特集（1 日 1 件。網站の「特集」ページが読む）。"""
+        self.db.collection("specials").document(day).set({**doc, "createdAt": self.fs.SERVER_TIMESTAMP})
 
     def items_by_ids(self, ids):
         """記事の全文（要点・解説つき）。発布記録には一部の項目しか残していないので、メールの再送などで使う。"""
