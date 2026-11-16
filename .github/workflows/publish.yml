@@ -67,7 +67,13 @@ jobs:
           git add state/published.json
           if git diff --cached --quiet; then
             echo "state unchanged"
-          else
-            git commit -m "state: update published list"
-            git push origin HEAD:main
+            exit 0
           fi
+          git commit -m "state: update published list"
+          # 整点まで待っている間に main が進むことがある（誰かが push した）。最新の main に載せ直してから push し、だめなら数回やり直す
+          for i in 1 2 3 4; do
+            if git pull --rebase -q origin main && git push origin HEAD:main; then exit 0; fi
+            echo "push failed (try $i), retrying"
+            sleep $((i * 5))
+          done
+          exit 1
