@@ -1,0 +1,352 @@
+{
+ "game": {
+  "title": "Slay the Spire 2",
+  "title_en": "Slay the Spire 2",
+  "developer": "Mega Crit",
+  "platforms": [
+   "PC（Steam／Windows・Mac・Linux）"
+  ],
+  "release": "2026年3月（Steam早期アクセス）",
+  "genre": "デッキ構築型ローグライク",
+  "price": "",
+  "engine": "Godot",
+  "steam_appid": 2868840,
+  "url": "https://store.steampowered.com/app/2868840/Slay_the_Spire_2/",
+  "hook": "「データで遊びを磨く」を続編でも貫く、デッキ構築ローグライクの本命",
+  "why_now": "今週、新キャラ「The Fool」と新モード2つが入った過去最大のベータパッチが公開され、Steamの急上昇にも入った。続編が今どう育てられているかを、制作の視点で読む好機だ。",
+  "summary": "カードでデッキを組み、毎回ランダムに変わる塔を登っていく、デッキ構築型ローグライクの続編。前作の骨組みを引き継ぎつつ、エンジンをUnityからGodotへ移し、オンライン協力プレイにも対応した。現在はSteamの早期アクセスで、開発元は1〜2年ほどかけて仕上げる見込みと説明している。",
+  "player": {
+   "points": [
+    "戦闘ごとにカードを1枚選んでデッキを育て、毎回違う組み合わせで塔の頂上を目指す",
+    "レビューでは、前作の手触りを保ったまま新しさを出した「ちょうどいい続編」という評価が目立つ",
+    "敵は前作より「理不尽さ」が減り、工夫すれば対処できる設計になったと評されている",
+    "友だちと遊ぶ協力プレイに対応。新要素はベータ版で先行公開され、調整が続いている"
+   ],
+   "detail": "【どんなゲームか】\nプレイヤーはキャラクターを選び、戦闘に勝つたびにカードや「レリック」と呼ばれる強化アイテムを手に入れて、毎回自分だけのデッキを作っていく。負けたらやり直しだが、その1回の中で「何を足し、何を足さないか」を決める面白さが核になっている。\n\n【レビューで評価されている点】\nRPGFanの早期アクセス評は、約10時間のプレイをもとに「Mega Crit has nailed the sweet spot」と述べ、前作らしさと新しさのバランスを高く評価している。敵の設計が前作より創造的で、いわゆる「初見殺し」が減ったという指摘もある。一方で、イベントなどに繰り返しを感じる点や、仮の絵（ベータ版のアート）が残っている点は弱みとして挙げられていた。\n\n【今週の動き】\n11月13日には、ベータブランチ向けに新キャラクター「The Fool」と、短時間で遊べる「Blitz」、高難度の「Dread」が追加された。ただしSteamの直近30日のレビューは「やや好評（79％）」。ベータ版のバランス調整パッチへの反発が報じられたこともあり、調整の途中経過を一緒に見守るゲームだと言える。",
+   "for_whom": "カードゲームやローグライクが好きな人。短い1回を何度も繰り返して研究したい人。",
+   "caution": "早期アクセスのため、バランスや絵は今後変わる。ベータ版を試すときはセーブのバックアップを。"
+  },
+  "maker": {
+   "points": [
+    "前作では、プレイヤーの選択を全部記録する自作の「メトリクスサーバー」でバランスを取っていた",
+    "データで「強すぎる」と分かったカードは、仕様ごと変えて対処。壊れ方の上限を先に決めている",
+    "Unityの料金問題をきっかけに、続編はGodotで作る道を選んだ。技術選定も制作の判断になる",
+    "新モードをまずベータブランチで出し、意見を聞きながら調整する流れを公開している"
+   ],
+   "detail": "【データで遊びを測る：前作から続く方針】\n続編のバランス方針は前作の延長にあると見られる。前作の開発中、Mega Critは自作の「メトリクスサーバー」を作り、カードが提示されたときに選ばれる頻度、勝ったデッキに入っている頻度、特定の敵から受けた平均ダメージなどを記録していた（Game Developer、2018年）。GDC 2019の講演でも、共同創業者のAnthony Giovannettiがこの「データ駆動のバランス調整」を語っている。同記事で彼は、カードの数が多すぎて少人数では手作業で釣り合わせられない、という趣旨を述べている。\n\n【数字が仕様を変えた例】\n同記事によれば、カードを複製する「Dual Wield」は、当初デッキの一番上しか複製できず選ばれにくかった。そこで手札の好きなカードを複製できるよう変えたところ、今度は強すぎると数字で分かり、最終的にスキルカードだけを複製できる形に絞られた。Giovannettiは「Going infinite is the number one thing we try to make really rare.」（同記事）と述べている。「無限コンボを極力まれにする」という上限を先に決め、数字で外れた部分を直すという考え方だと読み取れる。\n\n【エンジン選びも設計判断】\n続編ではUnityをやめてGodotを採用した。Game Developerによると、Mega CritはUnityの対応を「a violation of trust」と批判しており、方針が変わらなければ別のエンジンへ移る考えを示していた。共同創業者のCasey Yanoは、続編を作る理由として性能の改善、Godotへの移行、アートとUIの刷新、新しいメカニクスの試行などを挙げている（PCGamesN、2024年）。同じ文脈で彼は「Games aren't a list of game mechanics and features.」と語った。仕組みの一覧ではなく、内容の設計・ペース・バランスの組み合わせが体験をつくる、という意味だ。\n\n【早期アクセスを調整の場として使う】\nSteamのストアページでは、早期アクセスの理由を、バランスや使い勝手の改善に多くのフィードバックが必要だからと説明している。前作は約1年半かかったため、今作も1〜2年を見込むという。今週の新モードもまずベータブランチで公開され、通常版への反映は調整に納得してからになると見られる。完成品を出す前に、遊ばれ方を見て直す。それをチームの仕組みにしている、と考えられる。"
+  },
+  "steal": [
+   "遊ばれ方を記録する：提示・選択・勝敗の3項目をCSVに出力するだけでも、弱い選択肢が見つかる。",
+   "「壊れ方の上限」を先に決める：無限コンボのように避けたい状態を言葉にしてから数値を調整する。",
+   "新要素は小さい枠（ベータ版や限定モード）で先に試し、反応を見てから本体に入れる。"
+  ],
+  "exercise": "やってみよう：自作ゲームかカードゲームの試作で、「選択肢が出た回数」と「選ばれた回数」を10回分メモし、選ばれ率が最も低い選択肢と最も高い選択肢を1つずつ見つけて、数値を1つだけ調整してみよう。",
+  "terms": [
+   {
+    "term": "デッキ構築型ローグライク",
+    "explain": "カードを集めて自分のデッキを作りながら進む、1回ごとに状況が変わるゲーム。負けたら最初からやり直す。"
+   },
+   {
+    "term": "メトリクス",
+    "explain": "プレイヤーの行動を数字にして記録したもの。どのカードがよく選ばれたかなど、設計を直す根拠になる。"
+   },
+   {
+    "term": "ベータブランチ",
+    "explain": "Steamで通常版とは別に配る先行テスト版。新要素を先に試せる代わりに、不具合やセーブの問題が起こりやすい。"
+   }
+  ],
+  "sources": [
+   {
+    "title": "Steamストアページ（Slay the Spire 2）",
+    "url": "https://store.steampowered.com/app/2868840/Slay_the_Spire_2/",
+    "kind": "store"
+   },
+   {
+    "title": "GDC 2019「Slay the Spire: Metrics Driven Design and Balance」（Anthony Giovannetti）",
+    "url": "https://gdcvault.com/play/1025731/Slay-the-Spire-Metrics-Driven",
+    "kind": "talk"
+   },
+   {
+    "title": "How Slay the Spire's devs use data to balance their roguelike deck-builder（Game Developer）",
+    "url": "https://gamedeveloper.com/design/how-i-slay-the-spire-i-s-devs-use-data-to-balance-their-roguelike-deck-builder",
+    "kind": "interview"
+   },
+   {
+    "title": "Slay the Spire devs followed through on abandoning Unity（Game Developer）",
+    "url": "https://www.gamedeveloper.com/business/slay-the-spire-devs-followed-through-on-abandoning-unity",
+    "kind": "article"
+   },
+   {
+    "title": "Slay the Spire 2 dev not worried about \"cynics\"（PCGamesN）",
+    "url": "https://www.pcgamesn.com/slay-the-spire-2/why-a-sequel",
+    "kind": "article"
+   },
+   {
+    "title": "Slay the Spire II 早期アクセス評（RPGFan）",
+    "url": "https://www.rpgfan.com/2026/03/14/slay-the-spire-ii-hands-on-and-slay-some-monsters-while-youre-at-it/",
+    "kind": "review"
+   },
+   {
+    "title": "Slay the Spire 2 just got its first new character, a rapid-fire mode, and its hardest challenge yet（PCGamesN）",
+    "url": "https://www.pcgamesn.com/slay-the-spire-2/update-the-fool-blitz-dread",
+    "kind": "article"
+   },
+   {
+    "title": "Mega Crit co-founder on the Steam backlash to the beta balance patch（PC Gamer）",
+    "url": "https://www.pcgamer.com/games/card-games/mega-crit-co-founder-says-he-wasnt-bothered-by-the-steam-backlash-to-slay-the-spire-2s-beta-balance-patch-its-difficult-for-players-to-feel-like-theyre-heard",
+    "kind": "article"
+   }
+  ],
+  "media": {
+   "header": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/b0958d387dc366211e0f353443710cfcf9fdb020/header.jpg?t=1787169309",
+   "shots": [
+    {
+     "thumb": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/1a373a95229aab0cfd97f553ecbe86092364bb9c/ss_1a373a95229aab0cfd97f553ecbe86092364bb9c.600x338.jpg?t=1787169309",
+     "full": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/1a373a95229aab0cfd97f553ecbe86092364bb9c/ss_1a373a95229aab0cfd97f553ecbe86092364bb9c.1920x1080.jpg?t=1787169309"
+    },
+    {
+     "thumb": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/f3af7cb9693b9c4b6a7555227db3fef943db3992/ss_f3af7cb9693b9c4b6a7555227db3fef943db3992.600x338.jpg?t=1787169309",
+     "full": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/f3af7cb9693b9c4b6a7555227db3fef943db3992/ss_f3af7cb9693b9c4b6a7555227db3fef943db3992.1920x1080.jpg?t=1787169309"
+    },
+    {
+     "thumb": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/c3db69efd984ef012ae85c5b426663720152f0a4/ss_c3db69efd984ef012ae85c5b426663720152f0a4.600x338.jpg?t=1787169309",
+     "full": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/c3db69efd984ef012ae85c5b426663720152f0a4/ss_c3db69efd984ef012ae85c5b426663720152f0a4.1920x1080.jpg?t=1787169309"
+    },
+    {
+     "thumb": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/0fdb2940c0d367a40b2be6433daf12e3634089cf/ss_0fdb2940c0d367a40b2be6433daf12e3634089cf.600x338.jpg?t=1787169309",
+     "full": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/0fdb2940c0d367a40b2be6433daf12e3634089cf/ss_0fdb2940c0d367a40b2be6433daf12e3634089cf.1920x1080.jpg?t=1787169309"
+    }
+   ]
+  },
+  "price_jp": "¥2,240"
+ },
+ "ranking": {
+  "basis": "SteamChartsの7日・24時間の伸びから候補を絞り、常年上位の作品は除外。各作品のSteamニュースと媒体記事で、11月10〜13日の大型更新やDLC発売、無料プレイなど「伸びた理由」が確認できたものだけを選んだ。",
+  "items": [
+   {
+    "rank": 1,
+    "title": "Path of Exile",
+    "steam_appid": 238960,
+    "url": "https://store.steampowered.com/app/238960/",
+    "why": "11月13日に大型アップデート3.30と新リーグ「Covens of Umbra」が開始。12月にはPoE 2の正式版が控えており、旧作に戻る人や新規のプレイヤーが集まっている。",
+    "tag": "大型更新",
+    "stats": {
+     "peak24": 119494,
+     "now": null,
+     "d1": -0.03772779616521316,
+     "w1": 8.295183884483114,
+     "top_rank": 43,
+     "last_week_rank": null,
+     "release": "2013-10-24"
+    },
+    "img": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/238960/19a8acaddb5659ef3c1c91e5d6beb89abf10718d/header.jpg?t=1794430224",
+    "sources": [
+     "https://www.pcgamesn.com/path-of-exile/3-30-launch-time-covens-of-umbra"
+    ]
+   },
+   {
+    "rank": 2,
+    "title": "Bodycam",
+    "steam_appid": 2406770,
+    "url": "https://store.steampowered.com/app/2406770/",
+    "why": "11月13日に v0.9「The Dead & Damned」を配信。ゾンビモードが新モード「Zombie Trenches」とともに復活し、不正対策のEasy Anti-Cheatも導入された。直前には24時間の公開テストも実施。",
+    "tag": "大型更新",
+    "stats": {
+     "peak24": 26897,
+     "now": null,
+     "d1": 0.09850929140289977,
+     "w1": 2.8243802025794955,
+     "top_rank": 38,
+     "last_week_rank": 136,
+     "release": "2024-06-08"
+    },
+    "img": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2406770/b533bca55927692f0cf812ebb91c6e6e8f5cb4a6/header_alt_assets_4.jpg?t=1794683329",
+    "sources": [
+     "https://www.gamespress.com/Bodycam-v09-Zombie-Update-Public-Playtest"
+    ]
+   },
+   {
+    "rank": 3,
+    "title": "Euro Truck Simulator 2",
+    "steam_appid": 227300,
+    "url": "https://store.steampowered.com/app/227300/",
+    "why": "11月10日にIceland DLC、12日にCoaches DLCが発売。Coachesは13日時点でSteamの売上トップとなり、本体も大幅割引で上位に入った。11月5日には1.62アップデートも配信。",
+    "tag": "大型更新",
+    "stats": {
+     "peak24": 101544,
+     "now": null,
+     "d1": 0.06870421823692863,
+     "w1": 0.6536508523508235,
+     "top_rank": 12,
+     "last_week_rank": 30,
+     "release": "2012-10-13"
+    },
+    "img": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/227300/9a81dc3126c56637297b654f9dcac057cfd79b77/header.jpg?t=1794502925",
+    "sources": [
+     "https://www.pcgamesn.com/euro-truck-simulator-2/coaches-dlc-tops-steam-sales-chart",
+     "https://racinggames.gg/article/euro-truck-simulator-2-update-162-rebuilds-every-garage-ahead-of-iceland"
+    ]
+   },
+   {
+    "rank": 4,
+    "title": "Cities: Skylines II",
+    "steam_appid": 949230,
+    "url": "https://store.steampowered.com/app/949230/",
+    "why": "11月12日〜16日にSteamで無料プレイが実施され、無料アップデート「Seasonal Shift」も配信。12月2日発売の拡張「Park Adventures」の発表とも重なり、体験者が一気に増えた。",
+    "tag": "話題",
+    "stats": {
+     "peak24": 23860,
+     "now": null,
+     "d1": 0.08865264406624984,
+     "w1": 0.27727151871924605,
+     "top_rank": 86,
+     "last_week_rank": 147,
+     "release": "2023-10-25"
+    },
+    "img": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/949230/32fb7aeb36e9815a16e65b7c1bf2a4fdfa300764/header_alt_assets_9_japanese.jpg?t=1794506466",
+    "sources": [
+     "https://worthplaying.com/article/2026/11/10/news/151395-cities-skylines-ii-rolls-out-seasonal-shift-update-free-this-weekend-to-get-park-adventures-expansion-in-december-trailer/"
+    ]
+   },
+   {
+    "rank": 5,
+    "title": "Slay the Spire 2",
+    "steam_appid": 2868840,
+    "url": "https://store.steampowered.com/app/2868840/",
+    "why": "11月12日（日本では13日）、ベータブランチに過去最大規模のパッチが登場。6人目のキャラクター「The Fool」と、短時間で遊べるBlitz、高難度のDreadという2つのモードが追加された。",
+    "tag": "大型更新",
+    "stats": {
+     "peak24": 182015,
+     "now": null,
+     "d1": -0.08720487051413206,
+     "w1": 0.6385364007067986,
+     "top_rank": 9,
+     "last_week_rank": 12,
+     "release": "2026-03-06"
+    },
+    "img": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/b0958d387dc366211e0f353443710cfcf9fdb020/header.jpg?t=1787169309",
+    "sources": [
+     "https://www.pcgamesn.com/slay-the-spire-2/update-the-fool-blitz-dread"
+    ]
+   }
+  ]
+ },
+ "watch": [
+  {
+   "title": "Zombies Aren't Real",
+   "steam_appid": 5185890,
+   "url": "https://store.steampowered.com/app/5185890/",
+   "why": "実在の都市の地図を使い、軍隊で感染拡大を食い止めるゾンビ封鎖ストラテジー。早期アクセス開始から2日で「圧倒的に好評」になり、Workshopで地図を共有できる点も参考になる。",
+   "status": "早期アクセス",
+   "img": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5185890/cd54755b9d15a2cad33471464fb630d6a5363ff0/header.jpg?t=1794756301",
+   "sources": [
+    "https://www.gamespark.jp/article/2026/11/16/174908.html"
+   ]
+  },
+  {
+   "title": "Terminus Historia｜境界戦役",
+   "steam_appid": 2011180,
+   "url": "https://store.steampowered.com/app/2011180/",
+   "why": "元アリスソフトのディレクターが約5年かけて個人開発した、フリーシナリオのドット絵RPG。物語・システム・演出まで1人で作り上げた制作例として、学生にも参考になる。",
+   "status": "早期アクセス",
+   "img": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2011180/d46d3056645741c8608ee0745c1fb2b3acc17009/header.jpg?t=1794710746",
+   "sources": [
+    "https://www.gamespark.jp/article/2026/11/16/174907.html"
+   ]
+  }
+ ],
+ "news": [
+  {
+   "title": "『GTA6』を遊ぶ前に知っておきたい10のこと",
+   "url": "https://www.4gamer.net/games/036/G003691/20261113042/",
+   "id": "f78e5ac0b6783db6",
+   "source": "4Gamer.net",
+   "summary": "11月19日の発売を前に、4Gamerの連載が舞台や新システムを整理。開発体制は2018年の約2400人から約4700人に増え、家庭用機版は30fpsを目標にしているとされる。",
+   "why": "大作の開発規模と「密度か、フレームレートか」という設計判断が見える。制作の学びになる。"
+  },
+  {
+   "title": "NVIDIAの新技術「DLSS 5」を『ホグワーツ・レガシー』で体験",
+   "url": "https://automaton-media.com/articles/reportjp/hogwarts-legacy-dlss5-20261115-479361/",
+   "id": "14107f4ef4f33055",
+   "source": "AUTOMATON",
+   "summary": "11月5日の更新で同作に「ニューラルレンダリング」設定が加わり、AUTOMATONが検証。顔の形は変わらず、光や質感が変化した一方、平均フレームレートは186fpsから162fpsに下がった。",
+   "why": "AIが描画の仕上げに入り始めた。グラフィックス志望の学生には、得るものと負担の両方を知る材料になる。"
+  },
+  {
+   "title": "『Potato Please』はなぜ話題に？",
+   "url": "https://www.gamespark.jp/article/2026/11/15/174904.html",
+   "id": "9a7804c109eeaf0a",
+   "source": "Game*Spark",
+   "summary": "ジャガイモの皮をむき続けるだけのシンプルなゲームが11月3日に発売。13日時点で2,164件のレビューのうち88％が好評。他作品の模倣だとする疑惑も出たが、開発側は生成AIの使用を否定している。",
+   "why": "小さなアイデアが配信向きだと広がる例であり、「オマージュ」と「盗用」の線引きという、作り手が避けて通れない論点でもある。"
+  },
+  {
+   "title": "『ゼルダの伝説 時のオカリナ』リメイク版、「死因第一位」はリーデット",
+   "url": "https://automaton-media.com/articles/newsjp/20261116-479409/",
+   "id": "b84c05d100a76ba1",
+   "source": "AUTOMATON",
+   "summary": "任天堂が11月5日に発売したSwitch 2向けリメイク版で、連携サービスの統計ではゲームオーバーの原因第1位が敵「リーデット」だった。プロデューサーは恐怖表現を抑えて作り直したと説明している。",
+   "why": "プレイデータから難所を見つける発想と、表現のさじ加減を調整する設計判断の両方が学べる話題だ。"
+  }
+ ],
+ "report": "【今夜の1本】Slay the Spire 2（Mega Crit）。選んだ理由：①今週ベータに過去最大のパッチ（新キャラ「The Fool」＋Blitz／Dread）が入り、TOP5にも入る“今日の話題”と直結。②制作者側の一次資料が揃っている：GDC 2019講演（Giovannetti氏、gdcvault上のセッションページを確認）、Game Developer 2018の開発者発言記事（メトリクスサーバー、Dual Wield／無限コンボの調整例、英語引用を原文で確認）、Game Developer 2024のUnity離脱／Godot採用記事、PCGamesN 2024のCasey Yano氏の発言（Steamニュース投稿の紹介記事）。③プレイヤー側：RPGFan早期アクセス評、Steamストアページ（直近30日レビュー「やや好評79%」を原文確認）、PCGamerの批判報道（見出しのみ確認）。注意点：メトリクスの話は前作(StS1)の記事・講演が中心で、続編が同じ方式かは「と見られる」として書いた。PC Gamerの2記事と、AMA要約サイトは本文を開けず、事実としては使っていない。\n\n【TOP5の上昇理由】\n1. Path of Exile（7日+830%）：11/13に大型更新3.30＋新リーグ「Covens of Umbra」開始。12月にPoE2正式版（1.0）も控える（PCGamesN 11/13）。\n2. Bodycam（+282%）：11/13にv0.9「The Dead & Damned」配信。ゾンビモード復活、Zombie Trenches追加、Easy Anti-Cheat導入、直前に24時間の公開テスト（公式プレス資料で確認）。\n3. Euro Truck Simulator 2（+65%、ピーク10万人超）：11/10 Iceland DLC、11/12 Coaches DLC発売。Coachesは売上トップ、本体も大幅割引で上位（PCGamesN 11/13）。1.62更新は11/5。\n4. Cities: Skylines II（+28%）：11/12〜16の無料プレイ＋無料更新Seasonal Shift、12/2発売の拡張Park Adventures発表（WorthPlaying 11/10）。※無料期間は本日最終日で、今後は反動で落ちる可能性が高い。\n5. Slay the Spire 2（+64%）：11/12（日本13日）にベータで過去最大パッチ。新キャラThe Fool、Blitz、Dread（PCGamesN 11/13）。※24hは−9%で山は越えた可能性あり。\n候補から外したもの：Blue Archive、スターセイヴァー（原因を確認できず）、Limbus／Marvel Rivals／鳴潮（更新はあるが24hが−9〜−23%で優先度を下げた。時間があれば差し替え可）。\n\n【期待の新星】Zombies Aren't Real（早期アクセス2日で「圧倒的に好評」、Game*Spark）、Terminus Historia｜境界戦役（元アリスソフト、約5年の個人開発）。いずれもSteam APIでappidと価格を確認。\n\n【今日の話題】GTA6発売週（4Gamer）、DLSS5×ホグワーツ・レガシー（AUTOMATON 11/15 17:06）、Potato Please（Game*Spark 11/15 20:00）、ゼルダ時オカリメイクの統計（AUTOMATON 11/16）。\n\n【遇到的问题】\n- WebSearchは最新日付の絞り込みが弱く、24時間以内のニュースは各媒体のトップページ（AUTOMATON、4Gamer、Game*Spark）を直接開いて探した。GamesIndustry.bizはWebFetch不可。\n- WebFetchの要約は数字が不安定だったため、本文に入れた数字は原文確認できたものだけに限定。PC Gamer数記事は本文が切れて見出ししか読めなかった。\n- Steamのレビュー集計API(appreviews)はプロキシ環境で空応答、ストアページ経由で確認。\n- DLSS5記事は公開が11/15 17:06で、本番(18:10開始)の24時間枠の境界ギリギリ。本番で使うなら差し替えを検討。\n- special-checkで terms は最大3件の制限に当たり1件削除。\n- プレビューのため special-submit --preview で提出（Discord送信なし）。",
+ "date": "2026-11-16",
+ "created_at": "2026-11-16T12:29:00+09:00",
+ "data": {
+  "fetched": "2026-11-16T12:21+09:00",
+  "upcoming": [
+   5185750,
+   3724300,
+   2321960,
+   4928450,
+   2781660,
+   3218350,
+   3188660,
+   4171850,
+   4776500,
+   2561460,
+   4697880,
+   5460910,
+   3224600,
+   4150720,
+   5189950,
+   5066010,
+   5275590,
+   4954970,
+   2483700,
+   4259360,
+   5527800,
+   5037200,
+   2870790,
+   5472080,
+   4009490
+  ],
+  "topsellers": [
+   1172470,
+   3393110,
+   2860490,
+   2638080,
+   2868840,
+   3681610,
+   1973530,
+   4435490,
+   227300,
+   3432860,
+   5160800,
+   4508340,
+   2492040,
+   1449850,
+   3259780,
+   1665460,
+   3513350,
+   2357570,
+   3375780,
+   3609080,
+   4618570,
+   4968640,
+   5266240,
+   438100,
+   2426960
+  ]
+ }
+}
