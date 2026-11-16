@@ -1,0 +1,29 @@
+# 邮件中继（Apps Script）的检查：在 GitHub 的 Actions 页面手动按「Run workflow」运行。
+# 收件人是空的，所以不会发出任何邮件；也不发 Discord、不写网站。
+# 结果显示在这次运行页面的「Annotations」里（✅ 设置正确／❌ 原因和改法）。
+name: Mail relay check
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install -q -r requirements.txt
+
+      - name: Check the mail relay (sends no email)
+        env:
+          MAIL_RELAY_URL: ${{ secrets.MAIL_RELAY_URL }}
+          MAIL_RELAY_TOKEN: ${{ secrets.MAIL_RELAY_TOKEN }}
+        run: python radar.py mail-check

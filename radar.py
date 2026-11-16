@@ -983,19 +983,79 @@ def email_for_day(day: date, items: list[dict], kws: list[dict]) -> tuple[str, s
     return html, "\n".join(text)
 
 
-def send_via_relay(url: str, token: str, to_list: list[str], subject: str, html: str, text: str) -> str:
-    """Google Apps Script（tools/mail_relay.gs）経由で送る。送信元の Gmail で 1 人ずつ送られる。"""
+def _relay_not_json(r) -> str:
+    """Apps Script から JSON 以外（ログイン画面・エラー画面）が返ってきたとき、原因を推測して書く。
+    URL にはデプロイ ID が入っているので、ログにはホスト名だけを出す。"""
+    import html as H
+
+    host = urlsplit(r.url).netloc
+    body = r.text[:30000]
+    low = body.lower()
+    m = re.search(r"<title[^>]*>(.*?)</title>", body, re.S | re.I)
+    title = re.sub(r"\s+", " ", H.unescape(m.group(1))).strip()[:80] if m else ""
+    if host.startswith("accounts.google.") or "servicelogin" in low or "sign in" in title.lower() or "ログイン" in title:
+        why = ("返回的是 Google 登录页 → 部署的「アクセスできるユーザー」没有选「全員」，"
+               "或者 MAIL_RELAY_URL 用的是以 /dev 结尾的测试网址（要用 /exec 结尾的「ウェブアプリ URL」）")
+    elif "script function not found" in low or "関数が見つかりません" in body:
+        why = "找不到 doPost → 粘贴代码之后没有用「新バージョン」重新部署"
+    elif "authorization is required" in low or "承認が必要" in body or "許可が必要" in body:
+        why = "还没有授权 → 在 Apps Script 编辑器里运行一次 test，允许发送邮件的权限"
+    elif r.status_code == 404:
+        why = "网址找不到（404）→ 确认 MAIL_RELAY_URL 是「ウェブアプリ URL」（https://script.google.com/macros/s/…/exec）"
+    else:
+        why = "Apps Script 的回复不是 JSON"
+    return f"HTTP {r.status_code}・{host}" + (f"・「{title}」" if title else "") + f" → {why}"
+
+
+def relay_call(url: str, token: str, payload: dict) -> tuple[dict | None, str]:
+    """Apps Script（tools/mail_relay.gs）にデータを送る。(返事の JSON, エラーの説明) を返す。"""
     try:
         import requests
-        r = requests.post(url, json={"token": token, "to": to_list, "subject": subject, "html": html, "text": text}, timeout=90)
-        data = r.json()
+        r = requests.post(url.strip(), json={"token": token.strip(), **payload}, timeout=90)
     except Exception as e:
-        return f"⚠️ メールを送れませんでした（Apps Script に接続できない：{str(e)[:150]}）"
-    if not data.get("ok"):
-        return f"⚠️ メールを送れませんでした（Apps Script：{str(data.get('error'))[:150]}）"
+        return None, f"Apps Script に接続できない：{str(e)[:150]}"
+    try:
+        data = r.json()
+    except ValueError:
+        return None, _relay_not_json(r)
+    if not isinstance(data, dict) or not data.get("ok"):
+        err = str(data.get("error") if isinstance(data, dict) else data)[:150]
+        if err == "unauthorized":
+            err += " → Apps Script 的脚本属性 TOKEN 和 GitHub Secrets 的 MAIL_RELAY_TOKEN 不一致（或 TOKEN 不到 20 个字符）"
+        return None, f"Apps Script：{err}"
+    return data, ""
+
+
+def send_via_relay(url: str, token: str, to_list: list[str], subject: str, html: str, text: str) -> str:
+    """Google Apps Script 経由で送る。送信元の Gmail で 1 人ずつ送られる。"""
+    data, err = relay_call(url, token, {"to": to_list, "subject": subject, "html": html, "text": text})
+    if data is None:
+        return f"⚠️ メールを送れませんでした（{err}）"
     errs = data.get("errors") or []
     return (f"メール {data.get('sent', 0)}/{len(to_list)} 人（今日あと {data.get('remaining', '?')} 通まで）"
             + (f"（失敗：{'; '.join(map(str, errs))[:300]}）" if errs else ""))
+
+
+def cmd_mail_check(args) -> int:
+    """邮件中继（Apps Script）的检查：收件人为空，所以不会发出任何邮件，也不发 Discord、不写网站。
+    结果用 GitHub Actions 的注释（::notice:: / ::error::）显示在运行页面上。"""
+    url = (os.environ.get("MAIL_RELAY_URL") or "").strip()
+    token = (os.environ.get("MAIL_RELAY_TOKEN") or "").strip()
+    if not url or not token:
+        missing = "、".join(n for n, v in (("MAIL_RELAY_URL", url), ("MAIL_RELAY_TOKEN", token)) if not v)
+        print(f"::error title=邮件中继::GitHub Secrets 里没有 {missing}")
+        return 1
+    p = urlsplit(url)
+    if p.netloc != "script.google.com" or not p.path.endswith("/exec"):
+        end = ("/exec" if p.path.endswith("/exec") else "/dev（测试用网址）" if p.path.endswith("/dev") else "不是 /exec")
+        print(f"::warning title=邮件中继::MAIL_RELAY_URL 看起来不是 Apps Script 的「ウェブアプリ URL」"
+              f"（应该是 https://script.google.com/macros/s/…/exec；现在的主机是 {p.netloc or '?'}，结尾 {end}）")
+    data, err = relay_call(url, token, {"to": [], "subject": "check", "html": "", "text": ""})
+    if data is None:
+        print(f"::error title=邮件中继::{err}")
+        return 1
+    print(f"::notice title=邮件中继::✅ 设置正确，可以发邮件（今天还能发 {data.get('remaining', '?')} 封）")
+    return 0
 
 
 def send_emails(to_list: list[str], subject: str, html: str, text: str, dry_run: bool) -> str:
@@ -1004,7 +1064,7 @@ def send_emails(to_list: list[str], subject: str, html: str, text: str, dry_run:
         return ""
     if dry_run:
         return f"（dry-run）メール {len(to_list)} 人：{subject}"
-    relay, token = os.environ.get("MAIL_RELAY_URL"), os.environ.get("MAIL_RELAY_TOKEN")
+    relay, token = (os.environ.get("MAIL_RELAY_URL") or "").strip(), (os.environ.get("MAIL_RELAY_TOKEN") or "").strip()
     if relay and token:
         return send_via_relay(relay, token, to_list, subject, html, text)
     addr, pw = os.environ.get("GMAIL_ADDRESS"), os.environ.get("GMAIL_APP_PASSWORD")
@@ -1652,12 +1712,14 @@ def main() -> int:
     sub.add_parser("preview-learn").add_argument("source", help="学习内容的预览分支或 JSON 文件")
     sub.add_parser("publish-status", help="发布检查：今天的发布记录和待发布的分支")
     sub.add_parser("wait-published", help="触发发布后，等待并确认分支被处理").add_argument("--timeout", type=int, default=240)
+    sub.add_parser("mail-check", help="检查邮件中继（Apps Script）的设置，不发任何邮件")
     args = parser.parse_args()
     return {"context": cmd_context, "feeds": cmd_feeds, "community": cmd_community, "check": cmd_check,
             "submit": cmd_submit, "learn-context": cmd_learn_context, "learn-check": cmd_learn_check,
             "learn-submit": cmd_learn_submit, "publish-pending": cmd_publish_pending,
             "preview": cmd_preview, "preview-learn": cmd_preview_learn,
-            "publish-status": cmd_publish_status, "wait-published": cmd_wait_published}[args.cmd](args)
+            "publish-status": cmd_publish_status, "wait-published": cmd_wait_published,
+            "mail-check": cmd_mail_check}[args.cmd](args)
 
 
 if __name__ == "__main__":
