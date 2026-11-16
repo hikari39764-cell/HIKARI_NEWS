@@ -55,6 +55,13 @@ class JsonStore:
     def add_keywords(self, area, entries):
         self._bundle(f"kw_{area}").extend(entries)
 
+    def items_by_ids(self, ids):
+        want = set(ids)
+        return [it for it in self.data["items"] if it.get("id") in want]
+
+    def keywords_for(self, area, day, slot):
+        return [k for k in self._bundle(f"kw_{area}") if k.get("date") == day and str(k.get("slot")) == str(slot)]
+
     def add_quiz(self, topic, entries):
         self._bundle(f"quiz_{topic}").extend(entries)
 
@@ -138,6 +145,16 @@ class FirestoreStore:
 
     def add_keywords(self, area, entries):
         self._append(f"kw_{area}", entries)
+
+    def items_by_ids(self, ids):
+        """記事の全文（要点・解説つき）。発布記録には一部の項目しか残していないので、メールの再送などで使う。"""
+        refs = [self.db.collection("items").document(i) for i in ids]
+        return [s.to_dict() for s in self.db.get_all(refs) if s.exists] if refs else []
+
+    def keywords_for(self, area, day, slot):
+        snap = self.db.collection("learn").document(f"kw_{area}").get()
+        items = (snap.to_dict() or {}).get("items", []) if snap.exists else []
+        return [k for k in items if k.get("date") == day and str(k.get("slot")) == str(slot)]
 
     def add_quiz(self, topic, entries):
         self._append(f"quiz_{topic}", entries)

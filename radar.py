@@ -1058,6 +1058,48 @@ def cmd_mail_check(args) -> int:
     return 0
 
 
+def mask_emails(s: str) -> str:
+    """公开仓库的 Actions 日志谁都能看，所以邮件地址不写进日志。"""
+    return re.sub(r"[^\s@<>()（）「」,;:：]+@[^\s@<>()（）「」,;:：]+", "（地址已隐藏）", s)
+
+
+def cmd_mail_resend(args) -> int:
+    """把上一次的新闻（最新的 10:00 / 17:00 / 22:00 批次）重新发给开启了邮件的人（不分「每次」「每天一次」）。
+    只发邮件：不发 Discord、不改网站和发布记录。"""
+    from store import open_store
+
+    state = load_state()
+    last = next((b for b in reversed(state["batches"]) if str(b.get("slot")) in CONFIG["slots"]
+                 and str(b.get("status", "")).startswith("ok") and b.get("count")), None)
+    if not last:
+        print("::error title=重发::发布记录里没有找到上一次的新闻批次")
+        return 1
+    day, slot = str(last["date"]), str(last["slot"])
+    ids = [it["id"] for it in state["items"] if it.get("date") == day and str(it.get("slot")) == slot]
+    store = open_store()
+    items = [it for it in store.items_by_ids(ids) if it.get("title") and it.get("url")]
+    for it in items:
+        it.setdefault("importance", 3)
+        it.setdefault("category", "")
+    track = KW_TRACKS.get(slot)
+    ks = store.keywords_for(track["area"], day, slot) if track else []
+    kw = {"theme": ks[0].get("theme") or "", "items": ks} if ks else None
+    if not items and not kw:
+        print(f"::error title=重发::在网站的数据库里找不到 {day} {slot}:00 这一批的内容")
+        return 1
+    to = sorted({s["email"] for s in store.subscribers() if s.get("email_on") and s.get("email")})
+    if not to:
+        print("::warning title=重发::现在没有人开启邮件，所以没有发送")
+        return 0
+    cats = [t["id"] for t in CONFIG["tasks"] if any(it.get("category") == t["id"] for it in items)]
+    title = "【再送】" + thread_title(date.fromisoformat(day), slot, cats)
+    html, text = email_for_batch(title, items, kw, track["name"] if track else "", [])
+    res = mask_emails(send_emails(to, title, html, text, args.dry_run))
+    ok = not res.startswith("⚠️")
+    print(f"::{'notice' if ok else 'error'} title=重发::{day} {slot}:00 这一批（新闻 {len(items)} 条）→ {res}")
+    return 0 if ok else 1
+
+
 def send_emails(to_list: list[str], subject: str, html: str, text: str, dry_run: bool) -> str:
     """1 人ずつ送る（宛先はお互いに見えない）。Apps Script の中継があればそれを、なければ Gmail（アプリ パスワード）を使う。"""
     if not to_list:
@@ -1143,10 +1185,12 @@ def daily_mail(state: dict, store, now: datetime, dry_run: bool) -> str | None:
     return "📮 1 日まとめメール：" + send_emails(to, f"📰 HIKARI NEWS {now.month}/{now.day} のまとめ", html, text, dry_run)
 
 
-def log(text: str, dry_run: bool) -> None:
-    """发给管理员日志频道（没有设置的话只打印出来）。"""
-    print(f"[bot-log] {text}")
+def log(text: str, dry_run: bool, private: bool = False) -> None:
+    """发给管理员日志频道（没有设置的话只打印出来）。
+    仓库是公开的，Actions 日志谁都能看：打印时隐藏邮件地址；private 的内容（表单的留言等）只打印第一行。"""
     webhook = os.environ.get("DISCORD_LOG_WEBHOOK")
+    shown = text.split("\n", 1)[0] + "（详细内容只发到日志频道）" if private and webhook and not dry_run else text
+    print(f"[bot-log] {mask_emails(shown)}")
     if webhook and not dry_run:
         try:
             discord_post(webhook, {"content": text[:1900]})
@@ -1468,7 +1512,7 @@ def cmd_publish_pending(args) -> int:
                               f"　{str(c.get('message', ''))[:300]}" + (f"\n　連絡先：{str(c.get('contact'))[:100]}" if c.get("contact") else "")
                               for c in contacts)
             log(f"📮 有 {len(contacts)} 条来自网站表单的请求（请尽快处理，删除请求优先）\n{lines}\n"
-                f"在网站的「管理」页可以查看全文：{CONFIG.get('site_url', '')}", args.dry_run)   # 他の通知と混ざって切れないよう単独で送る
+                f"在网站的「管理」页可以查看全文：{CONFIG.get('site_url', '')}", args.dry_run, private=True)   # 他の通知と混ざって切れないよう単独で送る
             store.mark_contacts([c["id"] for c in contacts])
         store.save_meta({
             "updated": now.isoformat(timespec="minutes"),
@@ -1713,13 +1757,14 @@ def main() -> int:
     sub.add_parser("publish-status", help="发布检查：今天的发布记录和待发布的分支")
     sub.add_parser("wait-published", help="触发发布后，等待并确认分支被处理").add_argument("--timeout", type=int, default=240)
     sub.add_parser("mail-check", help="检查邮件中继（Apps Script）的设置，不发任何邮件")
+    sub.add_parser("mail-resend", help="把上一次的新闻重新发给开启了邮件的人（只发邮件）").add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
     return {"context": cmd_context, "feeds": cmd_feeds, "community": cmd_community, "check": cmd_check,
             "submit": cmd_submit, "learn-context": cmd_learn_context, "learn-check": cmd_learn_check,
             "learn-submit": cmd_learn_submit, "publish-pending": cmd_publish_pending,
             "preview": cmd_preview, "preview-learn": cmd_preview_learn,
             "publish-status": cmd_publish_status, "wait-published": cmd_wait_published,
-            "mail-check": cmd_mail_check}[args.cmd](args)
+            "mail-check": cmd_mail_check, "mail-resend": cmd_mail_resend}[args.cmd](args)
 
 
 if __name__ == "__main__":

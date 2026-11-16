@@ -1,10 +1,17 @@
-# 邮件中继（Apps Script）的检查：在 GitHub 的 Actions 页面手动按「Run workflow」运行。
-# 收件人是空的，所以不会发出任何邮件；也不发 Discord、不写网站。
-# 结果显示在这次运行页面的「Annotations」里（✅ 设置正确／❌ 原因和改法）。
+# 邮件的检查和重发：在 GitHub 的 Actions 页面手动按「Run workflow」运行。
+# - 不勾选：只检查邮件中继（Apps Script）的设置。收件人是空的，不会发出任何邮件。
+# - 勾选「resend_last」：再把上一次的新闻真的发一封邮件给开启了邮件的人。
+# 两种都不发 Discord（这个流程里根本没有 Discord 的密钥），也不改网站和发布记录。
+# 结果显示在这次运行页面的「Annotations」里。
 name: Mail relay check
 
 on:
   workflow_dispatch:
+    inputs:
+      resend_last:
+        description: "勾选后：把上一次的新闻真的发一封邮件给开启了邮件的人（不发 Discord）"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -27,3 +34,11 @@ jobs:
           MAIL_RELAY_URL: ${{ secrets.MAIL_RELAY_URL }}
           MAIL_RELAY_TOKEN: ${{ secrets.MAIL_RELAY_TOKEN }}
         run: python radar.py mail-check
+
+      - name: Resend the last batch by email (no Discord)
+        if: ${{ inputs.resend_last }}
+        env:
+          FIREBASE_SERVICE_ACCOUNT_B64: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_B64 }}
+          MAIL_RELAY_URL: ${{ secrets.MAIL_RELAY_URL }}
+          MAIL_RELAY_TOKEN: ${{ secrets.MAIL_RELAY_TOKEN }}
+        run: python radar.py mail-resend
