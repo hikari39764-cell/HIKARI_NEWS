@@ -1117,6 +1117,32 @@
    "source": "電撃オンライン（公式：gc2026.jp.square-enix.com）",
    "note": "参加条件：日本在住で未発売のオリジナル作品。学生かどうかの条件は公式ページに記載なし",
    "reminded": []
+  },
+  {
+   "id": "c31d0d34a17ff92a",
+   "url": "https://unity.com/the-unity-cli-1.0-is-here",
+   "title": "Unity CLI 1.0 が正式版に：エディターの操作をターミナルとAIエージェントに開放",
+   "category": "programmer",
+   "importance": 3,
+   "date": "2026-11-17",
+   "slot": "learn",
+   "deadline": null,
+   "source": "Unity 公式ブログ",
+   "note": "ビルドや検査を1コマンドにする手がかりに。まず projects audit を試してみよう。",
+   "reminded": []
+  },
+  {
+   "id": "8532ae6a2cb546eb",
+   "url": "https://80.lv/articles/full-circle-building-terminal-escape-from-tarkov-s-final-location/",
+   "title": "『タルコフ』最終マップ「Terminal」の作り方：港の広さを、ストップウォッチと照明で整える",
+   "category": "planner",
+   "importance": 3,
+   "date": "2026-11-17",
+   "slot": "learn",
+   "deadline": null,
+   "source": "80 Level（Battlestate Games へのインタビュー）",
+   "note": "ステージを「歩く時間」で設計するという考え方。自作マップにも今日から使える。",
+   "reminded": []
   }
  ],
  "batches": [
@@ -1237,6 +1263,13 @@
    "slot": "22",
    "date": "2026-11-16",
    "count": 11,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/learn-20261117-learn-063622",
+   "slot": "learn",
+   "date": "2026-11-17",
+   "count": 14,
    "status": "ok"
   }
  ],
@@ -2364,6 +2397,90 @@
    "track": "planner",
    "level": "発展",
    "q": "ポーズメニューに項目が20個並んでいて、プレイヤーが目的の項目を選ぶのに時間がかかっている。「ヒックの法則」の考え方から、最も適切な改善は？"
+  },
+  {
+   "id": "a8dfe715877d",
+   "topic": "math",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "長さが 1 とは限らない 0 でない 2 つのベクトル a, b について、dot(a, b) ÷ (|a| × |b|) が表すものは？（|v| はベクトルの長さ、θ は 2 つ"
+  },
+  {
+   "id": "c4f7220f29b7",
+   "topic": "math",
+   "track": "programmer",
+   "level": "発展",
+   "q": "回転だけを表す 3×3 行列 R（拡大縮小やせん断を含まない）の逆行列として正しいのは？"
+  },
+  {
+   "id": "e3787bec6dba",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "「オクルージョンカリング」の説明として正しいのは？"
+  },
+  {
+   "id": "d0e9648e17e4",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "発展",
+   "q": "RGBA8（1 ピクセル 4 バイト）の非圧縮テクスチャを BC7 圧縮に置き換えた。BC7 は 4×4 ピクセルのブロックあたり 16 バイトである。ミップマップを無視すると、テ"
+  },
+  {
+   "id": "3a7264f64f83",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "応用",
+   "q": "敵オブジェクトを固定長の配列（プール）に格納し、倒された敵のスロットを次の敵が再利用する設計にしている。ほかのシステム（ロックオン表示など）が敵を「配列のインデックス」で覚えている"
+  },
+  {
+   "id": "f632c4031fe9",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "コマンドキューに Signal(fence, 5) を積んだ。GPU がその地点まで処理を終えたかを、CPU 側でブロックせずに確かめる方法として正しいのは？"
+  },
+  {
+   "id": "17d105664bd2",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "発展",
+   "q": "コマンドキューに Signal(fence, 7) を積んだあと、イベントオブジェクトを自分で作らずに、フェンスが 7 に達するまで呼び出しスレッドをブロックして待ちたい。ID3D"
+  },
+  {
+   "id": "2683077d8773",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "発展",
+   "q": "次のコンピュートシェーダーを Dispatch(4, 4, 1) で起動した。SV_GroupID が (2, 3, 0)、SV_GroupThreadID が (5, 1, 0)"
+  },
+  {
+   "id": "2b6a4464597b",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "発展",
+   "q": "複数のスレッドから使われるオブジェクトを weak_ptr<T> wp で観測している。次の 2 つの書き方のうち、後者（B）のほうが安全とされる理由として正しいのは？\n\nA: i"
+  },
+  {
+   "id": "3849c8b6556d",
+   "topic": "biz",
+   "track": "planner",
+   "level": "応用",
+   "q": "運営型ゲームのショップ画面で、新しいデザインが購入率を上げるかを確かめたい。最も信頼できる検証方法は？"
+  },
+  {
+   "id": "8f8a184a3964",
+   "topic": "level",
+   "track": "planner",
+   "level": "発展",
+   "q": "グレーボックス（仮の簡素な形状）で組んだ広いステージの検証で、デザイナーが全体を通して歩きながらストップウォッチで移動時間を測った。この測定の目的として最も適切なのは？"
+  },
+  {
+   "id": "3b3e14257ca6",
+   "topic": "design",
+   "track": "planner",
+   "level": "応用",
+   "q": "RPG のダメージ式を「攻撃力 − 防御力」にしたところ、終盤は防御力が攻撃力を上回り、ダメージが 0 以下になる敵が出てきた。「防御を上げるほどダメージは減るが、その効果は次第に"
   }
  ],
  "themes": [
@@ -2382,16 +2499,20 @@
   {
    "date": "2026-11-16",
    "title": "いつもの道具、別の使い道"
+  },
+  {
+   "date": "2026-11-17",
+   "title": "忘れ物"
   }
  ],
  "reports": [],
  "idea_counts": {
-  "genre": 27,
-  "mechanic": 27,
-  "theme": 27,
-  "constraint": 27,
-  "feeling": 25,
-  "prompt": 25
+  "genre": 32,
+  "mechanic": 32,
+  "theme": 32,
+  "constraint": 32,
+  "feeling": 30,
+  "prompt": 30
  },
  "last_daily_mail": "2026-11-16",
  "specials": [
