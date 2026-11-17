@@ -1249,6 +1249,71 @@
    "source": "GameBusiness.jp",
    "note": "学生券1,500円。メディア編集者が「話題になる条件」を語る貴重な場",
    "reminded": []
+  },
+  {
+   "id": "fc35e8978fc69343",
+   "url": "https://ben3d.ca/blog/building-the-aaa-lighting-pipeline-in-threejs",
+   "title": "Three.jsにAAA級ライティングを。足りない部品と実測値を段階別に整理",
+   "category": "tech",
+   "importance": 5,
+   "date": "2026-11-17",
+   "slot": "17",
+   "deadline": null,
+   "source": "Ben Houston（個人ブログ）",
+   "note": "AAAの描画工程を一覧で見られる。数字つきなので比べやすい",
+   "reminded": []
+  },
+  {
+   "id": "ce3d3d2ce86e2e37",
+   "url": "https://cgworld.jp/article/2610-dinosaur.html",
+   "title": "3DGSで実在の展示室を映像に。恐竜博物館シアターの制作手順とつまずき",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-17",
+   "slot": "17",
+   "deadline": null,
+   "source": "CGWORLD",
+   "note": "3DGSが苦手な場所と、その補い方が具体的に分かる",
+   "reminded": []
+  },
+  {
+   "id": "11e5932aa7f56450",
+   "url": "https://zenn.dev/linkedge/articles/claude-code-instead-of-reading-code",
+   "title": "テストが一度も動いていなかった。AI任せ開発で「検証の記録」を読む理由",
+   "category": "ai_howto",
+   "importance": 5,
+   "date": "2026-11-17",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn",
+   "note": "試すならこうする：まず合格の記録を疑い、わざとテストを壊して確かめる",
+   "reminded": []
+  },
+  {
+   "id": "80afdda7c683ee44",
+   "url": "https://zenn.dev/polyco/articles/e05cb28c569801",
+   "title": "AIが書いた大量のテストは本当に効くか。ミューテーションテストで確かめた記録",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-17",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn",
+   "note": "試すならこうする：計算関数の条件を1つ壊し、テストが落ちるか見る",
+   "reminded": []
+  },
+  {
+   "id": "83a677258e552ca0",
+   "url": "https://gameprogrammingpatterns.com/state.html",
+   "title": "『Game Programming Patterns』のStateの章。フラグだらけの操作を状態機械で整理する",
+   "category": "classic",
+   "importance": 4,
+   "date": "2026-11-17",
+   "slot": "17",
+   "deadline": null,
+   "source": "Game Programming Patterns（Robert Nystrom）",
+   "note": "今も通じる理由：フラグ地獄から抜ける最初の一手が学べる",
+   "reminded": []
   }
  ],
  "batches": [
@@ -1383,6 +1448,13 @@
    "slot": "10",
    "date": "2026-11-17",
    "count": 8,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261117-17-161800",
+   "slot": "17",
+   "date": "2026-11-17",
+   "count": 5,
    "status": "ok"
   }
  ],
@@ -1660,6 +1732,27 @@
    "level": "応用",
    "area": "cpp",
    "theme": "アロケータとメモリ確保",
+   "date": "2026-11-17"
+  },
+  {
+   "term": "フリップモデル",
+   "level": "基礎",
+   "area": "dx12",
+   "theme": "スワップチェーンとプレゼンテーション",
+   "date": "2026-11-17"
+  },
+  {
+   "term": "待機可能スワップチェーン",
+   "level": "発展",
+   "area": "dx12",
+   "theme": "スワップチェーンとプレゼンテーション",
+   "date": "2026-11-17"
+  },
+  {
+   "term": "ティアリング許可とVRR対応",
+   "level": "応用",
+   "area": "dx12",
+   "theme": "スワップチェーンとプレゼンテーション",
    "date": "2026-11-17"
   }
  ],
