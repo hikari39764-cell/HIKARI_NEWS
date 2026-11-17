@@ -1314,6 +1314,71 @@
    "source": "Game Programming Patterns（Robert Nystrom）",
    "note": "今も通じる理由：フラグ地獄から抜ける最初の一手が学べる",
    "reminded": []
+  },
+  {
+   "id": "c7699742f845181e",
+   "url": "https://togetter.com/li/2771593",
+   "title": "初代「ペルソナ」はなぜ「鬼」と呼ばれる？ セーブ間隔と離脱手段から学ぶ設計",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-17",
+   "slot": "22",
+   "deadline": null,
+   "source": "X で話題（Togetter）",
+   "note": "昔の「不便」を数えると、失敗のコストの設計が見えてくる",
+   "reminded": []
+  },
+  {
+   "id": "beaefc3fd892d789",
+   "url": "https://news.denfaminicogamer.jp/interview/261113b",
+   "title": "堀井雄二×橋野桂の対談から学ぶ、RPGの物語を「面」で作る発想",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-17",
+   "slot": "22",
+   "deadline": null,
+   "source": "電ファミニコゲーマー（はてブで話題）",
+   "note": "セリフと配置で世界を作る、2人のクリエイターの具体的な手順",
+   "reminded": []
+  },
+  {
+   "id": "efbf08a51ff9a9c5",
+   "url": "https://zenn.dev/turing_motors/articles/cea9e3c85611b2",
+   "title": "カメラ・座標系の基本を可視化で学ぶ。自動運転の記事が3D描画にも通じる理由",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-17",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn（Turing Tech Blog）",
+   "note": "座標系の「向きの約束」を知ると、3Dのずれ探しが速くなる",
+   "reminded": []
+  },
+  {
+   "id": "18937ba2a9b0f158",
+   "url": "https://zenn.dev/ara_ta3/articles/thinking-about-engineers-five-years-from-now",
+   "title": "「5年後のエンジニアは何に責任を持つのか」。AIに任せるほど、学び方の設計が要る",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-17",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn",
+   "note": "AIに任せる時代の「自分で説明できる力」の育て方がわかる",
+   "reminded": []
+  },
+  {
+   "id": "ce81382197ac758a",
+   "url": "https://qiita.com/shin270080/items/78bb82c2307742e3d5e2",
+   "title": "Unity 7を待つべき？ 個人開発をUnity 6.3 LTSで始めるときの設計ポイント5つ",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-17",
+   "slot": "22",
+   "deadline": null,
+   "source": "Qiita",
+   "note": "Unityで小さく作り切るための、明日から試せる設計の型",
+   "reminded": []
   }
  ],
  "batches": [
@@ -1462,6 +1527,13 @@
    "slot": "special",
    "date": "2026-11-17",
    "count": 4,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261117-22-211920",
+   "slot": "22",
+   "date": "2026-11-17",
+   "count": 5,
    "status": "ok"
   }
  ],
@@ -1760,6 +1832,27 @@
    "level": "応用",
    "area": "dx12",
    "theme": "スワップチェーンとプレゼンテーション",
+   "date": "2026-11-17"
+  },
+  {
+   "term": "ガンマ補正",
+   "level": "基礎",
+   "area": "shader",
+   "theme": "ガンマ補正とsRGB",
+   "date": "2026-11-17"
+  },
+  {
+   "term": "_SRGBフォーマット",
+   "level": "発展",
+   "area": "shader",
+   "theme": "ガンマ補正とsRGB",
+   "date": "2026-11-17"
+  },
+  {
+   "term": "HDRレンダーターゲットとトーンマッピング",
+   "level": "応用",
+   "area": "shader",
+   "theme": "ガンマ補正とsRGB",
    "date": "2026-11-17"
   }
  ],
@@ -2748,7 +2841,7 @@
   "feeling": 30,
   "prompt": 30
  },
- "last_daily_mail": "2026-11-16",
+ "last_daily_mail": "2026-11-17",
  "specials": [
   {
    "date": "2026-11-16",
