@@ -1064,7 +1064,9 @@
    "deadline": "2026-11-24",
    "source": "JDN コンペ情報（主催：Cygames）",
    "note": "参加条件：学生（個人・グループ可）。発表済みの作品でも応募できる",
-   "reminded": []
+   "reminded": [
+    7
+   ]
   },
   {
    "id": "65bf1d150b061fca",
@@ -1142,6 +1144,110 @@
    "deadline": null,
    "source": "80 Level（Battlestate Games へのインタビュー）",
    "note": "ステージを「歩く時間」で設計するという考え方。自作マップにも今日から使える。",
+   "reminded": []
+  },
+  {
+   "id": "12f565e5c9f8cc1f",
+   "url": "https://www.cs.cmu.edu/learn/",
+   "title": "CMUがCS講義をYouTubeで無料公開、AIエージェントや機械学習システムの授業も",
+   "category": "ai",
+   "importance": 5,
+   "date": "2026-11-17",
+   "slot": "10",
+   "deadline": null,
+   "source": "CMU Learn（Hacker Newsで話題）",
+   "note": "大学の本物の授業が無料で見られる。まず設計の講義を1本だけ試そう",
+   "reminded": []
+  },
+  {
+   "id": "87e107f986a09b97",
+   "url": "https://www.itmedia.co.jp/news/article/2611/16/2000003244/",
+   "title": "攻撃者が「AIエージェントに脆弱性探しから攻撃まで任せる」段階へ。Claude Codeの設定ファイルも標的に",
+   "category": "ai",
+   "importance": 5,
+   "date": "2026-11-17",
+   "slot": "10",
+   "deadline": null,
+   "source": "ITmedia NEWS（Google GTIGレポートの紹介）",
+   "note": "設定ファイルを開くだけで感染する手口。就活の課題リポジトリでも要注意",
+   "reminded": []
+  },
+  {
+   "id": "853b24ff0d6ecd3f",
+   "url": "https://huggingface.co/blog/openrouter",
+   "title": "Hugging FaceがOpenRouterと統合。1つのAPIで80社超のオープンモデルを価格・速度で選べる",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-17",
+   "slot": "10",
+   "deadline": null,
+   "source": "Hugging Face Blog",
+   "note": "モデルを1行で切り替えて比べられる。AI機能を作る前の試し打ちに",
+   "reminded": []
+  },
+  {
+   "id": "950ac38f23f2d5a7",
+   "url": "https://magazine.sebastianraschka.com/p/understanding-positional-embeddings",
+   "title": "LLMは「語順」をどう知るのか。GPT-2のRoPEまで、位置埋め込みを手を動かして理解する",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-17",
+   "slot": "10",
+   "deadline": null,
+   "source": "Sebastian Raschka（Hacker Newsで話題）",
+   "note": "コンテキスト長の話が、仕組みから分かる。写経用のコード付き",
+   "reminded": []
+  },
+  {
+   "id": "cf37760d59c1c366",
+   "url": "https://www.gamedeveloper.com/business/unity-to-support-indies-with-cash-and-dedicated-support-through-new-fellowship-program",
+   "title": "Unityが開発中のインディーに5万ドルを無償提供、「Unity Fellowship」の募集開始",
+   "category": "industry",
+   "importance": 4,
+   "date": "2026-11-17",
+   "slot": "10",
+   "deadline": null,
+   "source": "Game Developer",
+   "note": "返済なしの5万ドル。1年以内に出す予定のUnity作品がある人は要チェック",
+   "reminded": []
+  },
+  {
+   "id": "e662e1aa8e96f660",
+   "url": "https://automaton-media.com/articles/newsjp/20261116-479460/",
+   "title": "『MONOMOON』Steam好評率98%。戦闘なし、「月の光」だけで謎を解く作りが評価",
+   "category": "industry",
+   "importance": 4,
+   "date": "2026-11-17",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "道具は「月の光」ひとつだけ。少ない要素で遊びを広げる設計の見本",
+   "reminded": []
+  },
+  {
+   "id": "72bb45f462c4cba6",
+   "url": "https://www.famitsu.com/article/202611/94116",
+   "title": "流行語「オーラ・ファーミング」を小さな商業作品に。ブラジル発『Keep Farming Aura』が420円で登場",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-17",
+   "slot": "10",
+   "deadline": null,
+   "source": "ファミ通.com",
+   "note": "流行語から試作、420円で発売まで。小さく出す判断の参考に",
+   "reminded": []
+  },
+  {
+   "id": "0154c8deadbd58bb",
+   "url": "https://www.gamebusiness.jp/article/2026/11/04/28541.html",
+   "title": "Indie Developers Conference 2026は11/28、学生は1,500円。メディア編集者が語る「話題になるインディー」",
+   "category": "industry",
+   "importance": 4,
+   "date": "2026-11-17",
+   "slot": "10",
+   "deadline": "2026-11-28",
+   "source": "GameBusiness.jp",
+   "note": "学生券1,500円。メディア編集者が「話題になる条件」を語る貴重な場",
    "reminded": []
   }
  ],
@@ -1270,6 +1376,13 @@
    "slot": "learn",
    "date": "2026-11-17",
    "count": 14,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261117-10-091628",
+   "slot": "10",
+   "date": "2026-11-17",
+   "count": 8,
    "status": "ok"
   }
  ],
@@ -1527,6 +1640,27 @@
    "area": "shader",
    "theme": "コンピュートシェーダーの基本",
    "date": "2026-11-16"
+  },
+  {
+   "term": "reserve と capacity",
+   "level": "基礎",
+   "area": "cpp",
+   "theme": "アロケータとメモリ確保",
+   "date": "2026-11-17"
+  },
+  {
+   "term": "monotonic_buffer_resource",
+   "level": "発展",
+   "area": "cpp",
+   "theme": "アロケータとメモリ確保",
+   "date": "2026-11-17"
+  },
+  {
+   "term": "polymorphic_allocator によるフレームアロケータ",
+   "level": "応用",
+   "area": "cpp",
+   "theme": "アロケータとメモリ確保",
+   "date": "2026-11-17"
   }
  ],
  "quiz": [
