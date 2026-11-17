@@ -1379,6 +1379,32 @@
    "source": "Qiita",
    "note": "Unityで小さく作り切るための、明日から試せる設計の型",
    "reminded": []
+  },
+  {
+   "id": "96c4902788cd3f95",
+   "url": "https://devblogs.microsoft.com/directx/machine-learning-compilers-challenges-hardware/",
+   "title": "Microsoftが語る「MLコンパイラが難しい理由」：理論性能の5〜10%しか出ないとき、何が起きているのか",
+   "category": "programmer",
+   "importance": 3,
+   "date": "2026-11-18",
+   "slot": "learn",
+   "deadline": null,
+   "source": "DirectX Developer Blog（Microsoft）",
+   "note": "GPUが理論性能の数%しか出ない理由を、メモリとコンパイラの視点から学べる",
+   "reminded": []
+  },
+  {
+   "id": "77362856f3acd36d",
+   "url": "https://www.4gamer.net/games/865/G086556/20261117004/",
+   "title": "「Time Takers」プレイテスト報告：『残り時間』が体力・通貨・経験値を兼ねるサバイバルシューターの設計",
+   "category": "planner",
+   "importance": 3,
+   "date": "2026-11-18",
+   "slot": "learn",
+   "deadline": null,
+   "source": "4Gamer.net",
+   "note": "1つの数値に役割を集める設計を、具体的な数字で学べる",
+   "reminded": []
   }
  ],
  "batches": [
@@ -1534,6 +1560,13 @@
    "slot": "22",
    "date": "2026-11-17",
    "count": 5,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/learn-20261118-learn-063630",
+   "slot": "learn",
+   "date": "2026-11-18",
+   "count": 14,
    "status": "ok"
   }
  ],
@@ -2808,6 +2841,90 @@
    "track": "planner",
    "level": "応用",
    "q": "RPG のダメージ式を「攻撃力 − 防御力」にしたところ、終盤は防御力が攻撃力を上回り、ダメージが 0 以下になる敵が出てきた。「防御を上げるほどダメージは減るが、その効果は次第に"
+  },
+  {
+   "id": "b5e999a0cb23",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "敵キャラの種類が増え、「飛ぶ敵」「泳ぐ敵」「飛んで泳ぐ敵」…と機能の組み合わせごとに継承クラスを作っていくと、階層が絡み合って保守しにくくなる。この問題への一般的な対処として最も適"
+  },
+  {
+   "id": "eb6be8b21767",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "発展",
+   "q": "毎フレームの update ループで、配列の先頭から順に敵を更新している。敵 A の処理中に別の敵 B をその場で配列から取り除いて要素を詰めると、ループが次の要素を飛ばしてしまう"
+  },
+  {
+   "id": "d6fd78ce1500",
+   "topic": "math",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "ベクトル a = (3, 4, 0) を、単位ベクトル n = (0, 1, 0) の方向に射影したときの「n 方向の成分の長さ（符号付き）」は？"
+  },
+  {
+   "id": "cf22dfbe1098",
+   "topic": "math",
+   "track": "programmer",
+   "level": "発展",
+   "q": "キャラクターの向きを度数（0〜360）で持っている。350° から 10° へ向きを変えるために、単純に lerp(350, 10, 0.5) で補間すると 180° になる。実際"
+  },
+  {
+   "id": "96a041473777",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "大量の敵について、毎フレーム「プレイヤーから半径 R 以内にいるか」を判定したい。計算を減らす定番の書き方は？ ただし d は敵からプレイヤーへのベクトル、R は 0 以上とする。"
+  },
+  {
+   "id": "50f8479a2379",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "応用",
+   "q": "あるゲームの1フレームは 33.3 ms かかっている。プロファイラで、同じスレッドの中で直列に実行されている「ある処理」が 10 ms を占めていると分かった。この処理だけを 2"
+  },
+  {
+   "id": "ac1768cb349e",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "応用",
+   "q": "幅 100 × 高さ 60 の画像の全ピクセルを、次のコンピュートシェーダーで1スレッド1ピクセルとして処理したい。全ピクセルをもれなくカバーする最小の Dispatch の引数は"
+  },
+  {
+   "id": "18dfbc41b5b2",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "応用",
+   "q": "1つのアップロードバッファに、オブジェクトごとの定数バッファ（C++ 側の構造体は 80 バイト）を並べて置き、オブジェクト i 用の CBV を作る。i 番目のデータの開始位置（"
+  },
+  {
+   "id": "3caabc622a1f",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "発展",
+   "q": "コンピュートシェーダーが GPU 上で計算した結果を、CPU から読み出して確認したい。結果を CPU に渡すためのバッファを置く場所として、標準的なヒープ種別は？"
+  },
+  {
+   "id": "600b77ff0601",
+   "topic": "level",
+   "track": "planner",
+   "level": "基礎",
+   "q": "探索型のアクションゲームで、鍵付きの扉や「二段ジャンプがないと登れない段差」のように、進行を制限する仕掛け（ゲート）をレベルに置く主な狙いは？"
+  },
+  {
+   "id": "22a0af7081ed",
+   "topic": "ux",
+   "track": "planner",
+   "level": "基礎",
+   "q": "メニュー画面ごとに「決定」ボタンが○だったり×だったりして、プレイヤーが誤操作を繰り返している。UX の原則のうち、どれに反している？"
+  },
+  {
+   "id": "771b6f1c549a",
+   "topic": "biz",
+   "track": "planner",
+   "level": "発展",
+   "q": "運営型ゲームで、アップデートの後に「新規ユーザーの継続率が上がったか」を確かめたい。全ユーザーの平均継続率だけを見ると判断を誤りやすい。この確認に適した分析は？"
   }
  ],
  "themes": [
@@ -2830,16 +2947,20 @@
   {
    "date": "2026-11-17",
    "title": "忘れ物"
+  },
+  {
+   "date": "2026-11-18",
+   "title": "借りもの"
   }
  ],
  "reports": [],
  "idea_counts": {
-  "genre": 32,
-  "mechanic": 32,
-  "theme": 32,
-  "constraint": 32,
-  "feeling": 30,
-  "prompt": 30
+  "genre": 37,
+  "mechanic": 37,
+  "theme": 37,
+  "constraint": 37,
+  "feeling": 35,
+  "prompt": 35
  },
  "last_daily_mail": "2026-11-17",
  "specials": [
