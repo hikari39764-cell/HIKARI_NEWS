@@ -1678,6 +1678,32 @@
    "source": "Zenn（トレンド入り）",
    "note": "アロケータとSoAを実コードで見て、エンジン開発の基礎を学べる",
    "reminded": []
+  },
+  {
+   "id": "9f5bd94492c8fe42",
+   "url": "https://80.lv/articles/behind-the-incredible-new-tech-and-systems-rockstar-built-to-make-gta-6-feel-alive/",
+   "title": "『GTA 6』を「生きた街」にする仕掛け：連動するアニメ・音・天候・警察",
+   "category": "programmer",
+   "importance": 3,
+   "date": "2026-11-19",
+   "slot": "learn",
+   "deadline": null,
+   "source": "80 Level（Rockstar 開発陣の発言をまとめた記事）",
+   "note": "機能そのものより「機能同士の連動」が設計の肝。自作ゲームにも持ち帰れる視点。",
+   "reminded": []
+  },
+  {
+   "id": "3486df46b6529689",
+   "url": "https://unity.com/blog/how-to-playtest-your-first-video-game",
+   "title": "初めてのプレイテスト入門：質問は2つ、テスターは3〜5人、見守るだけで直す",
+   "category": "planner",
+   "importance": 4,
+   "date": "2026-11-19",
+   "slot": "learn",
+   "deadline": null,
+   "source": "Unity 公式ブログ",
+   "note": "企画に活かせる視点：直す前に「3 人が同じ所で詰まったか」を確かめる。",
+   "reminded": []
   }
  ],
  "batches": [
@@ -1868,6 +1894,13 @@
    "slot": "22",
    "date": "2026-11-18",
    "count": 6,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/learn-20261119-learn-063755",
+   "slot": "learn",
+   "date": "2026-11-19",
+   "count": 14,
    "status": "ok"
   }
  ],
@@ -3289,6 +3322,90 @@
    "track": "planner",
    "level": "発展",
    "q": "運営型ゲームで、アップデートの後に「新規ユーザーの継続率が上がったか」を確かめたい。全ユーザーの平均継続率だけを見ると判断を誤りやすい。この確認に適した分析は？"
+  },
+  {
+   "id": "8493b4c06837",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "Direct3D 12 のデバッグレイヤーを有効にする ID3D12Debug::EnableDebugLayer() を呼ぶタイミングとして正しいのは？"
+  },
+  {
+   "id": "fadc3a464b2d",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "発展",
+   "q": "Direct3D 12 の「バンドル（Bundle）」を GPU で実行する方法として正しいのは？"
+  },
+  {
+   "id": "ccc4851c5543",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "応用",
+   "q": "DXR（DirectX Raytracing）で、毎フレーム頂点位置だけが変わるキャラクターの BLAS（下位レベル加速構造）を扱う。仕様書の記述に沿った説明として正しいのは？"
+  },
+  {
+   "id": "61b6cf9862e3",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "応用",
+   "q": "HLSL で次のように [flatten] 属性を付けた if 文は、コンパイル結果としてどう実行される？"
+  },
+  {
+   "id": "83f85957b364",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "次の HLSL コードで、c の値は？"
+  },
+  {
+   "id": "07fb77e94acd",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "次のコードをコンパイルしたとき、正しいのは？"
+  },
+  {
+   "id": "d7aeda72a9e3",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "応用",
+   "q": "物理は固定タイムステップ（1/60 秒）で更新し、描画は可変フレームレートで行うゲームループがある。描画のたびに「前回の物理状態」と「最新の物理状態」を、alpha = アキュムレ"
+  },
+  {
+   "id": "59ada2bc9391",
+   "topic": "math",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "同次座標（4 次元）で、位置（点）の w 成分を 1、方向ベクトルの w 成分を 0 として 4×4 の変換行列を掛ける。この約束のねらいとして正しいのは？"
+  },
+  {
+   "id": "6fb13fa096fa",
+   "topic": "math",
+   "track": "programmer",
+   "level": "発展",
+   "q": "単位クォータニオン q と、すべての成分の符号を反転した −q が表す回転について、正しいのは？"
+  },
+  {
+   "id": "a2d1bb690c85",
+   "topic": "narrative",
+   "track": "planner",
+   "level": "基礎",
+   "q": "物語の「三幕構成」で、第一幕（導入部）の説明として最も適切なのは？"
+  },
+  {
+   "id": "e792a1f742ce",
+   "topic": "level",
+   "track": "planner",
+   "level": "応用",
+   "q": "新しい部屋のプレイテストで、5 人中 3 人が、先へ進むための扉に気づけず部屋を何周もした。残りの 2 人はすぐ気づいた。最初に取る対応として最も適切なのは？"
+  },
+  {
+   "id": "189e4861ce4b",
+   "topic": "ux",
+   "track": "planner",
+   "level": "応用",
+   "q": "あるゲームで、ステージ切り替え時のデータ読み込みに毎回およそ 15 秒かかる。何も表示しないと「フリーズした？」と不安にさせてしまう。ユーザビリティの定番の目安（応答時間の 3 つ"
   }
  ],
  "themes": [
@@ -3315,16 +3432,20 @@
   {
    "date": "2026-11-18",
    "title": "借りもの"
+  },
+  {
+   "date": "2026-11-19",
+   "title": "帰り道"
   }
  ],
  "reports": [],
  "idea_counts": {
-  "genre": 37,
-  "mechanic": 37,
-  "theme": 37,
-  "constraint": 37,
-  "feeling": 35,
-  "prompt": 35
+  "genre": 42,
+  "mechanic": 42,
+  "theme": 42,
+  "constraint": 42,
+  "feeling": 40,
+  "prompt": 40
  },
  "last_daily_mail": "2026-11-18",
  "specials": [
