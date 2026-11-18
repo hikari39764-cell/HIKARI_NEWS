@@ -1405,6 +1405,110 @@
    "source": "4Gamer.net",
    "note": "1つの数値に役割を集める設計を、具体的な数字で学べる",
    "reminded": []
+  },
+  {
+   "id": "069078b2b4e3b49a",
+   "url": "https://claude.dev/blog/how-the-claude-code-team-thinks-about-verification/",
+   "title": "コードの9割をAIが書くClaude Codeチームの「検証」の仕組み",
+   "category": "ai",
+   "importance": 5,
+   "date": "2026-11-18",
+   "slot": "10",
+   "deadline": null,
+   "source": "Claude Dev Blog（Addy Osmani）",
+   "note": "AIに任せるほど必要になる「検証の設計」が、実例つきで分かる",
+   "reminded": []
+  },
+  {
+   "id": "c60558e98558e0e7",
+   "url": "https://simonwillison.net/2026/Nov/17/external-sandboxes-for-coding-agents/",
+   "title": "コーディングエージェントを「外のサンドボックス」で動かす実験",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-18",
+   "slot": "10",
+   "deadline": null,
+   "source": "Simon Willison's Weblog",
+   "note": "AIに実行を任せる前に知りたい、安全な隔離の考え方",
+   "reminded": []
+  },
+  {
+   "id": "23791fed6fa0ce2c",
+   "url": "https://microsoft.ai/news/introducing-mai-code-2-and-mai-code-2-flash/",
+   "title": "MicrosoftのコーディングAI「MAI Code 2」、Copilotで利用可能に",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-18",
+   "slot": "10",
+   "deadline": null,
+   "source": "Microsoft AI",
+   "note": "性能だけでなくコストで選ぶ時代の、比較の見方が学べる",
+   "reminded": []
+  },
+  {
+   "id": "5cbc55e1b429d883",
+   "url": "https://simonwillison.net/2026/Nov/17/gpt62-astra-and-sol/",
+   "title": "GPT-6.2 AstraとSolの料金と評判、Simon Willisonの試用メモ",
+   "category": "ai",
+   "importance": 2,
+   "date": "2026-11-18",
+   "slot": "10",
+   "deadline": null,
+   "source": "Simon Willison's Weblog",
+   "note": "新モデルを「料金×自分の課題」で見極めるための材料",
+   "reminded": []
+  },
+  {
+   "id": "52c207184675bffa",
+   "url": "https://automaton-media.com/articles/newsjp/20261117-479683/",
+   "title": "『Minecraft』統合版にリソースパック経由の脆弱性、発覚から2日で修正版",
+   "category": "industry",
+   "importance": 4,
+   "date": "2026-11-18",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "MODやUGCを受け入れる作品を作るなら知っておきたい、実例からの教訓",
+   "reminded": []
+  },
+  {
+   "id": "fbe7054166e3d04a",
+   "url": "https://automaton-media.com/articles/newsjp/20261117-479632/",
+   "title": "『勇者パーティはぜんめつしました。』が約1週間で5万本、「激重感情」が刺さった理由",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-18",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "ヒットの数字と、真似しやすい「失敗を資源にする」設計がセットで読める",
+   "reminded": []
+  },
+  {
+   "id": "ceedf6c82ae3a86e",
+   "url": "https://automaton-media.com/articles/newsjp/20261117-479594/",
+   "title": "『Slay the Spire 2』大型更新v0.111.1、調整の中身から学ぶバランスの考え方",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-18",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "調整の「理由」まで見えるので、自作ゲームの調整メモの参考になる",
+   "reminded": []
+  },
+  {
+   "id": "0fbd479e146e7e28",
+   "url": "https://www.gamedeveloper.com/production/europe-s-game-worker-unions-publish-a-manifesto-warning-against-unchecked-ai-usage",
+   "title": "欧州のゲーム労働組合が「生成AI」マニフェストを公表、業界の利用率は40%",
+   "category": "industry",
+   "importance": 2,
+   "date": "2026-11-18",
+   "slot": "10",
+   "deadline": null,
+   "source": "Game Developer",
+   "note": "AI時代の就職・制作に向けて、現場の声と数字を知っておく",
+   "reminded": []
   }
  ],
  "batches": [
@@ -1567,6 +1671,13 @@
    "slot": "learn",
    "date": "2026-11-18",
    "count": 14,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261118-10-091523",
+   "slot": "10",
+   "date": "2026-11-18",
+   "count": 8,
    "status": "ok"
   }
  ],
@@ -1887,6 +1998,27 @@
    "area": "shader",
    "theme": "ガンマ補正とsRGB",
    "date": "2026-11-17"
+  },
+  {
+   "term": "std::thread",
+   "level": "基礎",
+   "area": "cpp",
+   "theme": "スレッドとメモリ順序",
+   "date": "2026-11-18"
+  },
+  {
+   "term": "std::atomic",
+   "level": "発展",
+   "area": "cpp",
+   "theme": "スレッドとメモリ順序",
+   "date": "2026-11-18"
+  },
+  {
+   "term": "release/acquireによるデータ受け渡し",
+   "level": "応用",
+   "area": "cpp",
+   "theme": "スレッドとメモリ順序",
+   "date": "2026-11-18"
   }
  ],
  "quiz": [
