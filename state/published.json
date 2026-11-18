@@ -1600,6 +1600,84 @@
    "source": "Lost Garden（Daniel Cook）",
    "note": "今も効く理由：自分の企画を一瞬で分解できる物差し",
    "reminded": []
+  },
+  {
+   "id": "83ac0c7b381e46a3",
+   "url": "https://automaton-media.com/articles/newsjp/20261118-479880/",
+   "title": "YouTube200万再生でも初週474本。「バズる前にSteamページを」と語る個人開発者の振り返り",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-18",
+   "slot": "22",
+   "deadline": null,
+   "source": "AUTOMATON（開発者のReddit投稿を紹介）",
+   "note": "バズってから慌てない。発売前にやるべき準備が数字で分かる",
+   "reminded": []
+  },
+  {
+   "id": "ca29583db5f1742a",
+   "url": "https://automaton-media.com/articles/newsjp/20261118-479857/",
+   "title": "Steamで約2200万円、Epicでは約15万円。同じゲームで約150倍の差が出た理由",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-18",
+   "slot": "22",
+   "deadline": null,
+   "source": "AUTOMATON（Xでの開発者の発言を紹介）",
+   "note": "どのストアで出すか。手数料より先に見るべきものが分かる",
+   "reminded": []
+  },
+  {
+   "id": "398785dbcba0f2a4",
+   "url": "https://automaton-media.com/articles/newsjp/20261118-479914/",
+   "title": "AI推奨の4日間ジャムで、AI不使用の1本が人気トップに。見えてきた「人気順」の読み方",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-18",
+   "slot": "22",
+   "deadline": null,
+   "source": "AUTOMATON（開発者のXの投稿を紹介）",
+   "note": "AIの是非より、4日間で遊びの核を絞る発想が参考になる",
+   "reminded": []
+  },
+  {
+   "id": "6e090bb95c89cabb",
+   "url": "https://complexdiscovery.com/harvard-researchers-find-ai-coding-agents-shifted-the-bottleneck-to-code-review/",
+   "title": "AIでコードは3割増え、レビュー待ちは約5割増え。ハーバード大の研究が示す「詰まり先」",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-18",
+   "slot": "22",
+   "deadline": null,
+   "source": "ComplexDiscovery（Hacker Newsで話題）",
+   "note": "AIで書く量が増えた後、本当に詰まる場所が数字で分かる",
+   "reminded": []
+  },
+  {
+   "id": "2a46e6db1011d889",
+   "url": "https://zenn.dev/hiromoo/articles/reading-less-preparing-more",
+   "title": "「コードを真面目に読まなくなった」。AIに任せる時に先に決めておく4つの前提",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-18",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn（はてなブックマークでも話題）",
+   "note": "AIに任せる前に何を決めるか。頼み方の型がそのまま使える",
+   "reminded": []
+  },
+  {
+   "id": "dc2d110ac16cdf9c",
+   "url": "https://zenn.dev/mizchi/articles/odin-introduction-guide",
+   "title": "Zenn上位に入ったOdin言語入門。アロケータやSoAなど、エンジン開発者向けの機能を整理",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-18",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn（トレンド入り）",
+   "note": "アロケータとSoAを実コードで見て、エンジン開発の基礎を学べる",
+   "reminded": []
   }
  ],
  "batches": [
@@ -1783,6 +1861,13 @@
    "slot": "special",
    "date": "2026-11-18",
    "count": 5,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261118-22-211501",
+   "slot": "22",
+   "date": "2026-11-18",
+   "count": 6,
    "status": "ok"
   }
  ],
@@ -2144,6 +2229,27 @@
    "level": "応用",
    "area": "dx12",
    "theme": "コマンドの記録と実行",
+   "date": "2026-11-18"
+  },
+  {
+   "term": "lerp（線形補間）",
+   "level": "基礎",
+   "area": "shader",
+   "theme": "組み込み関数で作るエフェクトの基本",
+   "date": "2026-11-18"
+  },
+  {
+   "term": "smoothstep",
+   "level": "発展",
+   "area": "shader",
+   "theme": "組み込み関数で作るエフェクトの基本",
+   "date": "2026-11-18"
+  },
+  {
+   "term": "fwidth（画面上での変化量）",
+   "level": "応用",
+   "area": "shader",
+   "theme": "組み込み関数で作るエフェクトの基本",
    "date": "2026-11-18"
   }
  ],
@@ -3220,7 +3326,7 @@
   "feeling": 35,
   "prompt": 35
  },
- "last_daily_mail": "2026-11-17",
+ "last_daily_mail": "2026-11-18",
  "specials": [
   {
    "date": "2026-11-16",
