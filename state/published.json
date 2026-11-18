@@ -1509,6 +1509,97 @@
    "source": "Game Developer",
    "note": "AI時代の就職・制作に向けて、現場の声と数字を知っておく",
    "reminded": []
+  },
+  {
+   "id": "b4d51910297915b3",
+   "url": "https://github.com/NVIDIA-RTX/Whitepapers/tree/main/pt_performance_whitepaper",
+   "title": "リアルタイムパストレーシングの「予算の組み方」をNVIDIAが整理",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-18",
+   "slot": "17",
+   "deadline": null,
+   "source": "NVIDIA-RTX / GitHub（Graphics Programming weekly経由）",
+   "note": "学べること：レイ数を「信号ごと」に予算化する発想",
+   "reminded": []
+  },
+  {
+   "id": "ac6c8eee690e7e57",
+   "url": "https://oddpotatodev.itch.io/godot-cheap-ground-fog",
+   "title": "『時のオカリナ』風の地面霧をGodotで。CC0で配布される軽量シェーダー",
+   "category": "tech",
+   "importance": 3,
+   "date": "2026-11-18",
+   "slot": "17",
+   "deadline": null,
+   "source": "itch.io（OrdinaryCicada）／80 Level",
+   "note": "学べること：軽い「霧っぽさ」の作り方と使い方",
+   "reminded": []
+  },
+  {
+   "id": "95bd7b59d4114444",
+   "url": "https://unity.com/blog/unite-tokyo-2026-keynote-recap",
+   "title": "Unite Tokyo 2026：Unity 7の「ECS for All」と描画まわりの新要素",
+   "category": "tech",
+   "importance": 3,
+   "date": "2026-11-18",
+   "slot": "17",
+   "deadline": null,
+   "source": "Unity Blog",
+   "note": "学べること：Unity 7が目指すECSと描画の方向性",
+   "reminded": []
+  },
+  {
+   "id": "843fbf4e1540613e",
+   "url": "https://80.lv/articles/creating-real-time-desert-temple-environment-in-unreal-engine-5/",
+   "title": "UE5で砂漠の神殿を作る：RGBマスクとRVTで「汚れ」を載せる実践メイキング",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-18",
+   "slot": "17",
+   "deadline": null,
+   "source": "80 Level（Marc Castells氏インタビュー）",
+   "note": "学べること：素材と汚れを効率よく載せる制作の流れ",
+   "reminded": []
+  },
+  {
+   "id": "8a2018352f18168b",
+   "url": "https://zenn.dev/enterprise_ai/articles/1b1f34af88fb8f",
+   "title": "AIに任せる度合いを変えて270回実測。「承認」は何を止められて、何を止められないか",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-18",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn",
+   "note": "試すならこうする：メモに「確認済み／仮説」を分けて書く",
+   "reminded": []
+  },
+  {
+   "id": "2f1cd0b092d36ae5",
+   "url": "https://pc.watch.impress.co.jp/docs/column/nishikawa/2156976.html",
+   "title": "「東京駅を空撮して」の一言からBlender CGと動画へ。AIに3Dツールを操作させた実録",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-18",
+   "slot": "17",
+   "deadline": null,
+   "source": "PC Watch（西川和久の不定期コラム）",
+   "note": "試すならこうする：範囲を絞って静止画1枚から",
+   "reminded": []
+  },
+  {
+   "id": "807f63d9fa7a4341",
+   "url": "https://lostgarden.com/2012/04/30/loops-and-arcs/",
+   "title": "ゲームを「繰り返す輪」と「一度きりの弧」に分けて考える。Lost Gardenの『Loops and Arcs』",
+   "category": "classic",
+   "importance": 5,
+   "date": "2026-11-18",
+   "slot": "17",
+   "deadline": null,
+   "source": "Lost Garden（Daniel Cook）",
+   "note": "今も効く理由：自分の企画を一瞬で分解できる物差し",
+   "reminded": []
   }
  ],
  "batches": [
@@ -1678,6 +1769,13 @@
    "slot": "10",
    "date": "2026-11-18",
    "count": 8,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261118-17-161756",
+   "slot": "17",
+   "date": "2026-11-18",
+   "count": 7,
    "status": "ok"
   }
  ],
@@ -2018,6 +2116,27 @@
    "level": "応用",
    "area": "cpp",
    "theme": "スレッドとメモリ順序",
+   "date": "2026-11-18"
+  },
+  {
+   "term": "コマンドキューとコマンドリスト",
+   "level": "基礎",
+   "area": "dx12",
+   "theme": "コマンドの記録と実行",
+   "date": "2026-11-18"
+  },
+  {
+   "term": "バンドル",
+   "level": "発展",
+   "area": "dx12",
+   "theme": "コマンドの記録と実行",
+   "date": "2026-11-18"
+  },
+  {
+   "term": "ExecuteIndirect",
+   "level": "応用",
+   "area": "dx12",
+   "theme": "コマンドの記録と実行",
    "date": "2026-11-18"
   }
  ],
