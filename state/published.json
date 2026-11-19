@@ -1704,6 +1704,123 @@
    "source": "Unity 公式ブログ",
    "note": "企画に活かせる視点：直す前に「3 人が同じ所で詰まったか」を確かめる。",
    "reminded": []
+  },
+  {
+   "id": "b8930a9a56df63fc",
+   "url": "https://newsletter.posthog.com/p/decision-models",
+   "title": "「何でもLLM」をやめる。PostHogが使う『判断モデル』で呼び出しを98.7%減らした話",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-19",
+   "slot": "10",
+   "deadline": null,
+   "source": "PostHog Newsletter（Hacker Newsで話題）",
+   "note": "LLMに投げる前に「二択で足りないか」を疑う。コストを桁違いに下げる設計の実例",
+   "reminded": []
+  },
+  {
+   "id": "af1852b4c46dc30e",
+   "url": "https://huggingface.co/blog/moe-expert-streaming",
+   "title": "1800億パラメータのMoEを32GBのMacで動かす。「必要な専門家だけSSDから読む」仕組み",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-19",
+   "slot": "10",
+   "deadline": null,
+   "source": "Hugging Face Blog",
+   "note": "大型モデルが小さなPCで動く理由が、ゲームのストリーミングと同じ発想で分かる",
+   "reminded": []
+  },
+  {
+   "id": "abe03c170f0b92ca",
+   "url": "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/genie-4-now-available-project-genie/",
+   "title": "Google「Genie 4」が使える状態に。遊びながら文章で世界を書き換えられるワールドモデル",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-19",
+   "slot": "10",
+   "deadline": null,
+   "source": "Google公式ブログ",
+   "note": "遊びながら世界を書き換えられる新しい作り方。企画の試作にどこまで使えるかが見える",
+   "reminded": []
+  },
+  {
+   "id": "b2c084a412751371",
+   "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-neon/",
+   "title": "Google「Gemini 4 Neon」登場。中位モデルが『安く速い司令塔』になる設計",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-19",
+   "slot": "10",
+   "deadline": null,
+   "source": "Google公式ブログ",
+   "note": "上位・中位・小型の使い分けと、料金表の読み方が分かる",
+   "reminded": []
+  },
+  {
+   "id": "70cc8a0a1d314807",
+   "url": "https://www.radixark.com/blog/daisyrose-27b",
+   "title": "1,200問のRLで27Bモデルのターミナル操作が5.6%→12.0%に。ズルで解けるタスクを直す工夫",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-19",
+   "slot": "10",
+   "deadline": null,
+   "source": "RadixArk（Hacker Newsで話題）",
+   "note": "AIの調整で大事なのは数より「ズルできない問題」。評価の作り方の実例",
+   "reminded": []
+  },
+  {
+   "id": "324c1d550dc1a754",
+   "url": "https://automaton-media.com/articles/newsjp/20261118-479841/",
+   "title": "『Phasmophobia』が11/24に大型アプデ。早期アクセス中にUnity 6へ移行",
+   "category": "industry",
+   "importance": 4,
+   "date": "2026-11-19",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "人気作がなぜ今Unity 6へ移るのか。エンジン更新の判断を考える材料",
+   "reminded": []
+  },
+  {
+   "id": "47daa7918bf186e0",
+   "url": "https://www.4gamer.net/games/059/G105953/20261118046/",
+   "title": "バックパック配置で自動戦闘する『Dungeonbound』がSteamで配信。融合は10万通り超",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-19",
+   "slot": "10",
+   "deadline": null,
+   "source": "4Gamer.net",
+   "note": "操作ではなく「配置」で勝負する設計。小さな作品の核の作り方が分かる",
+   "reminded": []
+  },
+  {
+   "id": "7d7623ce3655a94e",
+   "url": "https://automaton-media.com/articles/newsjp/20261118-479848/",
+   "title": "プログラムにゲームを遊ばせる『Videogame Automation Engineer』、2027年3月4日発売",
+   "category": "industry",
+   "importance": 2,
+   "date": "2026-11-19",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "ゲームを「入力→判断→操作」に分解して見る目が養える、新しい企画の例",
+   "reminded": []
+  },
+  {
+   "id": "fd7de6910c91f0e5",
+   "url": "https://www.4gamer.net/games/991/G999110/20261118023/",
+   "title": "韓国「G-STAR 2026」が11/19開幕。インディー枠とUnity AI Game Jamも併設",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-19",
+   "slot": "10",
+   "deadline": null,
+   "source": "4Gamer.net（GAMEVUの記事を翻訳）",
+   "note": "アジア最大級の展示会。インディーの動向と物語の講演を、配信でも追える",
+   "reminded": []
   }
  ],
  "batches": [
@@ -1901,6 +2018,13 @@
    "slot": "learn",
    "date": "2026-11-19",
    "count": 14,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261119-10-091618",
+   "slot": "10",
+   "date": "2026-11-19",
+   "count": 9,
    "status": "ok"
   }
  ],
@@ -2284,6 +2408,27 @@
    "area": "shader",
    "theme": "組み込み関数で作るエフェクトの基本",
    "date": "2026-11-18"
+  },
+  {
+   "term": "関数テンプレート",
+   "level": "基礎",
+   "area": "cpp",
+   "theme": "テンプレートとコンセプト",
+   "date": "2026-11-19"
+  },
+  {
+   "term": "コンセプト（C++20）",
+   "level": "発展",
+   "area": "cpp",
+   "theme": "テンプレートとコンセプト",
+   "date": "2026-11-19"
+  },
+  {
+   "term": "CRTP（静的ポリモーフィズム）",
+   "level": "応用",
+   "area": "cpp",
+   "theme": "テンプレートとコンセプト",
+   "date": "2026-11-19"
   }
  ],
  "quiz": [
