@@ -1821,6 +1821,84 @@
    "source": "4Gamer.net（GAMEVUの記事を翻訳）",
    "note": "アジア最大級の展示会。インディーの動向と物語の講演を、配信でも追える",
    "reminded": []
+  },
+  {
+   "id": "c8676ae607661c38",
+   "url": "https://www.jacktollenaar.top/articles/split-rc.html",
+   "title": "3Dラジアンスカスケードを疎なプローブで軽くする。Split RCの設計メモ",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-19",
+   "slot": "17",
+   "deadline": null,
+   "source": "Jack Tollenaar の個人ブログ（Graphics Programming weekly #463 掲載）",
+   "note": "疎なプローブでGIを軽くする発想が学べる",
+   "reminded": []
+  },
+  {
+   "id": "bc54e0a74f603948",
+   "url": "https://cgworld.jp/article/339-animecg-reborn01.html",
+   "title": "『THE RIBBON HERO』の巨大怪獣はこう作る。着ぐるみ感を出すリグと、引き・寄りのアセット分け",
+   "category": "tech",
+   "importance": 3,
+   "date": "2026-11-19",
+   "slot": "17",
+   "deadline": null,
+   "source": "CGWORLD.jp",
+   "note": "引き・寄りの分け方とリグ設計の考え方が学べる",
+   "reminded": []
+  },
+  {
+   "id": "99f84165cccaa165",
+   "url": "https://zenn.dev/applibot_tech/articles/6b8ec8d196634b",
+   "title": "AIに全部読ませない。Unityゲームの仕様チェックを、プログラムとAIで分担する設計",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-19",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（アプリボット）",
+   "note": "AIに任せる範囲の切り分け方が学べる",
+   "reminded": []
+  },
+  {
+   "id": "9a8e4edb4f2c2d3b",
+   "url": "https://zenn.dev/xtm_blog/articles/20261116-fd1702b0ba06cd",
+   "title": "AIエージェントの担当をどこで分けるか。「自分で評価できる範囲」で区切る分担実験",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-19",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（クロステック・マネジメント）",
+   "note": "エージェントへの任せ方を、失敗例つきで学べる",
+   "reminded": []
+  },
+  {
+   "id": "b60814c79d7c5271",
+   "url": "https://daniel.haxx.se/blog/2026/11/17/actual-curl-rewrites-in-rust/",
+   "title": "curlをAIでRustに全面書き換えた2プロジェクト。作者本人が見た「コピーが追いつけないもの」",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-19",
+   "slot": "17",
+   "deadline": null,
+   "source": "Daniel Stenberg のブログ（daniel.haxx.se）",
+   "note": "AIに移植を任せる条件と、保守の価値が分かる",
+   "reminded": []
+  },
+  {
+   "id": "44cb7d42a34f729f",
+   "url": "https://www.redblobgames.com/grids/hexagons/",
+   "title": "六角形グリッドの定番解説「Hexagonal Grids」。座標の選び方で計算が一気に楽になる",
+   "category": "classic",
+   "importance": 4,
+   "date": "2026-11-19",
+   "slot": "17",
+   "deadline": null,
+   "source": "Red Blob Games（Amit Patel）",
+   "note": "座標の選び方で計算が簡単になる、今も更新される定番",
+   "reminded": []
   }
  ],
  "batches": [
@@ -2025,6 +2103,13 @@
    "slot": "10",
    "date": "2026-11-19",
    "count": 9,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261119-17-161723",
+   "slot": "17",
+   "date": "2026-11-19",
+   "count": 6,
    "status": "ok"
   }
  ],
@@ -2428,6 +2513,27 @@
    "level": "応用",
    "area": "cpp",
    "theme": "テンプレートとコンセプト",
+   "date": "2026-11-19"
+  },
+  {
+   "term": "デバッグレイヤー",
+   "level": "基礎",
+   "area": "dx12",
+   "theme": "デバッグとGPUクラッシュ調査",
+   "date": "2026-11-19"
+  },
+  {
+   "term": "GPUベース検証（GBV）",
+   "level": "発展",
+   "area": "dx12",
+   "theme": "デバッグとGPUクラッシュ調査",
+   "date": "2026-11-19"
+  },
+  {
+   "term": "DRED（デバイス削除の拡張データ）",
+   "level": "応用",
+   "area": "dx12",
+   "theme": "デバッグとGPUクラッシュ調査",
    "date": "2026-11-19"
   }
  ],
