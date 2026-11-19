@@ -1899,6 +1899,136 @@
    "source": "Red Blob Games（Amit Patel）",
    "note": "座標の選び方で計算が簡単になる、今も更新される定番",
    "reminded": []
+  },
+  {
+   "id": "00431a5453565976",
+   "url": "https://zenn.dev/oshikaidesu/articles/8bce9bc005b3e7",
+   "title": "新モデルが合うとは限らない：Opus 5.5から4.6へ戻した開発者の理由",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-19",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn（おしかいです）",
+   "note": "「最新モデル＝最適」とは限らない。AI開発で見るべき相性の話",
+   "reminded": []
+  },
+  {
+   "id": "b3dd90b1c04b3d11",
+   "url": "https://togetter.com/li/2772043",
+   "title": "FGOに10年「オート周回」がない理由は？ 面倒さとあえて手動の設計論争",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-19",
+   "slot": "22",
+   "deadline": null,
+   "source": "X で話題（Togetter）",
+   "note": "繰り返し作業は省くべきか残すべきか。ゲーム設計の分かれ道が見える議論",
+   "reminded": []
+  },
+  {
+   "id": "f00d83341f65cba8",
+   "url": "https://www.slowchronicle.com/posts/llm-assisted-reverse-engineering",
+   "title": "AIでリバースエンジニアリング：Ghidra連携と「仮説をCSVに残す」手順",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-19",
+   "slot": "22",
+   "deadline": null,
+   "source": "Slow Chronicle / Hacker News",
+   "note": "AIに任せても迷走させない。「仮説を記録する」調査の型が学べる",
+   "reminded": []
+  },
+  {
+   "id": "052f7252d5b54df7",
+   "url": "https://zenn.dev/tokium_dev/articles/paper-mindmap-before-ai",
+   "title": "AIと話す前に「紙のマインドマップ」を描く：新卒エンジニアの話が逸れない工夫",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-19",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn（TOKIUM Product Team）",
+   "note": "AIに流されないための「先に紙で考える」習慣。学生にそのまま使える",
+   "reminded": []
+  },
+  {
+   "id": "b707d873ae496f4d",
+   "url": "https://togetter.com/li/2771906",
+   "title": "SFCドンキーコングの理不尽なボーナス面は、なぜ「攻略本頼み」だったのか",
+   "category": "community",
+   "importance": 2,
+   "date": "2026-11-19",
+   "slot": "22",
+   "deadline": null,
+   "source": "X で話題（Togetter）",
+   "note": "「理不尽」と「発見の喜び」の境目はどこ？ヒント設計を考える入口",
+   "reminded": []
+  },
+  {
+   "id": "a6672973274ccb71",
+   "url": "https://koubo.jp/contest/370263",
+   "title": "福岡ゲームコンテスト「GFF AWARD 2027」ゲームソフト部門、締切は1/6",
+   "category": "chance",
+   "importance": 4,
+   "date": "2026-11-19",
+   "slot": "22",
+   "deadline": "2027-01-06",
+   "source": "公募ガイド（GFF AWARD 2027）",
+   "note": "参加条件：資格不問。プレイ動画＋企画書で応募、大賞30万円",
+   "reminded": []
+  },
+  {
+   "id": "21d2c2c114e89c1e",
+   "url": "https://hrmos.co/pages/aiming/jobs/2326549000500584448",
+   "title": "Aiming 28/29卒向けデザイナー冬季インターン、12/31締切、遠方者の交通・宿泊費は会社負担",
+   "category": "chance",
+   "importance": 4,
+   "date": "2026-11-19",
+   "slot": "22",
+   "deadline": "2026-12-31",
+   "source": "Aiming 採用ページ",
+   "note": "参加条件：28/29卒、ポートフォリオ必須（デッサン含む）、交通・宿泊費補助あり",
+   "reminded": []
+  },
+  {
+   "id": "c05e736c521dbc39",
+   "url": "https://itch.io/jam/point",
+   "title": "itch.io「The Point」ジャム、12/1〜15開催。ブラウザで遊べるHTML5形式が条件",
+   "category": "chance",
+   "importance": 3,
+   "date": "2026-11-19",
+   "slot": "22",
+   "deadline": "2026-12-15",
+   "source": "itch.io（INTJT2）",
+   "note": "参加条件：誰でも・エンジン自由。HTML5版の提出が必須、AI使用は歓迎",
+   "reminded": []
+  },
+  {
+   "id": "0abeaa08541b4644",
+   "url": "https://itch.io/jam/blend-jam-1",
+   "title": "BLEND JAM #1：「二つの組み合わせ」で作る12/3〜13のジャム。生成AIは使用禁止",
+   "category": "chance",
+   "importance": 3,
+   "date": "2026-11-19",
+   "slot": "22",
+   "deadline": "2026-12-13",
+   "source": "itch.io（discolexia）",
+   "note": "参加条件：ソロ〜8人、初心者歓迎。生成AIは全面禁止",
+   "reminded": []
+  },
+  {
+   "id": "bf46b54cdf4f95f4",
+   "url": "https://www.pocketgamer.biz/events/global-game-jam-2027/",
+   "title": "Global Game Jam 2027は1/23〜25の週末。個人参加の登録は12月開始の見込み",
+   "category": "chance",
+   "importance": 3,
+   "date": "2026-11-19",
+   "slot": "22",
+   "deadline": null,
+   "source": "PocketGamer.biz（公式サイトは403で未確認）",
+   "note": "参加条件：会場ごとに異なる。登録は公式サイトで、12月ごろ開始の見込み",
+   "reminded": []
   }
  ],
  "batches": [
@@ -2117,6 +2247,13 @@
    "slot": "special",
    "date": "2026-11-19",
    "count": 5,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261119-22-211728",
+   "slot": "22",
+   "date": "2026-11-19",
+   "count": 10,
    "status": "ok"
   }
  ],
@@ -2541,6 +2678,27 @@
    "level": "応用",
    "area": "dx12",
    "theme": "デバッグとGPUクラッシュ調査",
+   "date": "2026-11-19"
+  },
+  {
+   "term": "定数バッファ（cbuffer）",
+   "level": "基礎",
+   "area": "shader",
+   "theme": "定数バッファ",
+   "date": "2026-11-19"
+  },
+  {
+   "term": "パッキング規則（16バイト境界）",
+   "level": "発展",
+   "area": "shader",
+   "theme": "定数バッファ",
+   "date": "2026-11-19"
+  },
+  {
+   "term": "ConstantBuffer<T> とレジスタスペース",
+   "level": "応用",
+   "area": "shader",
+   "theme": "定数バッファ",
    "date": "2026-11-19"
   }
  ],
@@ -3705,7 +3863,7 @@
   "feeling": 40,
   "prompt": 40
  },
- "last_daily_mail": "2026-11-18",
+ "last_daily_mail": "2026-11-19",
  "specials": [
   {
    "date": "2026-11-16",
