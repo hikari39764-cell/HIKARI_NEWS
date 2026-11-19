@@ -2029,6 +2029,32 @@
    "source": "PocketGamer.biz（公式サイトは403で未確認）",
    "note": "参加条件：会場ごとに異なる。登録は公式サイトで、12月ごろ開始の見込み",
    "reminded": []
+  },
+  {
+   "id": "5b23b8e7c71f923a",
+   "url": "https://www.4gamer.net/games/484/G048495/20261119038/",
+   "title": "「紅の砂漠」の自社エンジン技術：200km²の世界を「距離ごとに描き分ける」設計",
+   "category": "programmer",
+   "importance": 4,
+   "date": "2026-11-20",
+   "slot": "learn",
+   "deadline": null,
+   "source": "4Gamer（G-CON 2026 講演レポート）",
+   "note": "遠景・植生・光を「距離」で使い分ける発想は、小さな作品でもそのまま試せる。",
+   "reminded": []
+  },
+  {
+   "id": "aa56e3299971790e",
+   "url": "https://www.gamedeveloper.com/marketing/why-greenlighting-dressmaker-wasn-t-an-easy-decision-to-make",
+   "title": "「Dressmaker」はなぜ作られたか：企画段階で「当たらない」と出ていたデータと、Free Lives の3つの検証",
+   "category": "planner",
+   "importance": 4,
+   "date": "2026-11-20",
+   "slot": "learn",
+   "deadline": null,
+   "source": "Game Developer",
+   "note": "「数字が悪いのに進めた」判断の理由から、企画の検証手順を学べる。",
+   "reminded": []
   }
  ],
  "batches": [
@@ -2254,6 +2280,13 @@
    "slot": "22",
    "date": "2026-11-19",
    "count": 10,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/learn-20261120-learn-063636",
+   "slot": "learn",
+   "date": "2026-11-20",
+   "count": 14,
    "status": "ok"
   }
  ],
@@ -3822,6 +3855,90 @@
    "track": "planner",
    "level": "応用",
    "q": "あるゲームで、ステージ切り替え時のデータ読み込みに毎回およそ 15 秒かかる。何も表示しないと「フリーズした？」と不安にさせてしまう。ユーザビリティの定番の目安（応答時間の 3 つ"
+  },
+  {
+   "id": "715c12e1ebf7",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "発展",
+   "q": "次のコードについて正しいのは？"
+  },
+  {
+   "id": "db9594f16fbb",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "応用",
+   "q": "次のコードを実行したときの出力として正しいのは？"
+  },
+  {
+   "id": "09fab1623564",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "応用",
+   "q": "次のルートシグネチャのルートパラメータが消費する DWORD の合計は？（静的サンプラーはルートパラメータに含めず、サイズの上限の計算にも入らないものとする）"
+  },
+  {
+   "id": "1de56f9dac90",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "発展",
+   "q": "ライティング計算の結果（リニア空間の色）を、DXGI_FORMAT_R8G8B8A8_UNORM_SRGB のレンダーターゲットビューに出力するピクセルシェーダーがある。SV_Ta"
+  },
+  {
+   "id": "7d7a1c4f26dd",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "「ジャンプボタンを押した瞬間のフレームだけ」ジャンプさせたい。押しっぱなしにしても連続ジャンプはしない。入力処理の基本的な書き方は？"
+  },
+  {
+   "id": "fb9158a5754a",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "発展",
+   "q": "1 万個の円形オブジェクトの当たり判定を、全ペアの総当たり（約 5000 万ペア）ではなく、均一グリッドで絞り込みたい。各オブジェクトを、中心座標が属するセルに登録する。セルの 1"
+  },
+  {
+   "id": "c3561d226607",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "応用",
+   "q": "オープンワールドで、プレイヤーから 100m 以内のエリアをロードし、100m を超えたらアンロードするストリーミングを作った。境界付近を行ったり来たりすると、短時間にロードとアン"
+  },
+  {
+   "id": "fd7e774d53e1",
+   "topic": "math",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "2D のベクトル (x, y) の向きの角度（ラジアン）を求めるとき、atan(y / x) ではなく atan2(y, x) を使う主な理由は？"
+  },
+  {
+   "id": "087b86b54e1e",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "発展",
+   "q": "画面上でほとんどの三角形が 1〜2 ピクセルにしかならない、遠景の高ポリゴンモデルが、ピクセルシェーダーの負荷を増やしやすい主な理由は？"
+  },
+  {
+   "id": "88897a49cdad",
+   "topic": "narrative",
+   "track": "planner",
+   "level": "応用",
+   "q": "推理アドベンチャーで、事件の真相に必要な手がかり「倉庫の鍵の場所」が、任意のスキップもできる脇役との一度きりの会話でしか手に入らない。テストでは半数のプレイヤーがこの手がかりを見逃"
+  },
+  {
+   "id": "5b9f16bddd54",
+   "topic": "biz",
+   "track": "planner",
+   "level": "応用",
+   "q": "排出率 1%（毎回独立）の「当たり」があるガチャを 100 回引いたとき、当たりが少なくとも 1 回出る確率に最も近いのは？"
+  },
+  {
+   "id": "18f3ecf355ad",
+   "topic": "ux",
+   "track": "planner",
+   "level": "発展",
+   "q": "アクションゲームで、攻撃モーションの終わりぎわ（残り 3 フレーム）に次の攻撃ボタンを押したのに、入力が無視される。プレイヤーから「反応が悪い」と言われた。操作感を改善する定番の手"
   }
  ],
  "themes": [
@@ -3852,16 +3969,20 @@
   {
    "date": "2026-11-19",
    "title": "帰り道"
+  },
+  {
+   "date": "2026-11-20",
+   "title": "だれも見ていない間に"
   }
  ],
  "reports": [],
  "idea_counts": {
-  "genre": 42,
-  "mechanic": 42,
-  "theme": 42,
-  "constraint": 42,
-  "feeling": 40,
-  "prompt": 40
+  "genre": 47,
+  "mechanic": 47,
+  "theme": 47,
+  "constraint": 47,
+  "feeling": 45,
+  "prompt": 45
  },
  "last_daily_mail": "2026-11-19",
  "specials": [
