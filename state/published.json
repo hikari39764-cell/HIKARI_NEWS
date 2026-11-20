@@ -2237,6 +2237,84 @@
    "source": "Red Blob Games",
    "note": "なぜ今でも価値がある？ 図を動かしながらA*が「優先度の差」だと腑に落ちる",
    "reminded": []
+  },
+  {
+   "id": "c75ca7b542ecf217",
+   "url": "https://automaton-media.com/articles/newsjp/20261120-480176/",
+   "title": "Steamで「AI使用の開示」作品が売れにくい？ 約3.1万本の分析が示した本当の差",
+   "category": "community",
+   "importance": 5,
+   "date": "2026-11-20",
+   "slot": "22",
+   "deadline": null,
+   "source": "AUTOMATON（元調査：Game Oracle）",
+   "note": "「AIだから売れない」を鵜呑みにしない。準備期間の差という見方が学べる",
+   "reminded": []
+  },
+  {
+   "id": "8ee49facf07a6eb7",
+   "url": "https://automaton-media.com/articles/newsjp/20261120-480178/",
+   "title": "フリーBGMサイトが一転、音ゲーでの利用を解禁。条件は「クレジット表記」",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-20",
+   "slot": "22",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "素材の規約は変わる。使った素材の管理表を作る理由が分かる",
+   "reminded": []
+  },
+  {
+   "id": "df816dbefe836a0d",
+   "url": "https://qiita.com/yangon/items/0f4a8fce9954e472e70d",
+   "title": "画像・音ファイルゼロの3Dホラー。テクスチャも効果音もコードで生成する作り方",
+   "category": "community",
+   "importance": 5,
+   "date": "2026-11-20",
+   "slot": "22",
+   "deadline": null,
+   "source": "Qiita / yangon",
+   "note": "画像ゼロでも質感は出せる。ライトを12個で回す負荷対策も真似できる",
+   "reminded": []
+  },
+  {
+   "id": "d869d2eb49b490f5",
+   "url": "https://zenn.dev/daichi_gamedev/articles/unity-vs-unrealengine",
+   "title": "Unity と Unreal Engine 5 の選び方。両方使う人が整理した「向き不向き」一覧",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-20",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn / daichi_gamedev",
+   "note": "エンジン選びの判断軸が一枚の表で分かる。古いデータには注意",
+   "reminded": []
+  },
+  {
+   "id": "f5c1d8753c2b4792",
+   "url": "https://em-online.bearblog.dev/i-can-tell-you-wrote-this-yourself/",
+   "title": "「自分で書いたと分かる」。AI利用を事実上求められる学生が考えた、思考を外注しないこと",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-20",
+   "slot": "22",
+   "deadline": null,
+   "source": "Hacker News / em-online（bearblog）",
+   "note": "AI時代の学び方への一つの意見。作品説明にどう活かせるか考えたい",
+   "reminded": []
+  },
+  {
+   "id": "31c83777ac17cd74",
+   "url": "https://zenn.dev/andoshin11/articles/ba68b39ef9a8ce",
+   "title": "月6,000セッションのAIエージェントを回す開発者が、減らした「3つの負担」",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-20",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn / andoshin11",
+   "note": "AIを増やすほど詰まるのは人間。小さく真似できる指示の足し方が分かる",
+   "reminded": []
   }
  ],
  "batches": [
@@ -2490,6 +2568,13 @@
    "slot": "special",
    "date": "2026-11-20",
    "count": 4,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261120-22-211441",
+   "slot": "22",
+   "date": "2026-11-20",
+   "count": 6,
    "status": "ok"
   }
  ],
@@ -2977,6 +3062,27 @@
    "level": "応用",
    "area": "dx12",
    "theme": "アップロードとストリーミング（CPUからGPUへデータを送る）",
+   "date": "2026-11-20"
+  },
+  {
+   "term": "動的分岐（[branch]と[flatten]）",
+   "level": "基礎",
+   "area": "shader",
+   "theme": "分岐とウェーブ命令",
+   "date": "2026-11-20"
+  },
+  {
+   "term": "ウェーブとレーン（ウェーブ投票）",
+   "level": "発展",
+   "area": "shader",
+   "theme": "分岐とウェーブ命令",
+   "date": "2026-11-20"
+  },
+  {
+   "term": "ウェーブ内の集計（WaveActiveCountBits / WavePrefixCountBits）",
+   "level": "応用",
+   "area": "shader",
+   "theme": "分岐とウェーブ命令",
    "date": "2026-11-20"
   }
  ],
@@ -4229,7 +4335,7 @@
   "feeling": 45,
   "prompt": 45
  },
- "last_daily_mail": "2026-11-19",
+ "last_daily_mail": "2026-11-20",
  "specials": [
   {
    "date": "2026-11-16",
