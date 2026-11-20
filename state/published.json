@@ -2055,6 +2055,123 @@
    "source": "Game Developer",
    "note": "「数字が悪いのに進めた」判断の理由から、企画の検証手順を学べる。",
    "reminded": []
+  },
+  {
+   "id": "b00f82b6db94c2e5",
+   "url": "https://blog.google/innovation-and-ai/technology/developers-tools/gemini-api-tool-retrieval/",
+   "title": "Gemini APIの「Tool Retrieval」、大量のツールを必要な分だけ読み込ませる",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-20",
+   "slot": "10",
+   "deadline": null,
+   "source": "Google AI Blog",
+   "note": "ツールを増やしても入力が重くならない設計の入口",
+   "reminded": []
+  },
+  {
+   "id": "26341ed927c3a565",
+   "url": "https://qiita.com/Syoitu/items/5bb47c01a8513e52d1b5",
+   "title": "AIエージェントを増やすほど詰まるのは人間。「受付と作業を分ける」など5つの設計パターン",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-20",
+   "slot": "10",
+   "deadline": null,
+   "source": "Qiita",
+   "note": "エージェントを並べる前に読みたい、詰まりの正体と対策",
+   "reminded": []
+  },
+  {
+   "id": "d7587f720ded53d8",
+   "url": "https://zenn.dev/no215/articles/claude-code-one-turn-model-skill",
+   "title": "「1ターンだけ安いモデルに」は逆に高くつく。プロンプトキャッシュがモデルごとに別だから",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-20",
+   "slot": "10",
+   "deadline": null,
+   "source": "Zenn",
+   "note": "安いモデルに切り替えたのに高くなる、その実測と理由",
+   "reminded": []
+  },
+  {
+   "id": "f9d038d9c238b0ad",
+   "url": "https://zenn.dev/port_inc/articles/ff974c7456f4db",
+   "title": "ローカルLLM入門：速度は「メモリ帯域÷モデルサイズ」で見積もれる",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-20",
+   "slot": "10",
+   "deadline": null,
+   "source": "Zenn",
+   "note": "自分のPCで動くモデルを、計算で見積もれるようになる",
+   "reminded": []
+  },
+  {
+   "id": "122be7cf5dd94362",
+   "url": "https://www.anthropic.com/research/claude-black-hole-physics",
+   "title": "Claudeがブラックホール物理の未解決問題を2つ解いた。その進め方（複数コピーの二重検算・Lean検証）",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-20",
+   "slot": "10",
+   "deadline": null,
+   "source": "Anthropic Research",
+   "note": "AIに大きな作業を任せるとき、確かめ方まで含めて学べる",
+   "reminded": []
+  },
+  {
+   "id": "6cf1e4ee87d3e6d2",
+   "url": "https://www.famitsu.com/article/202611/94370",
+   "title": "『GTA6』開発陣が語る作り込み：住人の目線で街を設計し、無響室で環境音を録る",
+   "category": "industry",
+   "importance": 4,
+   "date": "2026-11-20",
+   "slot": "10",
+   "deadline": null,
+   "source": "ファミ通",
+   "note": "大作が「理由のある世界」をどう作るか、担当別に分かる",
+   "reminded": []
+  },
+  {
+   "id": "18b955fdca0cb5ff",
+   "url": "https://automaton-media.com/articles/newsjp/20261119-480033/",
+   "title": "『Milki Delivery』が好評率99%。3〜5時間の短編だから、遊びの核を絞れた",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-20",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "短編でヒットした作品から、遊びの核の絞り方を学べる",
+   "reminded": []
+  },
+  {
+   "id": "4a32645ecd169623",
+   "url": "https://automaton-media.com/articles/newsjp/20261119-480066/",
+   "title": "「頂上を目指す」を反転、落下がゴールの『崩落の国』。癖の強い操作感が賛否を分ける",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-20",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "定番の向きを反転させる企画と、操作感のリスクの両面が見える",
+   "reminded": []
+  },
+  {
+   "id": "e265fa0abd7ff07a",
+   "url": "https://www.famitsu.com/article/202611/93171",
+   "title": "『ペルソナ4 リバイバル』開発陣が語る「覚悟」：作業量はP3Rの約1.5倍、BGMは周回で変化",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-20",
+   "slot": "10",
+   "deadline": null,
+   "source": "ファミ通",
+   "note": "リメイクで「変えるもの・守るもの」をどう決めたかが分かる",
+   "reminded": []
   }
  ],
  "batches": [
@@ -2287,6 +2404,13 @@
    "slot": "learn",
    "date": "2026-11-20",
    "count": 14,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261120-10-091530",
+   "slot": "10",
+   "date": "2026-11-20",
+   "count": 9,
    "status": "ok"
   }
  ],
@@ -2733,6 +2857,27 @@
    "area": "shader",
    "theme": "定数バッファ",
    "date": "2026-11-19"
+  },
+  {
+   "term": "string_view（文字列ビュー）",
+   "level": "基礎",
+   "area": "cpp",
+   "theme": "ビュー型（非所有の参照）",
+   "date": "2026-11-20"
+  },
+  {
+   "term": "span（連続領域のビュー）",
+   "level": "発展",
+   "area": "cpp",
+   "theme": "ビュー型（非所有の参照）",
+   "date": "2026-11-20"
+  },
+  {
+   "term": "as_bytes（バイト列としてのビュー）",
+   "level": "応用",
+   "area": "cpp",
+   "theme": "ビュー型（非所有の参照）",
+   "date": "2026-11-20"
   }
  ],
  "quiz": [
