@@ -2315,6 +2315,19 @@
    "source": "Zenn / andoshin11",
    "note": "AIを増やすほど詰まるのは人間。小さく真似できる指示の足し方が分かる",
    "reminded": []
+  },
+  {
+   "id": "1649e614cf2fe5dc",
+   "url": "https://www.gamesindustry.biz/how-the-eus-digital-fairness-act-will-impact-game-design-and-why-it-hits-european-indies-particularly-hard",
+   "title": "EU「デジタル公平性法」草案がゲームデザインに与える影響：ゲーム内通貨の実通貨表示とペイ・トゥ・ウィン規制",
+   "category": "planner",
+   "importance": 4,
+   "date": "2026-11-21",
+   "slot": "learn",
+   "deadline": null,
+   "source": "GamesIndustry.biz（Andreas Lober 氏の寄稿）",
+   "note": "企画に活かせる視点：課金設計は「面白さ」と同じ重さで、法規制も入力条件になる。",
+   "reminded": []
   }
  ],
  "batches": [
@@ -2575,6 +2588,13 @@
    "slot": "22",
    "date": "2026-11-20",
    "count": 6,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/learn-20261121-learn-063627",
+   "slot": "learn",
+   "date": "2026-11-21",
+   "count": 13,
    "status": "ok"
   }
  ],
@@ -4290,6 +4310,90 @@
    "track": "planner",
    "level": "発展",
    "q": "アクションゲームで、攻撃モーションの終わりぎわ（残り 3 フレーム）に次の攻撃ボタンを押したのに、入力が無視される。プレイヤーから「反応が悪い」と言われた。操作感を改善する定番の手"
+  },
+  {
+   "id": "eda0e343c827",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "発展",
+   "q": "次のコードについて正しい説明は？"
+  },
+  {
+   "id": "10d86802e008",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "応用",
+   "q": "次のコードを実行したときの出力は？"
+  },
+  {
+   "id": "b5aec78cb585",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "応用",
+   "q": "ウィンドウのサイズ変更に合わせて IDXGISwapChain::ResizeBuffers を呼んだが、失敗してしまう。DX12 アプリでまず疑うべき原因は？"
+  },
+  {
+   "id": "e6653d612510",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "応用",
+   "q": "次のコンピュートシェーダーで、InterlockedAdd の戻り値用の引数 slot について正しい説明は？"
+  },
+  {
+   "id": "caba1f975af3",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "発展",
+   "q": "Texture2D<float4> tex に対する tex.Load(int3(10, 20, 0)) の説明として正しいのは？"
+  },
+  {
+   "id": "0af8c3a8cae6",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "発展",
+   "q": "1本のコマンドリストで、ID3D12GraphicsCommandList::SetDescriptorHeaps により同時に設定できるディスクリプタヒープとして正しいのは？"
+  },
+  {
+   "id": "2c4dff190d49",
+   "topic": "math",
+   "track": "programmer",
+   "level": "応用",
+   "q": "2D の三角形 A(0, 0)、B(4, 0)、C(0, 3) の面積を、2D の外積（x1*y2 − y1*x2）を使って求めたい。正しいのは？"
+  },
+  {
+   "id": "630cb8d0d9b6",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "発展",
+   "q": "通常のアルファブレンドで半透明のオブジェクトを描画するとき、描画順として一般的なのは？"
+  },
+  {
+   "id": "a69a7942c66e",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "発展",
+   "q": "敵 AI を有限ステートマシンで作っている。「待機」「巡回」「追跡」「攻撃」など状態が10個以上あり、どの状態からでも「のけぞり」と「死亡」へ遷移させたい。各状態から遷移を書くと、"
+  },
+  {
+   "id": "02d98898a835",
+   "topic": "biz",
+   "track": "planner",
+   "level": "発展",
+   "q": "本リリースの前に、一部の国・地域だけでゲームを先行配信する「ソフトローンチ」の主な目的として最も適切なのは？"
+  },
+  {
+   "id": "7e3cc4a597de",
+   "topic": "level",
+   "track": "planner",
+   "level": "発展",
+   "q": "探索型のアクションゲームで、ボス部屋の近くから序盤の拠点へ戻れる「一方通行の扉（ボス側からしか開けられない）」を置いた。このショートカットを置く主な狙いは？"
+  },
+  {
+   "id": "39751d4634a8",
+   "topic": "ux",
+   "track": "planner",
+   "level": "応用",
+   "q": "セーブデータを削除するボタンを設計する。誤って押したときの被害が大きいので確認ダイアログを出すが、設計として最も適切なのは？"
   }
  ],
  "themes": [
@@ -4324,16 +4428,20 @@
   {
    "date": "2026-11-20",
    "title": "だれも見ていない間に"
+  },
+  {
+   "date": "2026-11-21",
+   "title": "あと一回だけ"
   }
  ],
  "reports": [],
  "idea_counts": {
-  "genre": 47,
-  "mechanic": 47,
-  "theme": 47,
-  "constraint": 47,
-  "feeling": 45,
-  "prompt": 45
+  "genre": 52,
+  "mechanic": 52,
+  "theme": 52,
+  "constraint": 52,
+  "feeling": 50,
+  "prompt": 50
  },
  "last_daily_mail": "2026-11-20",
  "specials": [
