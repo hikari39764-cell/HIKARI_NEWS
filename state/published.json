@@ -2172,6 +2172,71 @@
    "source": "ファミ通",
    "note": "リメイクで「変えるもの・守るもの」をどう決めたかが分かる",
    "reminded": []
+  },
+  {
+   "id": "2b96ca2faed3b042",
+   "url": "https://80.lv/articles/this-spider-man-simulation-brings-back-memories-of-sticky-wall-crawler-toys/",
+   "title": "Houdiniで「壁に貼りつくスパイダーマン」を作る。Vellumのゼリー風シミュレーション手順",
+   "category": "tech",
+   "importance": 3,
+   "date": "2026-11-20",
+   "slot": "17",
+   "deadline": null,
+   "source": "80.lv（Duncan Tune さんのメイキング）",
+   "note": "重い物理はプロキシで回して、あとで高精細モデルへ戻す設計が学べる",
+   "reminded": []
+  },
+  {
+   "id": "636176eba07637ff",
+   "url": "https://qiita.com/yamamoto_a_genee/items/76562c5c80032ad9e962",
+   "title": "約150行のPythonでAgent Harnessを自作する。「LLM＋ループ＋ツール＋安全策」の最小構成",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-20",
+   "slot": "17",
+   "deadline": null,
+   "source": "Qiita（@yamamoto_a_genee）",
+   "note": "試すなら：写経して、自分の制作フォルダだけを作業場所にして動かす",
+   "reminded": []
+  },
+  {
+   "id": "1d700f30df705a57",
+   "url": "https://zenn.dev/daiaoki/articles/webterm-ai-era-testing",
+   "title": "AIがコードの大半を書く時代の自動テスト。「核を切り出す」「テストを自動生成する」「変更に関係するテストだけ回す」",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-20",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（Dai）",
+   "note": "試すなら：乱数を外から渡す関数にして、ダメージ計算のテストを1本書く",
+   "reminded": []
+  },
+  {
+   "id": "9df8ff5b321f18bb",
+   "url": "https://zenn.dev/nttdata_tech/articles/9562962cc181a1",
+   "title": "AIエージェントに「規約・記録・記憶」を持たせる個人用ハーネス。薄い入口とhooksで運用する",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-20",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（NTT DATA TECH／吉本 和真）",
+   "note": "試すなら：規約を1枚の正本にして、CLAUDE.mdからそこを指す",
+   "reminded": []
+  },
+  {
+   "id": "a76dc3b403954728",
+   "url": "https://www.redblobgames.com/pathfinding/a-star/introduction.html",
+   "title": "経路探索の定番入門「Introduction to the A* Algorithm」。BFSからA*まで1本でつながる",
+   "category": "classic",
+   "importance": 4,
+   "date": "2026-11-20",
+   "slot": "17",
+   "deadline": null,
+   "source": "Red Blob Games",
+   "note": "なぜ今でも価値がある？ 図を動かしながらA*が「優先度の差」だと腑に落ちる",
+   "reminded": []
   }
  ],
  "batches": [
@@ -2411,6 +2476,13 @@
    "slot": "10",
    "date": "2026-11-20",
    "count": 9,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261120-17-161632",
+   "slot": "17",
+   "date": "2026-11-20",
+   "count": 5,
    "status": "ok"
   }
  ],
@@ -2877,6 +2949,27 @@
    "level": "応用",
    "area": "cpp",
    "theme": "ビュー型（非所有の参照）",
+   "date": "2026-11-20"
+  },
+  {
+   "term": "アップロードヒープ",
+   "level": "基礎",
+   "area": "dx12",
+   "theme": "アップロードとストリーミング（CPUからGPUへデータを送る）",
+   "date": "2026-11-20"
+  },
+  {
+   "term": "GetCopyableFootprints（テクスチャの転送レイアウト）",
+   "level": "発展",
+   "area": "dx12",
+   "theme": "アップロードとストリーミング（CPUからGPUへデータを送る）",
+   "date": "2026-11-20"
+  },
+  {
+   "term": "DirectStorage（ストリーミングの高速読み込み）",
+   "level": "応用",
+   "area": "dx12",
+   "theme": "アップロードとストリーミング（CPUからGPUへデータを送る）",
    "date": "2026-11-20"
   }
  ],
