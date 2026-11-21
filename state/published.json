@@ -2422,6 +2422,123 @@
    "source": "AUTOMATON",
    "note": "大手がAIに投資する一方で人員整理も。企業研究の読み方の参考に",
    "reminded": []
+  },
+  {
+   "id": "295f14098a6ed36a",
+   "url": "https://unity.com/blog/video-game-controls-phone-or-computer",
+   "title": "スマホとPCの操作設計は「ボタン」より先に「動詞」を決める",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-21",
+   "slot": "17",
+   "deadline": null,
+   "source": "Unity Blog",
+   "note": "学べること：ボタン配置の前に決める「動詞」と、実機での誤入力の記録法",
+   "reminded": []
+  },
+  {
+   "id": "ff5b80372f63e1bf",
+   "url": "https://80.lv/articles/building-detailed-caribbean-inspired-city-environment-in-unreal-engine-5/",
+   "title": "UE5で路地のシーンを作る流れ。モジュール式の壁と頂点ペイントで2か月",
+   "category": "tech",
+   "importance": 3,
+   "date": "2026-11-21",
+   "slot": "17",
+   "deadline": null,
+   "source": "80 Level（Santiago Forero）",
+   "note": "学べること：モジュール設計と頂点ペイントで、少ない素材から街並みを作る流れ",
+   "reminded": []
+  },
+  {
+   "id": "6899e55b962c93ac",
+   "url": "https://arxiv.org/abs/2611.12650",
+   "title": "ニューラルテクスチャ圧縮に異方性フィルタリングを足す研究。容量1/4で画質を保つ",
+   "category": "tech",
+   "importance": 3,
+   "date": "2026-11-21",
+   "slot": "17",
+   "deadline": null,
+   "source": "arXiv（Shin Fujieda・Takahiro Harada）",
+   "note": "学べること：テクスチャ圧縮で「フィルタ」が画質を左右する理由",
+   "reminded": []
+  },
+  {
+   "id": "55508d0c5f93d51d",
+   "url": "https://cgworld.jp/article/report-sapporogamecamp-2026.html",
+   "title": "札幌のゲームジャム、学生とプロが2日で20本。全チームがUnityを選んだ理由",
+   "category": "tech",
+   "importance": 2,
+   "date": "2026-11-21",
+   "slot": "17",
+   "deadline": null,
+   "source": "CGWORLD",
+   "note": "学べること：2日間のジャムで、役割分担から発表までをどう進めるか",
+   "reminded": []
+  },
+  {
+   "id": "c75694d3b3c5c16e",
+   "url": "https://zenn.dev/karamage/articles/73027ee36796dc",
+   "title": "AIにテストを書かせず「ルール」を書く。TLA+/Quintで割り込みバグを12ミリ秒で発見",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-21",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（karamage）",
+   "note": "試すならこうする：「絶対に破れない数字」を1つ選び、1行のルールにする",
+   "reminded": []
+  },
+  {
+   "id": "453b97eac90babd8",
+   "url": "https://qiita.com/aratakaji/items/795a248f6398b03eb9cf",
+   "title": "AIエージェントを隔離して動かす。Docker Sandboxesで「鍵を渡さない」環境を作る",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-21",
+   "slot": "17",
+   "deadline": null,
+   "source": "Qiita（aratakaji）",
+   "note": "試すならこうする：まず依存更新のような小さな作業を、隔離環境の中で任せる",
+   "reminded": []
+  },
+  {
+   "id": "63025c7f32d34c39",
+   "url": "https://qiita.com/rioriver/items/17308685b10b3a413427",
+   "title": "AIが作ったSkillは「期待値の表」で確かめる。読んでも分からない品質を可視化する",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-21",
+   "slot": "17",
+   "deadline": null,
+   "source": "Qiita（rioriver）",
+   "note": "試すならこうする：AIに作らせたものを、5行の「期待値の表」で点検してみる",
+   "reminded": []
+  },
+  {
+   "id": "865d5035c184cc1c",
+   "url": "https://qiita.com/ditchcrimson/items/0b312db230db8d0bb566",
+   "title": "AIコーディングで製品を作るなら押さえたい10か条。ルールより「仕組み」で縛る",
+   "category": "ai_howto",
+   "importance": 2,
+   "date": "2026-11-21",
+   "slot": "17",
+   "deadline": null,
+   "source": "Qiita（ditchcrimson）",
+   "note": "試すならこうする：AIの「テスト成功」報告は、自分でlintとテストを実行して確かめる",
+   "reminded": []
+  },
+  {
+   "id": "b7055601c47573ea",
+   "url": "https://thebookofshaders.com/?lan=jp",
+   "title": "シェーダーの定番入門「The Book of Shaders」。日本語訳つきで、無料で読める",
+   "category": "classic",
+   "importance": 4,
+   "date": "2026-11-21",
+   "slot": "17",
+   "deadline": null,
+   "source": "The Book of Shaders（Patricio Gonzalez Vivo・Jen Lowe）",
+   "note": "なぜ今でも価値があるか：シェーダーの考え方を、コードを動かしながら学べる定番",
+   "reminded": []
   }
  ],
  "batches": [
@@ -2696,6 +2813,13 @@
    "slot": "10",
    "date": "2026-11-21",
    "count": 7,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261121-17-161636",
+   "slot": "17",
+   "date": "2026-11-21",
+   "count": 9,
    "status": "ok"
   }
  ],
@@ -3225,6 +3349,27 @@
    "level": "応用",
    "area": "cpp",
    "theme": "RAIIとスコープによる資源管理",
+   "date": "2026-11-21"
+  },
+  {
+   "term": "頂点バッファビューとインデックスバッファビュー",
+   "level": "基礎",
+   "area": "dx12",
+   "theme": "ジオメトリの入力（頂点・インデックス・インスタンシング）",
+   "date": "2026-11-21"
+  },
+  {
+   "term": "入力レイアウト",
+   "level": "発展",
+   "area": "dx12",
+   "theme": "ジオメトリの入力（頂点・インデックス・インスタンシング）",
+   "date": "2026-11-21"
+  },
+  {
+   "term": "インスタンス描画",
+   "level": "応用",
+   "area": "dx12",
+   "theme": "ジオメトリの入力（頂点・インデックス・インスタンシング）",
    "date": "2026-11-21"
   }
  ],
