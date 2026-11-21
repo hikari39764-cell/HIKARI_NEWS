@@ -2539,6 +2539,84 @@
    "source": "The Book of Shaders（Patricio Gonzalez Vivo・Jen Lowe）",
    "note": "なぜ今でも価値があるか：シェーダーの考え方を、コードを動かしながら学べる定番",
    "reminded": []
+  },
+  {
+   "id": "8cda5174a1ebb15c",
+   "url": "https://zenn.dev/sorane/articles/e1ed930dea9b1d",
+   "title": "DOTweenなしでイージング31種を自作。式を検証して分かった「同名でも式が違う」落とし穴",
+   "category": "community",
+   "importance": 5,
+   "date": "2026-11-21",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn（トレンド）/ 空音",
+   "note": "UIの動きを自作したい人へ。式の検証手順まで真似できる",
+   "reminded": []
+  },
+  {
+   "id": "9d9e2c9f2c651b79",
+   "url": "https://a90.com/experiments/same-advice/",
+   "title": "AIに「おすすめの本」を聞くと73%が同じ本。13万回の質問で分かった、助言の偏りとその避け方",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-21",
+   "slot": "22",
+   "deadline": null,
+   "source": "A90 Research / Hacker News",
+   "note": "AIでアイデア出しする人へ。被らない聞き方が数字で分かる",
+   "reminded": []
+  },
+  {
+   "id": "8d0c9fc86bcccced",
+   "url": "https://zenn.dev/yasuakiomokawa/articles/3ac970c3a3a1c7",
+   "title": "AIに「壊れにくいテスト」を書かせる4手順。基準は外から見える振る舞いだけで書く",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-21",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn（トレンド）/ Yasuaki Omokawa",
+   "note": "AIに実装を任せる人へ。テストの書かせ方を4手順で学べる",
+   "reminded": []
+  },
+  {
+   "id": "e1a223b73868864c",
+   "url": "https://manidoraisamy.com/developer-to-architect.html",
+   "title": "「開発者は、告げられないままアーキテクトに昇格した」AI時代の仕事の変化とHNでの反応",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-21",
+   "slot": "22",
+   "deadline": null,
+   "source": "Mani Doraisamy / Hacker News",
+   "note": "AIにコードを任せる前に、人が決める範囲を考えるきっかけに",
+   "reminded": []
+  },
+  {
+   "id": "3e30621eb1a8fdca",
+   "url": "https://ankitg.me/blog/vibecoding-inference-chip/",
+   "title": "C++もVerilogも未経験の人が、AIエージェントでFPGA上のLLM推論を33倍に高速化した記録",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-21",
+   "slot": "22",
+   "deadline": null,
+   "source": "Ankit Gupta / Hacker News",
+   "note": "AIに最適化を任せるとき、人が握るべきものが分かる",
+   "reminded": []
+  },
+  {
+   "id": "35f854dd7615d7ab",
+   "url": "https://news.ycombinator.com/item?id=50583761",
+   "title": "2年失業中の経験15年エンジニアに集まった助言。「AIで作った個人開発だけでは響きにくい」",
+   "category": "community",
+   "importance": 2,
+   "date": "2026-11-21",
+   "slot": "22",
+   "deadline": null,
+   "source": "Hacker News（Ask HN）",
+   "note": "作品の見せ方を考える材料に。成果は「外から確認できる形」で",
+   "reminded": []
   }
  ],
  "batches": [
@@ -2827,6 +2905,13 @@
    "slot": "special",
    "date": "2026-11-21",
    "count": 4,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261121-22-211536",
+   "slot": "22",
+   "date": "2026-11-21",
+   "count": 6,
    "status": "ok"
   }
  ],
@@ -3377,6 +3462,27 @@
    "level": "応用",
    "area": "dx12",
    "theme": "ジオメトリの入力（頂点・インデックス・インスタンシング）",
+   "date": "2026-11-21"
+  },
+  {
+   "term": "clip関数",
+   "level": "基礎",
+   "area": "shader",
+   "theme": "ピクセルの破棄とアルファ抜き",
+   "date": "2026-11-21"
+  },
+  {
+   "term": "earlydepthstencil属性",
+   "level": "発展",
+   "area": "shader",
+   "theme": "ピクセルの破棄とアルファ抜き",
+   "date": "2026-11-21"
+  },
+  {
+   "term": "アルファ・トゥ・カバレッジ",
+   "level": "応用",
+   "area": "shader",
+   "theme": "ピクセルの破棄とアルファ抜き",
    "date": "2026-11-21"
   }
  ],
@@ -4717,7 +4823,7 @@
   "feeling": 50,
   "prompt": 50
  },
- "last_daily_mail": "2026-11-20",
+ "last_daily_mail": "2026-11-21",
  "specials": [
   {
    "date": "2026-11-16",
