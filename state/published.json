@@ -2617,6 +2617,19 @@
    "source": "Hacker News（Ask HN）",
    "note": "作品の見せ方を考える材料に。成果は「外から確認できる形」で",
    "reminded": []
+  },
+  {
+   "id": "b6638b340de6a36f",
+   "url": "https://www.4gamer.net/games/574/G057444/20261121015/",
+   "title": "「パルワールド」はどう「オワコン」から戻ってきたか：正式版に向けたポケットペアの3つの施策",
+   "category": "planner",
+   "importance": 4,
+   "date": "2026-11-22",
+   "slot": "learn",
+   "deadline": null,
+   "source": "4Gamer.net（CiGADC／WePlay 2026 講演レポート）",
+   "note": "企画に活かせる視点：人が減ったあとに「何を見せて呼び戻すか」を最初から設計する",
+   "reminded": []
   }
  ],
  "batches": [
@@ -2912,6 +2925,13 @@
    "slot": "22",
    "date": "2026-11-21",
    "count": 6,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/learn-20261122-learn-063520",
+   "slot": "learn",
+   "date": "2026-11-22",
+   "count": 13,
    "status": "ok"
   }
  ],
@@ -4774,6 +4794,90 @@
    "track": "planner",
    "level": "応用",
    "q": "セーブデータを削除するボタンを設計する。誤って押したときの被害が大きいので確認ダイアログを出すが、設計として最も適切なのは？"
+  },
+  {
+   "id": "c9429c302308",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "発展",
+   "q": "次のコードを実行したときの出力として正しいのは？（必要なヘッダーはすべてインクルード済みとする）"
+  },
+  {
+   "id": "97b2f90d2090",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "応用",
+   "q": "次のコードの最後の f() の呼び出しについて、正しい説明は？"
+  },
+  {
+   "id": "91f626d9a28a",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "応用",
+   "q": "レンダーターゲットとして描画を終えたテクスチャを、少しあとのパスでシェーダーリソースとして読む。その間に、このテクスチャを使わない別の GPU 作業を挟める。ストールを減らす目的で"
+  },
+  {
+   "id": "966e56b69b16",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "発展",
+   "q": "幅 100 ピクセル、フォーマット DXGI_FORMAT_R8G8B8A8_UNORM（1 ピクセル 4 バイト）の 2D テクスチャを、アップロードバッファから CopyTex"
+  },
+  {
+   "id": "7f6ee9477388",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "次の HLSL コードで、c の値は？"
+  },
+  {
+   "id": "9b36e7da2b5b",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "発展",
+   "q": "次の HLSL コードの a と b の値の組み合わせとして正しいのは？"
+  },
+  {
+   "id": "bb3c146f694a",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "発展",
+   "q": "ポーズ中は Time.timeScale のような倍率を 0 にして、ゲーム内の時間を止める設計にしている。ポーズメニューの開閉アニメーションを、ゲーム内のデルタタイム（実時間のデ"
+  },
+  {
+   "id": "977e63001d20",
+   "topic": "math",
+   "track": "programmer",
+   "level": "発展",
+   "q": "頂点シェーダーが出力した「長さ 1 の法線」は、ラスタライザで三角形の内側に線形補間されてピクセルシェーダーに渡される。ピクセルごとのライティング計算の前にすべきこととして正しいの"
+  },
+  {
+   "id": "7a3a6b45a480",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "発展",
+   "q": "double のアラインメントが 8 バイトの環境で、次の 2 つの構造体の sizeof の組み合わせとして正しいのは？ メンバーを並べ替えるだけでサイズが変わる理由も考えること"
+  },
+  {
+   "id": "d8c59220aeed",
+   "topic": "design",
+   "track": "planner",
+   "level": "発展",
+   "q": "対戦レースゲームで、序盤にリードしたプレイヤーが有利なアイテムや位置取りでさらに差を広げ、中盤以降は結果がほぼ決まってしまう（スノーボール現象）。設計上の対処として最も適切なのは？"
+  },
+  {
+   "id": "7593fe1ca7f6",
+   "topic": "ux",
+   "track": "planner",
+   "level": "発展",
+   "q": "経営シミュレーションで、最初から全メニュー（20 種類以上）を画面に出しているため、初心者が圧倒されて離脱している。「プログレッシブ・ディスクロージャー（段階的な開示）」の考え方に"
+  },
+  {
+   "id": "f0b11f155cc1",
+   "topic": "narrative",
+   "track": "planner",
+   "level": "基礎",
+   "q": "アルフレッド・ヒッチコックの映画の語りで知られる「マクガフィン」の説明として、最も適切なのは？"
   }
  ],
  "themes": [
@@ -4812,16 +4916,20 @@
   {
    "date": "2026-11-21",
    "title": "あと一回だけ"
+  },
+  {
+   "date": "2026-11-22",
+   "title": "まちがえて届いた"
   }
  ],
  "reports": [],
  "idea_counts": {
-  "genre": 52,
-  "mechanic": 52,
-  "theme": 52,
-  "constraint": 52,
-  "feeling": 50,
-  "prompt": 50
+  "genre": 57,
+  "mechanic": 57,
+  "theme": 57,
+  "constraint": 57,
+  "feeling": 55,
+  "prompt": 55
  },
  "last_daily_mail": "2026-11-21",
  "specials": [
