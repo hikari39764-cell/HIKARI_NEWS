@@ -1065,7 +1065,8 @@
    "source": "JDN コンペ情報（主催：Cygames）",
    "note": "参加条件：学生（個人・グループ可）。発表済みの作品でも応募できる",
    "reminded": [
-    7
+    7,
+    3
    ]
   },
   {
@@ -1248,7 +1249,9 @@
    "deadline": "2026-11-28",
    "source": "GameBusiness.jp",
    "note": "学生券1,500円。メディア編集者が「話題になる条件」を語る貴重な場",
-   "reminded": []
+   "reminded": [
+    7
+   ]
   },
   {
    "id": "fc35e8978fc69343",
@@ -2328,6 +2331,97 @@
    "source": "GamesIndustry.biz（Andreas Lober 氏の寄稿）",
    "note": "企画に活かせる視点：課金設計は「面白さ」と同じ重さで、法規制も入力条件になる。",
    "reminded": []
+  },
+  {
+   "id": "14b67dddb8073b5b",
+   "url": "https://spectrum.ieee.org/epic-games-unreal-engine-ai",
+   "title": "EpicがUnrealを「AIが触りやすい作り」に変える：UE5.9とUE6の方向性",
+   "category": "ai",
+   "importance": 5,
+   "date": "2026-11-21",
+   "slot": "10",
+   "deadline": null,
+   "source": "IEEE Spectrum",
+   "note": "Unrealを学ぶ人は必読。UE6でBlueprintsが消える方針とAI時代のエンジン設計",
+   "reminded": []
+  },
+  {
+   "id": "a0ebc9ee452b9f3e",
+   "url": "https://thinkingmachines.ai/news/inkling-2-mini/",
+   "title": "Thinking Machines「Inkling 2 Mini」公開：メモリ約20GBで動くオープンウェイトの開発向けモデル",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-21",
+   "slot": "10",
+   "deadline": null,
+   "source": "Thinking Machines Lab",
+   "note": "32GBのMacで動く開発向けモデル。ローカルAIを試す入口に",
+   "reminded": []
+  },
+  {
+   "id": "6687f7be62c34e4a",
+   "url": "https://openai.com/index/how-openai-performance-factory-keeps-chatgpt-fast",
+   "title": "OpenAIの「Performance Factory」：AIが原因調査と修正案を出し、人は判断だけに集中する運用",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-21",
+   "slot": "10",
+   "deadline": null,
+   "source": "OpenAI",
+   "note": "AIに任せる範囲と人が決める範囲の線引きが、数字つきで分かる",
+   "reminded": []
+  },
+  {
+   "id": "211fbe8009a45ecd",
+   "url": "https://huggingface.co/blog/harness-adapters-at-scale",
+   "title": "モデルを「自分のハーネス」に合わせて鍛える：Hugging Faceの harness adapters",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-21",
+   "slot": "10",
+   "deadline": null,
+   "source": "Hugging Face Blog",
+   "note": "AIの出来はモデルだけで決まらない。実行環境側を鍛えると伸びる実測値",
+   "reminded": []
+  },
+  {
+   "id": "9b5bbb78de8ac8ed",
+   "url": "https://www.gamebusiness.jp/article/2026/11/12/28644.html",
+   "title": "協力型ADV『Big Walk』の開発者が「AI利用0.1%未満」を自ら公表。ポリシー未策定を「失敗」と認めた理由",
+   "category": "industry",
+   "importance": 4,
+   "date": "2026-11-21",
+   "slot": "10",
+   "deadline": null,
+   "source": "GameBusiness.jp",
+   "note": "AIをどこに使ったか記録・開示する大切さが分かる、インディーの実例",
+   "reminded": []
+  },
+  {
+   "id": "a8afbba08cf7894f",
+   "url": "https://www.famitsu.com/article/202611/94667",
+   "title": "『OUTLIER』：NPC最大160体に紛れる「かくれんぼ」。全員の敬礼のズレで正体がバレる設計",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-21",
+   "slot": "10",
+   "deadline": null,
+   "source": "ファミ通.com",
+   "note": "大量NPCを遊びの判定基準に使う発想。小さなプロトタイプで試せる",
+   "reminded": []
+  },
+  {
+   "id": "c0c2c4aa17925caa",
+   "url": "https://automaton-media.com/articles/newsjp/20261120-480132/",
+   "title": "UbisoftがAI特化の子会社「Motherbrain」を設立。同じ日に166人のレイオフも発表",
+   "category": "industry",
+   "importance": 2,
+   "date": "2026-11-21",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "大手がAIに投資する一方で人員整理も。企業研究の読み方の参考に",
+   "reminded": []
   }
  ],
  "batches": [
@@ -2595,6 +2689,13 @@
    "slot": "learn",
    "date": "2026-11-21",
    "count": 13,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261121-10-091510",
+   "slot": "10",
+   "date": "2026-11-21",
+   "count": 7,
    "status": "ok"
   }
  ],
@@ -3104,6 +3205,27 @@
    "area": "shader",
    "theme": "分岐とウェーブ命令",
    "date": "2026-11-20"
+  },
+  {
+   "term": "RAII",
+   "level": "基礎",
+   "area": "cpp",
+   "theme": "RAIIとスコープによる資源管理",
+   "date": "2026-11-21"
+  },
+  {
+   "term": "std::scoped_lock",
+   "level": "発展",
+   "area": "cpp",
+   "theme": "RAIIとスコープによる資源管理",
+   "date": "2026-11-21"
+  },
+  {
+   "term": "スコープガード（scope_exit）",
+   "level": "応用",
+   "area": "cpp",
+   "theme": "RAIIとスコープによる資源管理",
+   "date": "2026-11-21"
   }
  ],
  "quiz": [
