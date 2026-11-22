@@ -2892,6 +2892,19 @@
    "source": "Zenn（kubell Tech Blog）",
    "note": "試作を作る前に「何を確かめるか」を決める習慣が身につく",
    "reminded": []
+  },
+  {
+   "id": "8896055e02a4c8fe",
+   "url": "https://www.4gamer.net/games/060/G106042/20261122014/",
+   "title": "「ゲームデザイナーシミュレーター」の議論カードバトル：説得力と新規性、そして「溜める」判断で議論を遊びにする",
+   "category": "planner",
+   "importance": 3,
+   "date": "2026-11-23",
+   "slot": "learn",
+   "deadline": null,
+   "source": "4Gamer.net",
+   "note": "企画に活かせる視点：題材そのものを戦闘ルールに言い換える練習になる",
+   "reminded": []
   }
  ],
  "batches": [
@@ -3222,6 +3235,13 @@
    "slot": "22",
    "date": "2026-11-22",
    "count": 4,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/learn-20261123-learn-063554",
+   "slot": "learn",
+   "date": "2026-11-23",
+   "count": 13,
    "status": "ok"
   }
  ],
@@ -5231,6 +5251,90 @@
    "track": "planner",
    "level": "基礎",
    "q": "アルフレッド・ヒッチコックの映画の語りで知られる「マクガフィン」の説明として、最も適切なのは？"
+  },
+  {
+   "id": "45180286916e",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "ゲームが 60fps から 55fps に落ちた場合と、30fps から 25fps に落ちた場合を比べる。1 フレームにかかる時間（フレームタイム）の増え方として正しいのは？"
+  },
+  {
+   "id": "0e3ae7e10233",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "発展",
+   "q": "2048×2048 ピクセル、1 ピクセル 4 バイト（RGBA8）の非圧縮テクスチャに、1×1 まで全レベルのミップマップを用意した。ミップチェーン全体のメモリ使用量として最も近"
+  },
+  {
+   "id": "c386df9322bb",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "応用",
+   "q": "ピクセルシェーダーが重いシーンで、「深度プリパス」（先に深度だけを描き、そのあとで本描画をする）を導入した。主な狙いと代償として正しいのは？"
+  },
+  {
+   "id": "9ddb27b2e947",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "キャラクターの手に剣を持たせるため、剣を手のオブジェクトの「子」にした。子がワールド座標ではなく、親からの相対位置（ローカル座標）で位置を持つ主な利点は？"
+  },
+  {
+   "id": "791bc9f234fe",
+   "topic": "math",
+   "track": "programmer",
+   "level": "応用",
+   "q": "カメラや敵の追従を、毎フレーム次のように書いている。この追従を、フレームレートが変わっても（同じ時間が経てば同じ位置になるように）したい。0.1f の代わりに使う係数として正しいの"
+  },
+  {
+   "id": "fdca83b502c9",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "次のコードをコンパイルしたとき、(1) と (2) の行についてどうなる？"
+  },
+  {
+   "id": "4a4e71a89f43",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "応用",
+   "q": "コンピュートキューの Dispatch が UAV 経由で書き込んだバッファを、そのあとダイレクトキューの描画で読みたい。CPU をブロックせずに、GPU 上で正しい順序を保証する"
+  },
+  {
+   "id": "e7a201d0a523",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "次の HLSL コードで、r の値は？"
+  },
+  {
+   "id": "05efb3280cbf",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "発展",
+   "q": "ピクセルシェーダーの中で、float 型の値 v に対して fwidth(v) を呼ぶと、何が返る？"
+  },
+  {
+   "id": "67c73db6d0dd",
+   "topic": "design",
+   "track": "planner",
+   "level": "応用",
+   "q": "ショップで売る武器 A と B は、価格・重さ・入手できる時期がまったく同じで、攻撃力だけが A=10、B=12 である。この 2 つを並べて売ると、設計上どんな問題がある？"
+  },
+  {
+   "id": "a09188e84181",
+   "topic": "narrative",
+   "track": "planner",
+   "level": "発展",
+   "q": "物語づくりでいう、主人公の「ウォント（want）」と「ニード（need）」について、正しい説明は？"
+  },
+  {
+   "id": "3f9a88b827fb",
+   "topic": "biz",
+   "track": "planner",
+   "level": "基礎",
+   "q": "ある月の売上が 100 万円、月間アクティブユーザー（MAU）が 1 万人、そのうち課金したユーザーが 500 人だった。ARPU（売上 ÷ MAU とする）と課金率の組み合わせと"
   }
  ],
  "themes": [
@@ -5273,16 +5377,20 @@
   {
    "date": "2026-11-22",
    "title": "まちがえて届いた"
+  },
+  {
+   "date": "2026-11-23",
+   "title": "三秒前の自分"
   }
  ],
  "reports": [],
  "idea_counts": {
-  "genre": 57,
-  "mechanic": 57,
-  "theme": 57,
-  "constraint": 57,
-  "feeling": 55,
-  "prompt": 55
+  "genre": 62,
+  "mechanic": 62,
+  "theme": 62,
+  "constraint": 62,
+  "feeling": 60,
+  "prompt": 60
  },
  "last_daily_mail": "2026-11-22",
  "specials": [
