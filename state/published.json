@@ -2840,6 +2840,58 @@
    "source": "Wizards of the Coast（Making Magic）",
    "note": "発表から10年以上たっても使える、自作ゲームの診断チェックリスト",
    "reminded": []
+  },
+  {
+   "id": "a34f45a76f7c5759",
+   "url": "https://linebender.org/blog/next-100-guis/",
+   "title": "Rust製GUIを作る人への助言。即時モードは「最初の9割」が楽で「残りの1割」が重い",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-22",
+   "slot": "22",
+   "deadline": null,
+   "source": "Linebender Blog（Hacker News 183pt）",
+   "note": "HNで話題。ゲームのツールやHUDにも通じるUI設計の勘所がわかる",
+   "reminded": []
+  },
+  {
+   "id": "1c5bece5cd099374",
+   "url": "https://zenn.dev/praha/articles/08568310684aa3",
+   "title": "「正しい」UIの次は「意図のある」UI。ガイドラインがぶつかるときの決め方",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-22",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn（PrAha）",
+   "note": "「何を作らないか」を決める考え方が、ゲームのUI設計にも使える",
+   "reminded": []
+  },
+  {
+   "id": "049ea5c45bc15810",
+   "url": "https://zenn.dev/peoplex_blog/articles/vscode-to-claude-desktop",
+   "title": "VS CodeからClaude Desktopへ。5〜10セッションを並行させる開発の回し方",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-22",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn（PeopleXテックブログ）",
+   "note": "AIを並列で使うときの「閉じ方・整理の仕方」が具体的にわかる",
+   "reminded": []
+  },
+  {
+   "id": "4dba11ec86a848a7",
+   "url": "https://zenn.dev/kubell/articles/3c3490a3592bb1",
+   "title": "AIで作るのが速くなった今、「誰に・何を・どう届けるか」を問い直す",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-22",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn（kubell Tech Blog）",
+   "note": "試作を作る前に「何を確かめるか」を決める習慣が身につく",
+   "reminded": []
   }
  ],
  "batches": [
@@ -3163,6 +3215,13 @@
    "slot": "special",
    "date": "2026-11-22",
    "count": 6,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261122-22-211506",
+   "slot": "22",
+   "date": "2026-11-22",
+   "count": 4,
    "status": "ok"
   }
  ],
@@ -3776,6 +3835,27 @@
    "level": "応用",
    "area": "dx12",
    "theme": "コンピュートシェーダーとUAV（GPU汎用計算）",
+   "date": "2026-11-22"
+  },
+  {
+   "term": "シャドウマップ",
+   "level": "基礎",
+   "area": "shader",
+   "theme": "シャドウマッピング",
+   "date": "2026-11-22"
+  },
+  {
+   "term": "比較サンプラーとSampleCmp",
+   "level": "発展",
+   "area": "shader",
+   "theme": "シャドウマッピング",
+   "date": "2026-11-22"
+  },
+  {
+   "term": "デプスバイアスとシャドウアクネ",
+   "level": "応用",
+   "area": "shader",
+   "theme": "シャドウマッピング",
    "date": "2026-11-22"
   }
  ],
@@ -5204,7 +5284,7 @@
   "feeling": 55,
   "prompt": 55
  },
- "last_daily_mail": "2026-11-21",
+ "last_daily_mail": "2026-11-22",
  "specials": [
   {
    "date": "2026-11-16",
