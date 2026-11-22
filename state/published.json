@@ -1106,7 +1106,9 @@
    "deadline": "2026-11-29",
    "source": "itch.io（Drozd Studios）",
    "note": "参加条件：誰でも参加可。個人・チーム・エンジン不問、期間中の新作に限る",
-   "reminded": []
+   "reminded": [
+    7
+   ]
   },
   {
    "id": "d0c8264697c6b11f",
@@ -2630,6 +2632,110 @@
    "source": "4Gamer.net（CiGADC／WePlay 2026 講演レポート）",
    "note": "企画に活かせる視点：人が減ったあとに「何を見せて呼び戻すか」を最初から設計する",
    "reminded": []
+  },
+  {
+   "id": "18d9f9bc59b30c8a",
+   "url": "https://leanprover-community.github.io/blog/posts/riemann-hypothesis/",
+   "title": "リーマン予想の証明を主張、1700万行のLean形式証明をコミュニティが検証",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-22",
+   "slot": "10",
+   "deadline": null,
+   "source": "Lean community blog / ITmedia AI+",
+   "note": "AIの出した答えを「機械が検査できる形」で信じる方法が見える",
+   "reminded": []
+  },
+  {
+   "id": "c6e0f6fe1d32263b",
+   "url": "https://github.com/ShinMegamiBoson/lookatmyquant",
+   "title": "26BのAIモデルを5.4GBまで圧縮、量子化コンパイラ「LookAtMyQuant」",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-22",
+   "slot": "10",
+   "deadline": null,
+   "source": "GitHub（Hacker News 325pt）",
+   "note": "「何GBなら精度が保てるか」を表で確かめる見方が学べる",
+   "reminded": []
+  },
+  {
+   "id": "c82934c02ed902f3",
+   "url": "http://ricapar.net/ClawDOS/",
+   "title": "1980年代のIBM PCでClaudeが動く、AIエージェントの最小構成「ClawDOS」",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-22",
+   "slot": "10",
+   "deadline": null,
+   "source": "ricapar.net（Hacker News 155pt）",
+   "note": "エージェントの中身は意外と小さい。自作の第一歩に",
+   "reminded": []
+  },
+  {
+   "id": "7fae68ee42283fc0",
+   "url": "https://www.itmedia.co.jp/aiplus/article/2611/20/2000003353/",
+   "title": "Antigravityを他社AIから操作すると規約違反に？ 個人プランの注意点",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-22",
+   "slot": "10",
+   "deadline": null,
+   "source": "ITmedia AI+",
+   "note": "個人でAIツールを組み合わせる前に知っておきたい規約の話",
+   "reminded": []
+  },
+  {
+   "id": "616316fff3ee1f27",
+   "url": "https://www.gamebusiness.jp/article/2026/11/21/28814.html",
+   "title": "C2PA付きの画像は5.8%だけ。AI画像判定3万件が示す「出どころ確認」の難しさ",
+   "category": "ai",
+   "importance": 2,
+   "date": "2026-11-22",
+   "slot": "10",
+   "deadline": null,
+   "source": "GameBusiness.jp（Uravation調査）",
+   "note": "素材のAI利用を説明する場面で、記録に頼りきれない理由が分かる",
+   "reminded": []
+  },
+  {
+   "id": "9eb7a95aeef4ca9a",
+   "url": "https://www.4gamer.net/games/618/G061824/20261121010/",
+   "title": "『Vampire Survivors』個人制作から40人のスタジオへ、poncleが語る成長と失敗",
+   "category": "industry",
+   "importance": 4,
+   "date": "2026-11-22",
+   "slot": "10",
+   "deadline": null,
+   "source": "4Gamer.net（CiGADC講演）",
+   "note": "ヒットの後に「作り続ける仕組み」をどう整えたかが分かる",
+   "reminded": []
+  },
+  {
+   "id": "5b190a6655a3a7ff",
+   "url": "https://www.4gamer.net/games/790/G079033/20261121013/",
+   "title": "『Slay the Spire 2』に協力プレイを入れた理由と、早期アクセスの使い方",
+   "category": "industry",
+   "importance": 4,
+   "date": "2026-11-22",
+   "slot": "10",
+   "deadline": null,
+   "source": "4Gamer.net（CiGADC講演）",
+   "note": "「説明せず一緒に遊ばせて教える」設計と、データでの機能選びが参考に",
+   "reminded": []
+  },
+  {
+   "id": "75a1f41c9efcd984",
+   "url": "https://www.gamebusiness.jp/article/2026/11/21/28811.html",
+   "title": "SHIFT UPが新理念「最初から最後まで手作り」、AI利用の反発を経て",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-22",
+   "slot": "10",
+   "deadline": null,
+   "source": "GameBusiness.jp（G-CON講演）",
+   "note": "AIの使いどころの線引きを、就活や作品説明に生かせる",
+   "reminded": []
   }
  ],
  "batches": [
@@ -2932,6 +3038,13 @@
    "slot": "learn",
    "date": "2026-11-22",
    "count": 13,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261122-10-091547",
+   "slot": "10",
+   "date": "2026-11-22",
+   "count": 8,
    "status": "ok"
   }
  ],
@@ -3504,6 +3617,27 @@
    "area": "shader",
    "theme": "ピクセルの破棄とアルファ抜き",
    "date": "2026-11-21"
+  },
+  {
+   "term": "ラムダ式",
+   "level": "基礎",
+   "area": "cpp",
+   "theme": "ラムダ式とコールバック",
+   "date": "2026-11-22"
+  },
+  {
+   "term": "初期化キャプチャ",
+   "level": "発展",
+   "area": "cpp",
+   "theme": "ラムダ式とコールバック",
+   "date": "2026-11-22"
+  },
+  {
+   "term": "std::move_only_function",
+   "level": "応用",
+   "area": "cpp",
+   "theme": "ラムダ式とコールバック",
+   "date": "2026-11-22"
   }
  ],
  "quiz": [
