@@ -346,9 +346,9 @@ function viewChance() {
   }).join("");
   const tab = (k, icon, l) => `<a class="${f === k ? "on" : ""}" href="#/chance${k === "all" ? "" : "?f=" + k}">${ic(icon)}${l}<span class="n">${cnt[k]}</span></a>`;
   return `<div class="page">
-    ${pageHead("ti-trophy", "チャンス")}
+    ${pageHead("ti-briefcase", "就活・チャンス")}
     <div class="seg rv" style="--i:1">${tab("all", "ti-door-enter", "受付中")}${tab("want", "ti-heart", "気になる")}${tab("done", "ti-send", "応募済み")}${tab("past", "ti-archive", "終了")}</div>
-    <div class="tl">${body || emptyHTML("該当なし", "チャンス情報は毎週 月・木 の 22:00 便で届きます")}</div>
+    <div class="tl">${body || emptyHTML("該当なし", "就活・チャンスの情報は毎週 月・木 の 22:00 便で届きます")}</div>
   </div>`;
 }
 

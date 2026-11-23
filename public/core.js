@@ -39,12 +39,12 @@ export const DEFAULT_CATS = [
   { id: "ai_howto", name: "AI活用", color: "F2F56A" },
   { id: "classic", name: "定番の一本", color: "C59BFF" },
   { id: "community", name: "SNS・コミュニティ", color: "FF8FC8" },
-  { id: "chance", name: "チャンス情報", color: "FFB874" },
+  { id: "chance", name: "就活・チャンス", color: "FFB874" },
   { id: "programmer", name: "プログラマー", color: "43D6FF", section: "programmer" },
   { id: "planner", name: "プランナー", color: "FFB874", section: "planner" },
 ];
 export const CAT_ICON = { ai: "ti-robot", industry: "ti-device-gamepad-2", tech: "ti-code", ai_howto: "ti-wand",
-  classic: "ti-pin", community: "ti-messages", chance: "ti-trophy", programmer: "ti-terminal-2", planner: "ti-notebook" };
+  classic: "ti-pin", community: "ti-messages", chance: "ti-briefcase", programmer: "ti-terminal-2", planner: "ti-notebook" };
 export const SLOT_LABEL = { "10": "10:00", "17": "17:00", "22": "22:00", learn: "朝" };
 export const WEEK = "日月火水木金土";
 
