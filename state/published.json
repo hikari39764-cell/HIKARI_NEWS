@@ -3104,6 +3104,149 @@
    "source": "Gaffer On Games（Glenn Fiedler）",
    "note": "どのオンラインゲームの設計にも通じる、通信方式の地図になる一本",
    "reminded": []
+  },
+  {
+   "id": "3b84475ad436cb03",
+   "url": "https://zenn.dev/ambr_inc/articles/3af2acbb2b7536",
+   "title": "Unityの設計を「6層×置き場所の型」で整理。ambrのアーキテクチャ解説",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-23",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn（ambr）",
+   "note": "チームで「どこに何を書くか」を決める実例。設計論争を減らす型が学べる",
+   "reminded": []
+  },
+  {
+   "id": "ee5091e48b3b31f3",
+   "url": "https://automaton-media.com/articles/columnjp/nununu-20261123-480415/",
+   "title": "なぜゲームは「左から右」が多い？デザイナーが挙げる6つの仮説",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-23",
+   "slot": "22",
+   "deadline": null,
+   "source": "AUTOMATON（コラム）／はてブで話題",
+   "note": "「当たり前」の配置や進行方向を、理由つきで見直せるコラム",
+   "reminded": []
+  },
+  {
+   "id": "4db104e33d86c697",
+   "url": "https://togetter.com/li/2773940",
+   "title": "「猫を撫でるだけ」のブラウザゲームがXで話題。評価されたのは質感と音、割れたのは入力",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-23",
+   "slot": "22",
+   "deadline": null,
+   "source": "X で話題（Togetter）／AUTOMATON",
+   "note": "質感・音・入力のどこが評価され、どこが改善点になったかが分かる",
+   "reminded": []
+  },
+  {
+   "id": "02255f4188d001d7",
+   "url": "https://qiita.com/minorun365/items/faa50b7662b86e1df29c",
+   "title": "AIに書かせたブログを「AI臭さ」から救う手順。開発日記・ポートフォリオにも使える",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-23",
+   "slot": "22",
+   "deadline": null,
+   "source": "Qiita（minorun365）",
+   "note": "AIに書かせても自分の作品説明になる、6つの手順が学べる",
+   "reminded": []
+  },
+  {
+   "id": "01914533a422d5c0",
+   "url": "https://danielsada.tech/blog/assume-people-are-not-interested-in-your-blog-post/",
+   "title": "「読者は興味がない」前提で書く。HNで222ptの短いブログ術",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-23",
+   "slot": "22",
+   "deadline": null,
+   "source": "Hacker News／Daniel Sada",
+   "note": "冒頭3行の書き方が変わる。開発日記や進捗報告にそのまま使える",
+   "reminded": []
+  },
+  {
+   "id": "c49958a39a9f9a63",
+   "url": "https://rokujyouhitoma.hatenablog.com/entry/2026/11/23/135112",
+   "title": "「AI時代に食いっぱぐれるエンジニア」の分かれ目は何か。はてブで読まれた私見",
+   "category": "community",
+   "importance": 2,
+   "date": "2026-11-23",
+   "slot": "22",
+   "deadline": null,
+   "source": "はてなブログ（rokujyouhitoma）／はてブ",
+   "note": "AI時代の学び方を考える材料。主張は筆者の私見として読もう",
+   "reminded": []
+  },
+  {
+   "id": "e138f5f88476d4c2",
+   "url": "https://www.cyberagent.co.jp/careers/students/event/detail/id=33949",
+   "title": "サイバーエージェント「Game Client College」。Unityの設計を学ぶ無料講座、1次は12/6まで",
+   "category": "chance",
+   "importance": 5,
+   "date": "2026-11-23",
+   "slot": "22",
+   "deadline": "2026-12-06",
+   "source": "サイバーエージェント 学生向け採用ページ",
+   "note": "参加条件：2028年入社可・ゲーム開発経験あり。受講無料で交通費支給",
+   "reminded": []
+  },
+  {
+   "id": "5f70e6fa0463993b",
+   "url": "https://job.rikunabi.com/job_descriptions/8c81ffc3dc394c8d/",
+   "title": "ポケモンの原著作権者クリーチャーズ、28卒ゲームプログラマーの本選考。12/14 18:00まで",
+   "category": "chance",
+   "importance": 4,
+   "date": "2026-11-23",
+   "slot": "22",
+   "deadline": "2026-12-14",
+   "source": "リクナビ（クリーチャーズ）",
+   "note": "参加条件：28卒、OOPの経験。作品は任意だが出すと強い",
+   "reminded": []
+  },
+  {
+   "id": "7256c78b6d9831a3",
+   "url": "https://hrmos.co/pages/aiming/jobs/2310986028893249538",
+   "title": "Aiming 28/29卒向けエンジニア冬季インターン。1〜2週間、本選考スキップ特典あり、12/31まで",
+   "category": "chance",
+   "importance": 4,
+   "date": "2026-11-23",
+   "slot": "22",
+   "deadline": "2026-12-31",
+   "source": "Aiming 採用ページ（HRMOS）",
+   "note": "参加条件：28/29卒、Unityでのゲーム制作経験。遠方者は交通費・宿泊を会社負担",
+   "reminded": []
+  },
+  {
+   "id": "55806a21516233bb",
+   "url": "https://itch.io/jam/game-off-2026",
+   "title": "GitHub公式の「Game Off 2026」、テーマは「SHIFT」。12/1提出締切、エンジン自由",
+   "category": "chance",
+   "importance": 3,
+   "date": "2026-11-23",
+   "slot": "22",
+   "deadline": "2026-12-01",
+   "source": "itch.io（Game Off 2026）",
+   "note": "参加条件：個人・チーム可、エンジン自由。コードを公開して作る",
+   "reminded": []
+  },
+  {
+   "id": "61145e309e6dea0a",
+   "url": "https://itch.io/jam/udc-jam-40",
+   "title": "Unity限定の「UDC Jam #40」。12/4〜14の10日間、1位はアセット賞品",
+   "category": "chance",
+   "importance": 3,
+   "date": "2026-11-23",
+   "slot": "22",
+   "deadline": "2026-12-14",
+   "source": "itch.io（UDC Jam #40）",
+   "note": "参加条件：Unity使用、個人・チーム可。WebGLでの公開が推奨",
+   "reminded": []
   }
  ],
  "batches": [
@@ -3462,6 +3605,13 @@
    "slot": "special",
    "date": "2026-11-23",
    "count": 5,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261123-22-211643",
+   "slot": "22",
+   "date": "2026-11-23",
+   "count": 11,
    "status": "ok"
   }
  ],
@@ -4138,6 +4288,27 @@
    "level": "応用",
    "area": "dx12",
    "theme": "レンダーターゲットと深度バッファ",
+   "date": "2026-11-23"
+  },
+  {
+   "term": "フルスクリーントライアングル",
+   "level": "基礎",
+   "area": "shader",
+   "theme": "ポストエフェクトの基本（フルスクリーン処理）",
+   "date": "2026-11-23"
+  },
+  {
+   "term": "Texture2D::Load（フィルタなしの読み出し）",
+   "level": "発展",
+   "area": "shader",
+   "theme": "ポストエフェクトの基本（フルスクリーン処理）",
+   "date": "2026-11-23"
+  },
+  {
+   "term": "分離可能ガウシアンブラー（2パス）",
+   "level": "応用",
+   "area": "shader",
+   "theme": "ポストエフェクトの基本（フルスクリーン処理）",
    "date": "2026-11-23"
   }
  ],
@@ -5654,7 +5825,7 @@
   "feeling": 60,
   "prompt": 60
  },
- "last_daily_mail": "2026-11-22",
+ "last_daily_mail": "2026-11-23",
  "specials": [
   {
    "date": "2026-11-16",
