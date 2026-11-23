@@ -3247,6 +3247,32 @@
    "source": "itch.io（UDC Jam #40）",
    "note": "参加条件：Unity使用、個人・チーム可。WebGLでの公開が推奨",
    "reminded": []
+  },
+  {
+   "id": "774867361b62715f",
+   "url": "https://unity.com/blog/hyper-visor-xreal-aura-physics-scenes",
+   "title": "Owlchemy Labs『Hyper Visor』の作り方：物理シーンを複数に分けて、ゲームもメニューもポーズも同じ仕組みで動かす",
+   "category": "programmer",
+   "importance": 4,
+   "date": "2026-11-24",
+   "slot": "learn",
+   "deadline": null,
+   "source": "Unity Blog（Owlchemy Labs）",
+   "note": "ポーズやメニューを後付けできる「世界ごとの時計」設計が学べる",
+   "reminded": []
+  },
+  {
+   "id": "345bdf0cf9d4da07",
+   "url": "https://80.lv/articles/play-as-puppies-rescue-your-owner-from-haunted-mansion-in-this-co-op-game/",
+   "title": "子犬2匹の協力パズル『Haunted Paws』：「片方が何をしている間、もう片方は何ができる？」から作る協力プレイ",
+   "category": "planner",
+   "importance": 3,
+   "date": "2026-11-24",
+   "slot": "learn",
+   "deadline": null,
+   "source": "80.lv（LazyFlock インタビュー）",
+   "note": "企画に活かせる視点：役割分担を強制する協力パズルの作り方",
+   "reminded": []
   }
  ],
  "batches": [
@@ -3612,6 +3638,13 @@
    "slot": "22",
    "date": "2026-11-23",
    "count": 11,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/learn-20261124-learn-063430",
+   "slot": "learn",
+   "date": "2026-11-24",
+   "count": 14,
    "status": "ok"
   }
  ],
@@ -5768,6 +5801,90 @@
    "track": "planner",
    "level": "基礎",
    "q": "ある月の売上が 100 万円、月間アクティブユーザー（MAU）が 1 万人、そのうち課金したユーザーが 500 人だった。ARPU（売上 ÷ MAU とする）と課金率の組み合わせと"
+  },
+  {
+   "id": "87cf9040f041",
+   "topic": "math",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "ベクトル v = (3, 0, 4) を正規化（長さ 1 に）した結果として正しいのは？"
+  },
+  {
+   "id": "b0a8638154c5",
+   "topic": "math",
+   "track": "programmer",
+   "level": "応用",
+   "q": "始点 O = (0, 0, 0)、方向 D = (0, 0, 1)（単位ベクトル）のレイと、中心 C = (2, 0, 5)、半径 r = 2 の球がある。このレイと球の関係として"
+  },
+  {
+   "id": "f903eeb082df",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "C++ で、int grid[1024][1024] の全要素を足し合わせる。次の (A) と (B) は結果が同じだが、一般に速いのはどちら？"
+  },
+  {
+   "id": "88451a49846b",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "発展",
+   "q": "ゲームの 1 フレームで、CPU 側（ゲームロジックと描画コマンド作成）が 8 ms、GPU の描画が 20 ms かかっている。CPU と GPU は 1 フレームずらしてパイプ"
+  },
+  {
+   "id": "fbbcc6684afd",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "プレイヤーの HP が変化したとき、UI・効果音・実績システムがそれぞれ反応したい。HP を管理するクラスが「イベント（オブザーバー）」で通知する設計にする主な利点は？"
+  },
+  {
+   "id": "1ece05d1a9fa",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "応用",
+   "q": "格闘ゲームのリプレイ機能を、「毎フレームの入力だけ」を記録して再生することで実現したい。入力ログだけで同じ試合を正確に再現するために、最も重要な条件は？"
+  },
+  {
+   "id": "6fff33363821",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "発展",
+   "q": "次のコードをコンパイルしたとき、(2) の行についてどうなる？（必要なヘッダーはインクルード済みとする）"
+  },
+  {
+   "id": "2f8c1ac66ede",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "DX12 で、スワップチェーンのバックバッファへ描画し終えた。IDXGISwapChain::Present を呼ぶ前に、バックバッファのリソースステートはどうしておく必要がある？"
+  },
+  {
+   "id": "d355ca06ee42",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "発展",
+   "q": "次の HLSL コードで、a と b の値の組み合わせとして正しいのは？"
+  },
+  {
+   "id": "7481fccabf6d",
+   "topic": "level",
+   "track": "planner",
+   "level": "基礎",
+   "q": "マップの中で、通路が 1 か所に絞られ、プレイヤーや敵がどうしても通ることになる狭い場所を、レベルデザインの用語で何と呼ぶ？"
+  },
+  {
+   "id": "e7da2193e4ae",
+   "topic": "design",
+   "track": "planner",
+   "level": "発展",
+   "q": "ユニット A は B に強く、B は C に強く、C は A に強い、という「三すくみ」の相性を設計に入れる。この仕組みの主な狙いとして最も適切なのは？"
+  },
+  {
+   "id": "e263746e3c28",
+   "topic": "narrative",
+   "track": "planner",
+   "level": "応用",
+   "q": "ミステリーゲームの序盤、プレイヤーだけが「頼れる仲間のレンは実は敵のスパイだ」という場面を見せられる。しかし主人公はそれを知らず、レンを信頼して進んでいく。プレイヤーが「気づいて、"
   }
  ],
  "themes": [
@@ -5814,16 +5931,20 @@
   {
    "date": "2026-11-23",
    "title": "三秒前の自分"
+  },
+  {
+   "date": "2026-11-24",
+   "title": "半分だけ見える"
   }
  ],
  "reports": [],
  "idea_counts": {
-  "genre": 62,
-  "mechanic": 62,
-  "theme": 62,
-  "constraint": 62,
-  "feeling": 60,
-  "prompt": 60
+  "genre": 67,
+  "mechanic": 67,
+  "theme": 67,
+  "constraint": 67,
+  "feeling": 65,
+  "prompt": 65
  },
  "last_daily_mail": "2026-11-23",
  "specials": [
