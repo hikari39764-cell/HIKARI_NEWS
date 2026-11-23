@@ -3000,6 +3000,110 @@
    "source": "4Gamer（G-STAR 2026）",
    "note": "15作品の「一文で言える強み」が、自分の企画づくりの手本になる",
    "reminded": []
+  },
+  {
+   "id": "80d24312ba3ea9a5",
+   "url": "https://zenn.dev/ibuking289/articles/godot46-kinsoku-line-breaking",
+   "title": "Godotの日本語折り返しで「っ」「ー」が行頭に来る問題。設定1行での直し方",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-23",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（@ibuking289）",
+   "note": "日本語UIを作ると一度は踏む折り返しの罠と、設定1行での対処法",
+   "reminded": []
+  },
+  {
+   "id": "eb76140342640f52",
+   "url": "https://zenn.dev/cliffy/articles/a3f55476dba1a1",
+   "title": "「避けられるはずなのに死ぬ」を防ぐ。弾幕の隙間を不変条件とテストで保証する設計",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-23",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（@cliffy）",
+   "note": "理不尽な死を、感覚でなく数字とテストで防ぐ考え方",
+   "reminded": []
+  },
+  {
+   "id": "1618a40fe3236987",
+   "url": "https://zenn.dev/jinchouge_mj/articles/f5b6d14a5654dc",
+   "title": "序章で4割が離脱。流入元の計測から直した、個人開発ノベルゲームの改善記録",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-23",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（jinchouge_mj）",
+   "note": "感覚でなくデータで序盤を直す、等身大の手順が分かる",
+   "reminded": []
+  },
+  {
+   "id": "ef79139003c8aaad",
+   "url": "https://zenn.dev/shige7000/articles/af9bcb3ee87c8a",
+   "title": "if文地獄を避ける。UnityのScriptableObjectで作る「互換性ルールエンジン」",
+   "category": "tech",
+   "importance": 3,
+   "date": "2026-11-23",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（@shige7000）",
+   "note": "条件が増えても崩れない判定ロジックの分け方を、Unityの機能で学べる",
+   "reminded": []
+  },
+  {
+   "id": "e27da5684a0fee04",
+   "url": "https://zenn.dev/canly/articles/ca6875cd79539f",
+   "title": "寝ている間にAIエージェントが進める。「pstack」の使い方と、指示に書く5点",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-23",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（canly）",
+   "note": "試すなら、まず次の依頼を5点セットで書き直してみる",
+   "reminded": []
+  },
+  {
+   "id": "15365da6e3dd3fe9",
+   "url": "https://zenn.dev/zivaengine/articles/028eab12186c4a",
+   "title": "「ChatGPTはGodot 3のコードを出す」は本当か。150回答の検証と、AIコードの確かめ方",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-23",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（Ziva／ziva.shの日本語版）",
+   "note": "試すなら、AIのコードは構文チェック→実行の2段階で確かめる",
+   "reminded": []
+  },
+  {
+   "id": "b746944f59d86654",
+   "url": "https://qiita.com/Kan0n/items/98b2c561c967ed207860",
+   "title": "AIに任せるのは雛形まで。MSX実機のゲーム開発で見えた、AIと人間の分担線",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-23",
+   "slot": "17",
+   "deadline": null,
+   "source": "Qiita（@Kan0n）",
+   "note": "試すなら、AIに任せる作業と人が確かめる作業を最初に分けてみる",
+   "reminded": []
+  },
+  {
+   "id": "01972794656f59b8",
+   "url": "https://gafferongames.com/post/what_every_programmer_needs_to_know_about_game_networking/",
+   "title": "ネットワークゲームの基本を一本で。ロックステップ→サーバー権威→クライアント予測の流れ",
+   "category": "classic",
+   "importance": 3,
+   "date": "2026-11-23",
+   "slot": "17",
+   "deadline": null,
+   "source": "Gaffer On Games（Glenn Fiedler）",
+   "note": "どのオンラインゲームの設計にも通じる、通信方式の地図になる一本",
+   "reminded": []
   }
  ],
  "batches": [
@@ -3344,6 +3448,13 @@
    "slot": "10",
    "date": "2026-11-23",
    "count": 7,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261123-17-161703",
+   "slot": "17",
+   "date": "2026-11-23",
+   "count": 8,
    "status": "ok"
   }
  ],
@@ -3999,6 +4110,27 @@
    "level": "応用",
    "area": "cpp",
    "theme": "要素の削除とイテレータ無効化",
+   "date": "2026-11-23"
+  },
+  {
+   "term": "レンダーターゲットビュー（RTV）",
+   "level": "基礎",
+   "area": "dx12",
+   "theme": "レンダーターゲットと深度バッファ",
+   "date": "2026-11-23"
+  },
+  {
+   "term": "最適化クリア値",
+   "level": "発展",
+   "area": "dx12",
+   "theme": "レンダーターゲットと深度バッファ",
+   "date": "2026-11-23"
+  },
+  {
+   "term": "読み取り専用DSV",
+   "level": "応用",
+   "area": "dx12",
+   "theme": "レンダーターゲットと深度バッファ",
    "date": "2026-11-23"
   }
  ],
