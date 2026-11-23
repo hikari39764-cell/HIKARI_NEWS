@@ -1080,7 +1080,9 @@
    "deadline": "2026-11-30",
    "source": "JDN コンペ情報（主催：カプコン）",
    "note": "参加条件：日本の学生（18歳以上・最大20名のチーム可）。企画書で応募",
-   "reminded": []
+   "reminded": [
+    7
+   ]
   },
   {
    "id": "80a76fe8f21f4441",
@@ -1093,7 +1095,9 @@
    "deadline": "2026-11-30",
    "source": "JDN コンペ情報（主催：iBAe）",
    "note": "参加条件：全国の学生（個人または2〜4名）。未発売のオリジナル作品に限る",
-   "reminded": []
+   "reminded": [
+    7
+   ]
   },
   {
    "id": "0194c99cfe26bb6d",
@@ -2905,6 +2909,97 @@
    "source": "4Gamer.net",
    "note": "企画に活かせる視点：題材そのものを戦闘ルールに言い換える練習になる",
    "reminded": []
+  },
+  {
+   "id": "de5cd1a6d51dc917",
+   "url": "https://openai.com/index/perplexity-and-intelligence/",
+   "title": "OpenAIの主任科学者が提案、AI開発の「上限」を共通指標パープレキシティで決めよう",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-23",
+   "slot": "10",
+   "deadline": null,
+   "source": "OpenAI（Jakub Pachocki）",
+   "note": "AIの進歩を測る「物差し」と、各社で上限を決める提案を図解的に知れる",
+   "reminded": []
+  },
+  {
+   "id": "3c4f4993adcaa465",
+   "url": "https://github.com/gulivan/worker755",
+   "title": "あなたがAIの「部下」になるゲーム『Worker 755』、LLMの上司が指示を出し出来を採点する",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-23",
+   "slot": "10",
+   "deadline": null,
+   "source": "GitHub（gulivan） / Hacker News",
+   "note": "AIに任せる側の落とし穴を、遊びながら体験できる題材",
+   "reminded": []
+  },
+  {
+   "id": "4f0ed76760ef2783",
+   "url": "https://www.gpupartner.com/blog/beginners-guide-local-ai-inkling-qwen-unsloth",
+   "title": "自分のPCでローカルAIを動かす入門、VRAM別のモデル選びと量子化の目安",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-23",
+   "slot": "10",
+   "deadline": null,
+   "source": "GPU Partner",
+   "note": "自分のGPUで動かせるモデルが、表を見るだけで決められる",
+   "reminded": []
+  },
+  {
+   "id": "4c786fb3af5a18b9",
+   "url": "https://www.4gamer.net/games/991/G999110/20261122008/",
+   "title": "『FF7』リメイクの再構築を北瀬氏が語る、変えない軸は「命」、変えたのは見せ方",
+   "category": "industry",
+   "importance": 4,
+   "date": "2026-11-23",
+   "slot": "10",
+   "deadline": null,
+   "source": "4Gamer（G-STAR 2026）",
+   "note": "「何を変えて、何を守るか」の判断基準を、現場の言葉で学べる",
+   "reminded": []
+  },
+  {
+   "id": "ac88fe4ffdb9d9ea",
+   "url": "https://www.4gamer.net/games/060/G106039/20261122009/",
+   "title": "1人で3年、UE5製の『BABA YAGA』。ボンバーマン式の爆弾をレベルアップ選択で作り替えた設計",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-23",
+   "slot": "10",
+   "deadline": null,
+   "source": "4Gamer（WePlay Expo 2026）",
+   "note": "有名な遊びを土台に、1か所だけ変えて個性を出す実例",
+   "reminded": []
+  },
+  {
+   "id": "6f0ea060dbce24e3",
+   "url": "https://www.4gamer.net/games/060/G106040/20261122012/",
+   "title": "『Shape Sender Deluxe』、答えを1つに決めない物理パズルと、音楽が自動でできる効果音の設計",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-23",
+   "slot": "10",
+   "deadline": null,
+   "source": "4Gamer（WePlay Expo 2026）",
+   "note": "「正解を示さない」設計と、音が曲になる工夫がそのまま参考になる",
+   "reminded": []
+  },
+  {
+   "id": "c247d9e8519a6b50",
+   "url": "https://www.4gamer.net/games/991/G999110/20261122005/",
+   "title": "G-STARインディー賞、全5部門15作品。受賞作から見える「遊びの切り口」の作り方",
+   "category": "industry",
+   "importance": 2,
+   "date": "2026-11-23",
+   "slot": "10",
+   "deadline": null,
+   "source": "4Gamer（G-STAR 2026）",
+   "note": "15作品の「一文で言える強み」が、自分の企画づくりの手本になる",
+   "reminded": []
   }
  ],
  "batches": [
@@ -3242,6 +3337,13 @@
    "slot": "learn",
    "date": "2026-11-23",
    "count": 13,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261123-10-091518",
+   "slot": "10",
+   "date": "2026-11-23",
+   "count": 7,
    "status": "ok"
   }
  ],
@@ -3877,6 +3979,27 @@
    "area": "shader",
    "theme": "シャドウマッピング",
    "date": "2026-11-22"
+  },
+  {
+   "term": "イテレータ無効化",
+   "level": "基礎",
+   "area": "cpp",
+   "theme": "要素の削除とイテレータ無効化",
+   "date": "2026-11-23"
+  },
+  {
+   "term": "std::erase_if（C++20）",
+   "level": "発展",
+   "area": "cpp",
+   "theme": "要素の削除とイテレータ無効化",
+   "date": "2026-11-23"
+  },
+  {
+   "term": "swap-and-pop",
+   "level": "応用",
+   "area": "cpp",
+   "theme": "要素の削除とイテレータ無効化",
+   "date": "2026-11-23"
   }
  ],
  "quiz": [
