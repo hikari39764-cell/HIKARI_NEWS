@@ -3341,6 +3341,71 @@
    "source": "Google DeepMind Blog",
    "note": "AIの出力を「検算役」に通す設計は、自分の制作にも使える",
    "reminded": []
+  },
+  {
+   "id": "16bb99b56d17dd63",
+   "url": "https://unity.com/blog/ai-vibe-coding-vs-buying-managed-infrastructure",
+   "title": "UnityをAIに触らせるなら、どこまで任せる？「表面」はバイブコーディング、「土台」は任せない",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-24",
+   "slot": "17",
+   "deadline": null,
+   "source": "Unity Blog",
+   "note": "試すならまず「使い捨てのエディタ拡張」をAIに頼む",
+   "reminded": []
+  },
+  {
+   "id": "ff5f056ab9a6869d",
+   "url": "https://zenn.dev/teradox_blog/articles/8ec76cc0d9e2bb",
+   "title": "コードを全部読まずに本番公開。Claude Codeで87本をマージした開発者が仕組みで守ったこと",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-24",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn",
+   "note": "「人が必ず読む場所」を先に決める、実例つきの運用",
+   "reminded": []
+  },
+  {
+   "id": "6fd4c32fe34a4cba",
+   "url": "https://huggingface.co/blog/agentic-evals",
+   "title": "AIエージェントの評価を自作する8ステップ。「完了しました」を信じない検証の作り方",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-24",
+   "slot": "17",
+   "deadline": null,
+   "source": "Hugging Face Blog",
+   "note": "AIの「できました」を疑うための、採点の作り方",
+   "reminded": []
+  },
+  {
+   "id": "1be3f9327aadc7b5",
+   "url": "https://zenn.dev/beyond/articles/92657b461ebcb4",
+   "title": "AIのテストが通っても、変異を入れると23%は見逃された。ミューテーションテストで見つかった穴とバグ",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-24",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn",
+   "note": "試すなら、境界の「以上」を1つ書き換えてテストを見る",
+   "reminded": []
+  },
+  {
+   "id": "b1cfca43ac2de353",
+   "url": "https://www.redblobgames.com/maps/terrain-from-noise/",
+   "title": "ノイズから地形を作る定番解説「Making maps with noise functions」。オクターブから島・バイオームまで",
+   "category": "classic",
+   "importance": 4,
+   "date": "2026-11-24",
+   "slot": "17",
+   "deadline": null,
+   "source": "Red Blob Games",
+   "note": "なぜ今も使えるか：数行の式で、地形の基本が全部つかめる",
+   "reminded": []
   }
  ],
  "batches": [
@@ -3718,6 +3783,13 @@
   {
    "branch": "claude/inbox-20261124-10-091612",
    "slot": "10",
+   "date": "2026-11-24",
+   "count": 5,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261124-17-161630",
+   "slot": "17",
    "date": "2026-11-24",
    "count": 5,
    "status": "ok"
@@ -4438,6 +4510,27 @@
    "level": "応用",
    "area": "cpp",
    "theme": "値の有無・選択を型で表す",
+   "date": "2026-11-24"
+  },
+  {
+   "term": "サンプラー（D3D12_SAMPLER_DESC）",
+   "level": "基礎",
+   "area": "dx12",
+   "theme": "テクスチャサンプリング",
+   "date": "2026-11-24"
+  },
+  {
+   "term": "静的サンプラー（Static Sampler）",
+   "level": "発展",
+   "area": "dx12",
+   "theme": "テクスチャサンプリング",
+   "date": "2026-11-24"
+  },
+  {
+   "term": "サンプラーフィードバック",
+   "level": "応用",
+   "area": "dx12",
+   "theme": "テクスチャサンプリング",
    "date": "2026-11-24"
   }
  ],
