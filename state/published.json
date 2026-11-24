@@ -3406,6 +3406,71 @@
    "source": "Red Blob Games",
    "note": "なぜ今も使えるか：数行の式で、地形の基本が全部つかめる",
    "reminded": []
+  },
+  {
+   "id": "a987659acf251281",
+   "url": "https://togetter.com/li/2774470",
+   "title": "「AI絵のフリゲが急増」にX上で議論。制作を止めていたのは本当に絵の費用だったのか",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-24",
+   "slot": "22",
+   "deadline": null,
+   "source": "X で話題（Togetter）",
+   "note": "絵が個人制作の壁になる理由を、制作者の生の声で知る",
+   "reminded": []
+  },
+  {
+   "id": "2b10775ab9760db8",
+   "url": "https://togetter.com/li/2774301",
+   "title": "「ブラウザゲームを作る人は何がしたいのか」への制作者の答え。収益化しない公開の利点",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-24",
+   "slot": "22",
+   "deadline": null,
+   "source": "X で話題（Togetter）",
+   "note": "最初の1本を無料で出す意味を、制作者の本音から考える",
+   "reminded": []
+  },
+  {
+   "id": "6eaaa818a474002d",
+   "url": "https://zenn.dev/ncdc/articles/a522c2c50022d2",
+   "title": "AIが提案し、AIが根拠にする。「判断」を丸ごと任せないための3つの線引き",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-24",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn（NCDC）",
+   "note": "AIの提案を鵜呑みにしないための、明日からできる3つの確認",
+   "reminded": []
+  },
+  {
+   "id": "0b65772dcf8839bc",
+   "url": "https://automaton-media.com/articles/newsjp/20261124-480596/",
+   "title": "UNDERTALEのアーティストが無料公開した新作、制作はRPGツクールからGB Studioへ",
+   "category": "community",
+   "importance": 2,
+   "date": "2026-11-24",
+   "slot": "22",
+   "deadline": null,
+   "source": "AUTOMATON（X で話題）",
+   "note": "作りたいゲームに合わせて道具を替える。公開時の同梱物にも学びあり",
+   "reminded": []
+  },
+  {
+   "id": "8c0c5cfdec1268d7",
+   "url": "https://zenn.dev/cybergarage/articles/5ee7ac6b3b0565",
+   "title": "コーディングエージェントでOSSが動き出した20年選手の記録。任せ方と環境整備のコツ",
+   "category": "community",
+   "importance": 2,
+   "date": "2026-11-24",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn（CyberGarage）",
+   "note": "AIに修正を任せる前に整える環境。20年選手の実体験で学ぶ",
+   "reminded": []
   }
  ],
  "batches": [
@@ -3799,6 +3864,13 @@
    "slot": "special",
    "date": "2026-11-24",
    "count": 4,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261124-22-211542",
+   "slot": "22",
+   "date": "2026-11-24",
+   "count": 5,
    "status": "ok"
   }
  ],
@@ -4538,6 +4610,27 @@
    "level": "応用",
    "area": "dx12",
    "theme": "テクスチャサンプリング",
+   "date": "2026-11-24"
+  },
+  {
+   "term": "深度テスト（デプステスト）",
+   "level": "基礎",
+   "area": "shader",
+   "theme": "深度バッファ",
+   "date": "2026-11-24"
+  },
+  {
+   "term": "深度バッファをテクスチャとして読む",
+   "level": "発展",
+   "area": "shader",
+   "theme": "深度バッファ",
+   "date": "2026-11-24"
+  },
+  {
+   "term": "SV_DepthGreaterEqual",
+   "level": "応用",
+   "area": "shader",
+   "theme": "深度バッファ",
    "date": "2026-11-24"
   }
  ],
@@ -6142,7 +6235,7 @@
   "feeling": 65,
   "prompt": 65
  },
- "last_daily_mail": "2026-11-23",
+ "last_daily_mail": "2026-11-24",
  "specials": [
   {
    "date": "2026-11-16",
