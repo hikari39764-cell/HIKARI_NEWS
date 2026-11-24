@@ -3471,6 +3471,19 @@
    "source": "Zenn（CyberGarage）",
    "note": "AIに修正を任せる前に整える環境。20年選手の実体験で学ぶ",
    "reminded": []
+  },
+  {
+   "id": "6c3160d3d56b2319",
+   "url": "https://www.gamedeveloper.com/design/grand-theft-auto-vi-and-world-of-warcraft-forever-show-that-mundanity-is-having-a-moment",
+   "title": "「日常の退屈」を遊びにする：GTA VI と WoW: Forever から読む、「面倒な部分だけ消す」設計",
+   "category": "planner",
+   "importance": 3,
+   "date": "2026-11-25",
+   "slot": "learn",
+   "deadline": null,
+   "source": "Game Developer",
+   "note": "企画に活かせる視点：作業の「楽しい部分」と「現実で面倒な部分」を分けて考える",
+   "reminded": []
   }
  ],
  "batches": [
@@ -3871,6 +3884,13 @@
    "slot": "22",
    "date": "2026-11-24",
    "count": 5,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/learn-20261125-learn-063711",
+   "slot": "learn",
+   "date": "2026-11-25",
+   "count": 13,
    "status": "ok"
   }
  ],
@@ -6174,6 +6194,90 @@
    "track": "planner",
    "level": "応用",
    "q": "ミステリーゲームの序盤、プレイヤーだけが「頼れる仲間のレンは実は敵のスパイだ」という場面を見せられる。しかし主人公はそれを知らず、レンを信頼して進んでいく。プレイヤーが「気づいて、"
+  },
+  {
+   "id": "ce0ffcd3b134",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "次のコードをコンパイルしたとき、(1)〜(3) のうちコンパイルできる行はどれ？"
+  },
+  {
+   "id": "97e16b5563ca",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "応用",
+   "q": "次のコードをコンパイルしたときの説明として正しいのは？"
+  },
+  {
+   "id": "1a93d6172aba",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "応用",
+   "q": "ヒープ上で重なった 2 つの配置リソース（CreatePlacedResource）A と B があり、どちらもレンダーターゲット用。A を使い終えて、同じメモリを B として使い"
+  },
+  {
+   "id": "e81ceef8f66d",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "応用",
+   "q": "Shader Model 5.0 以降のコンピュートシェーダーとして、次のコードをコンパイルしたときの結果は？"
+  },
+  {
+   "id": "edc7e5436671",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "次の HLSL コードで、r の値はどれ？"
+  },
+  {
+   "id": "2434353ec500",
+   "topic": "math",
+   "track": "programmer",
+   "level": "応用",
+   "q": "2D の三角形 A(0, 0)、B(4, 0)、C(0, 4) の内部にある点 P(1, 1) を、P = wA·A + wB·B + wC·C（wA + wB + wC = 1）"
+  },
+  {
+   "id": "427bfb8ff4b6",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "応用",
+   "q": "厚さ 0.2 m の薄い壁に向けて、毎秒 100 m で飛ぶ小さな球の弾を撃つ。物理は 1/60 秒の固定ステップで更新しており、1 ステップで約 1.67 m 進む。ときどき弾が"
+  },
+  {
+   "id": "730b31efbd43",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "応用",
+   "q": "遠景まで見える広いシーンで、遠くの Z ファイティング（深度のちらつき）を減らす定番の手法に「リバース Z」（近い側を 1、遠い側を 0 にする深度）がある。この手法が特に効果的な"
+  },
+  {
+   "id": "04a7c1ede871",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "応用",
+   "q": "HDR 用のレンダーターゲットを DXGI_FORMAT_R16G16B16A16_FLOAT から DXGI_FORMAT_R11G11B10_FLOAT に変えた。1920×1"
+  },
+  {
+   "id": "e923809e152f",
+   "topic": "level",
+   "track": "planner",
+   "level": "応用",
+   "q": "探索型アクションのボス戦。ボスの手前にチェックポイントがなく、負けるたびに約 3 分の道中（雑魚敵と長い通路）をやり直してから再挑戦する設計になっている。プレイテストでは、ボスの攻"
+  },
+  {
+   "id": "43456af85d20",
+   "topic": "design",
+   "track": "planner",
+   "level": "応用",
+   "q": "新作の対戦カードゲームで、カードを 200 種類追加した。ところがプレイテストでは「覚えることが増えただけで、結局いつも同じ数種類のデッキに落ち着く」という感想が多かった。ゲームデ"
+  },
+  {
+   "id": "f966a486dd98",
+   "topic": "biz",
+   "track": "planner",
+   "level": "応用",
+   "q": "運営型ゲームのリテンションを日数ごとに見ると、D1 = 45%、D7 = 22%、D30 = 12%、D60 = 11%、D90 = 11% のように、30 日目以降はほぼ横ばいに"
   }
  ],
  "themes": [
@@ -6224,16 +6328,20 @@
   {
    "date": "2026-11-24",
    "title": "半分だけ見える"
+  },
+  {
+   "date": "2026-11-25",
+   "title": "音だけが頼り"
   }
  ],
  "reports": [],
  "idea_counts": {
-  "genre": 67,
-  "mechanic": 67,
-  "theme": 67,
-  "constraint": 67,
-  "feeling": 65,
-  "prompt": 65
+  "genre": 72,
+  "mechanic": 72,
+  "theme": 72,
+  "constraint": 72,
+  "feeling": 70,
+  "prompt": 70
  },
  "last_daily_mail": "2026-11-24",
  "specials": [
