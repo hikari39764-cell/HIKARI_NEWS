@@ -1066,7 +1066,8 @@
    "note": "参加条件：学生（個人・グループ可）。発表済みの作品でも応募できる",
    "reminded": [
     7,
-    3
+    3,
+    0
    ]
   },
   {
@@ -3233,7 +3234,9 @@
    "deadline": "2026-12-01",
    "source": "itch.io（Game Off 2026）",
    "note": "参加条件：個人・チーム可、エンジン自由。コードを公開して作る",
-   "reminded": []
+   "reminded": [
+    7
+   ]
   },
   {
    "id": "61145e309e6dea0a",
@@ -3272,6 +3275,71 @@
    "deadline": null,
    "source": "80.lv（LazyFlock インタビュー）",
    "note": "企画に活かせる視点：役割分担を強制する協力パズルの作り方",
+   "reminded": []
+  },
+  {
+   "id": "e731dd02eecfee0e",
+   "url": "https://www.gamedeveloper.com/programming/unreal-engine-6-to-remove-blueprints-and-actor-gameplay-framework-from-the-beginning",
+   "title": "UE6からBlueprintsとActorが外れる。EpicがVerse中心へ舵を切った理由",
+   "category": "industry",
+   "importance": 5,
+   "date": "2026-11-24",
+   "slot": "10",
+   "deadline": null,
+   "source": "Game Developer（Epic公式投稿の報道）",
+   "note": "Unrealで学んでいるなら、今後の方向性を知っておきたい一本",
+   "reminded": []
+  },
+  {
+   "id": "e2597b07eac5ae17",
+   "url": "https://automaton-media.com/articles/newsjp/20261123-480440/",
+   "title": "『Binding of Isaac』の隠しモードにAI生成BGM。発覚から削除までと、評価が急落した経緯",
+   "category": "industry",
+   "importance": 4,
+   "date": "2026-11-24",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "素材の出どころ管理が大事な理由が、実例でよく分かる",
+   "reminded": []
+  },
+  {
+   "id": "81ecb7742efe5383",
+   "url": "https://huggingface.co/nari-labs/Qwen3.8-27B-NariQ-GGUF",
+   "title": "27BのAIモデルを10GBに圧縮。「NariQ」がBF16並みの性能を保てる理由と使うときの条件",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-24",
+   "slot": "10",
+   "deadline": null,
+   "source": "Hugging Face（Nari Labs）",
+   "note": "自分のPCで大きなモデルを動かせるかの目安がつかめる",
+   "reminded": []
+  },
+  {
+   "id": "ef3910f6a7af585b",
+   "url": "https://simonwillison.net/2026/Nov/23/glm-54/",
+   "title": "GLM-5.4は「同じ層を繰り返し通す」ループ型。パラメータを増やさず深くする発想",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-24",
+   "slot": "10",
+   "deadline": null,
+   "source": "Simon Willison's Weblog（Z.ai発表の紹介）",
+   "note": "モデルを大きくせずに賢くする新しい流れを、ひと言で理解できる",
+   "reminded": []
+  },
+  {
+   "id": "61dcf1169479ac82",
+   "url": "https://deepmind.google/blog/finding-faster-quantum-algorithms-with-agents-and-formal-verification/",
+   "title": "AIが出した案を形式証明で検算させる。DeepMindの量子アルゴリズム改善に見る使い方",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-24",
+   "slot": "10",
+   "deadline": null,
+   "source": "Google DeepMind Blog",
+   "note": "AIの出力を「検算役」に通す設計は、自分の制作にも使える",
    "reminded": []
   }
  ],
@@ -3645,6 +3713,13 @@
    "slot": "learn",
    "date": "2026-11-24",
    "count": 14,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261124-10-091612",
+   "slot": "10",
+   "date": "2026-11-24",
+   "count": 5,
    "status": "ok"
   }
  ],
@@ -4343,6 +4418,27 @@
    "area": "shader",
    "theme": "ポストエフェクトの基本（フルスクリーン処理）",
    "date": "2026-11-23"
+  },
+  {
+   "term": "std::optional",
+   "level": "基礎",
+   "area": "cpp",
+   "theme": "値の有無・選択を型で表す",
+   "date": "2026-11-24"
+  },
+  {
+   "term": "std::variant",
+   "level": "発展",
+   "area": "cpp",
+   "theme": "値の有無・選択を型で表す",
+   "date": "2026-11-24"
+  },
+  {
+   "term": "std::visit とラムダのオーバーロード集合",
+   "level": "応用",
+   "area": "cpp",
+   "theme": "値の有無・選択を型で表す",
+   "date": "2026-11-24"
   }
  ],
  "quiz": [
