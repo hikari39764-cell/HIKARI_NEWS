@@ -3680,6 +3680,84 @@
    "source": "Casey Muratori（Computer, Enhance!）",
    "note": "なぜ今も読まれる？ 「共通化はいつすべきか」に実例で答えている",
    "reminded": []
+  },
+  {
+   "id": "d1ddd07c64cd809e",
+   "url": "https://zenn.dev/henteko/articles/ed8d1458246d7a",
+   "title": "マーダーミステリーのシナリオを証明で検査。時刻と持ち物の矛盾が見つかった",
+   "category": "community",
+   "importance": 5,
+   "date": "2026-11-25",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn（はてブで話題）",
+   "note": "分岐や時系列の矛盾は機械で見つけられる。自分のADV・RPGの設計にも使える発想",
+   "reminded": []
+  },
+  {
+   "id": "20e56b9de797c23f",
+   "url": "https://news.denfaminicogamer.jp/interview/261125w",
+   "title": "『Wizardry』生みの親が語る創作の原点。制約が「必要な機能」を絞らせた",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-25",
+   "slot": "22",
+   "deadline": null,
+   "source": "電ファミニコゲーマー（はてブで話題）",
+   "note": "制約の中で何を残し何を捨てたか。企画のスコープを考える手がかりになる",
+   "reminded": []
+  },
+  {
+   "id": "58d27ed84273447e",
+   "url": "https://www.marginalia.nu/log/a_141_marginalia_update/",
+   "title": "Javaの検索エンジンをC++へ移す実験。「速さ」より「自分で保守できるか」で決めた",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-25",
+   "slot": "22",
+   "deadline": null,
+   "source": "Marginalia（Hacker Newsで話題）",
+   "note": "書き換えるか、測るか。言語移行の判断基準が、作者本人の言葉で読める",
+   "reminded": []
+  },
+  {
+   "id": "777816c50f03e837",
+   "url": "https://rida.dev/blog/bypassing-ios-safari-60-fps-limit",
+   "title": "iPhoneのSafariで120Hzの入力を取る方法。スクロール要素を「コントローラー」にする",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-25",
+   "slot": "22",
+   "deadline": null,
+   "source": "rida.dev（Hacker Newsで話題）",
+   "note": "Webゲームが60Hzで頭打ちになる理由と、入力経路を替える回避策",
+   "reminded": []
+  },
+  {
+   "id": "65185b2b6e7e4764",
+   "url": "https://gpu-demo-gallery.pages.dev/",
+   "title": "1998〜2006年のGPUデモをブラウザで再現。移植の粗さも話題に",
+   "category": "community",
+   "importance": 2,
+   "date": "2026-11-25",
+   "slot": "22",
+   "deadline": null,
+   "source": "Show HN（Hacker Newsで話題）",
+   "note": "古典デモを眺めつつ、移植の落とし穴とバンプ→法線マップの流れを知る",
+   "reminded": []
+  },
+  {
+   "id": "3b405668e7dfde0b",
+   "url": "https://togetter.com/li/2774784",
+   "title": "泥まみれの豚をホースで洗うだけのゲームがXで話題。小さな遊びの「手触り」",
+   "category": "community",
+   "importance": 2,
+   "date": "2026-11-25",
+   "slot": "22",
+   "deadline": null,
+   "source": "X で話題（Togetter）",
+   "note": "ルールが簡単でも話題になる。反応の作り込みが「手触り」を生む例",
+   "reminded": []
   }
  ],
  "batches": [
@@ -4108,6 +4186,13 @@
    "slot": "special",
    "date": "2026-11-25",
    "count": 5,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261125-22-211515",
+   "slot": "22",
+   "date": "2026-11-25",
+   "count": 6,
    "status": "ok"
   }
  ],
@@ -4910,6 +4995,27 @@
    "level": "応用",
    "area": "dx12",
    "theme": "GPUタイミング計測",
+   "date": "2026-11-25"
+  },
+  {
+   "term": "法線マップのデコード（0〜1から−1〜1へ）",
+   "level": "基礎",
+   "area": "shader",
+   "theme": "法線マップ（ノーマルマッピング）",
+   "date": "2026-11-25"
+  },
+  {
+   "term": "TBN行列（タンジェント空間からワールド空間へ）",
+   "level": "発展",
+   "area": "shader",
+   "theme": "法線マップ（ノーマルマッピング）",
+   "date": "2026-11-25"
+  },
+  {
+   "term": "ddx / ddy で作るタンジェントフレーム",
+   "level": "応用",
+   "area": "shader",
+   "theme": "法線マップ（ノーマルマッピング）",
    "date": "2026-11-25"
   }
  ],
@@ -6602,7 +6708,7 @@
   "feeling": 70,
   "prompt": 70
  },
- "last_daily_mail": "2026-11-24",
+ "last_daily_mail": "2026-11-25",
  "specials": [
   {
    "date": "2026-11-16",
