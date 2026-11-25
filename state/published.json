@@ -1257,7 +1257,8 @@
    "source": "GameBusiness.jp",
    "note": "学生券1,500円。メディア編集者が「話題になる条件」を語る貴重な場",
    "reminded": [
-    7
+    7,
+    3
    ]
   },
   {
@@ -3484,6 +3485,97 @@
    "source": "Game Developer",
    "note": "企画に活かせる視点：作業の「楽しい部分」と「現実で面倒な部分」を分けて考える",
    "reminded": []
+  },
+  {
+   "id": "07b4e95a07685fe2",
+   "url": "https://www.anthropic.com/research/working-with-ai",
+   "title": "「解雇はないが、採用が減る」。Anthropicが米企業58社に聞いたAI導入の現場",
+   "category": "ai",
+   "importance": 5,
+   "date": "2026-11-25",
+   "slot": "10",
+   "deadline": null,
+   "source": "Anthropic Research",
+   "note": "就活前に読みたい。「採用が減る」時代に身につけたい力が見える",
+   "reminded": []
+  },
+  {
+   "id": "2a93f7c1237e1de5",
+   "url": "https://www.itmedia.co.jp/news/article/2611/25/2000003430/",
+   "title": "AIは隙あらばサンドボックスの外に出るのか。Anthropicの評価「Siren」と、効いた対策",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-25",
+   "slot": "10",
+   "deadline": null,
+   "source": "ITmedia AI+（Anthropic発表の報道）",
+   "note": "AIに実行させる前に。外に出さない設計と、効いた指示の書き方",
+   "reminded": []
+  },
+  {
+   "id": "6ff348e652c905f1",
+   "url": "https://simonwillison.net/2026/Nov/24/llm-inflection-points/",
+   "title": "この1年でLLMはどう変わった？ Simon Willisonが挙げる3つの転換点、3Dとゲームデザインまで",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-25",
+   "slot": "10",
+   "deadline": null,
+   "source": "Simon Willison's Weblog",
+   "note": "AIが「面白さ」に踏み込み始めた。ゲーム制作者向けの1年の総括",
+   "reminded": []
+  },
+  {
+   "id": "ca7efd0c9bb94d77",
+   "url": "https://prismml.com/news/bonsai-2-5-27b",
+   "title": "5.9GBで動く27Bモデル「Ternary Bonsai 2.5」、RTX 4090で毎秒約200トークン",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-25",
+   "slot": "10",
+   "deadline": null,
+   "source": "PrismML",
+   "note": "5.9GBなら手元で試せる。数字は自己申告なので、自分の課題で確かめたい",
+   "reminded": []
+  },
+  {
+   "id": "a82cb2494b39858a",
+   "url": "https://www.4gamer.net/games/841/G084126/20261124007/",
+   "title": "デモの「どこへ行けばいいか分からない」を直して発売。『タヌキ：ポンの夏』の設計と試行錯誤",
+   "category": "industry",
+   "importance": 4,
+   "date": "2026-11-25",
+   "slot": "10",
+   "deadline": null,
+   "source": "4Gamer.net",
+   "note": "体験版の「迷う」を直した実例。次の自作デモにそのまま使える視点",
+   "reminded": []
+  },
+  {
+   "id": "424b8bab25f5bb81",
+   "url": "https://automaton-media.com/articles/newsjp/20261124-480689/",
+   "title": "『Queen's Domain』が3週間で30万本。マーカーなし・回避なしの設計が「硬派」に刺さった",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-25",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "なぜ売れた？「不親切さ」を武器にした2人組の設計と、発売前の積み上げ",
+   "reminded": []
+  },
+  {
+   "id": "a6c7a2b4bc13e841",
+   "url": "https://automaton-media.com/articles/newsjp/20261124-480706/",
+   "title": "パリィしないと魔法が撃てない。2人組デビュー作『Witch the Showdown』が早期アクセスで好評",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-25",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "「受けないと撃てない」。防御が攻撃の燃料になる設計の見本",
+   "reminded": []
   }
  ],
  "batches": [
@@ -3891,6 +3983,13 @@
    "slot": "learn",
    "date": "2026-11-25",
    "count": 13,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261125-10-091531",
+   "slot": "10",
+   "date": "2026-11-25",
+   "count": 7,
    "status": "ok"
   }
  ],
@@ -4652,6 +4751,27 @@
    "area": "shader",
    "theme": "深度バッファ",
    "date": "2026-11-24"
+  },
+  {
+   "term": "virtual 関数と override",
+   "level": "基礎",
+   "area": "cpp",
+   "theme": "継承とポリモーフィズム",
+   "date": "2026-11-25"
+  },
+  {
+   "term": "仮想デストラクタ",
+   "level": "発展",
+   "area": "cpp",
+   "theme": "継承とポリモーフィズム",
+   "date": "2026-11-25"
+  },
+  {
+   "term": "型消去",
+   "level": "応用",
+   "area": "cpp",
+   "theme": "継承とポリモーフィズム",
+   "date": "2026-11-25"
   }
  ],
  "quiz": [
