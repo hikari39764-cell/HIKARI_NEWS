@@ -3576,6 +3576,110 @@
    "source": "AUTOMATON",
    "note": "「受けないと撃てない」。防御が攻撃の燃料になる設計の見本",
    "reminded": []
+  },
+  {
+   "id": "2eda1a72d25014de",
+   "url": "https://ipotrick.github.io/site/blogs/practical-efficient-rendergraphs/",
+   "title": "レンダーグラフを一から作る。リソースのタイムラインでバリアとメモリを自動管理",
+   "category": "tech",
+   "importance": 5,
+   "date": "2026-11-25",
+   "slot": "17",
+   "deadline": null,
+   "source": "ipotrick（Timberdoodle／Daxa）",
+   "note": "バリアとメモリを自動化する設計を、段階的に最後まで追える",
+   "reminded": []
+  },
+  {
+   "id": "6cc14f9a1b292c3c",
+   "url": "https://xandev.blog.br/studies/timberborn-frame-analysis/",
+   "title": "『Timberborn』1フレームを解剖。描画が遅い原因は「シェーダー」ではなかった",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-25",
+   "slot": "17",
+   "deadline": null,
+   "source": "xandev.blog.br",
+   "note": "「遅い＝シェーダー」と決めつけず、測って絞り込む手順が学べる",
+   "reminded": []
+  },
+  {
+   "id": "97614bc31d9dd232",
+   "url": "https://note.com/cc2pr/n/n4fdb3cbafb6d",
+   "title": "CC2のエフェクト研修課題。「リアルさ」より「テンポと説得力」で評価する",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-25",
+   "slot": "17",
+   "deadline": null,
+   "source": "サイバーコネクトツー公式note／CGWORLD",
+   "note": "VFXを志す人が、作品で何を見せるべきかの基準になる",
+   "reminded": []
+  },
+  {
+   "id": "c458ef36b8014f5d",
+   "url": "https://onk.hatenablog.jp/entry/2026/11/25/022804",
+   "title": "AIに文章を書かせるときは、まず「ネストした箇条書き」で取捨選択させる",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-25",
+   "slot": "17",
+   "deadline": null,
+   "source": "はてなブログ（id:onk）",
+   "note": "試すなら：伝えたいことを入れ子で出させ、削ってから文章にする",
+   "reminded": []
+  },
+  {
+   "id": "ee3bb987cb57be67",
+   "url": "https://zenn.dev/mediaforce/articles/27df1f22a00546",
+   "title": "AIに「質問攻め」させて仕様を詰める。grill-meの使い方と、用語を決めるコツ",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-25",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（メディアフォース）",
+   "note": "試すなら：実装前に10分だけ、AIに質問攻めにしてもらう",
+   "reminded": []
+  },
+  {
+   "id": "f02ac2b2a2347dd1",
+   "url": "https://unity.com/blog/unity-asset-store-ai-generators-coding-agents",
+   "title": "UnityのCLIから、アセットストアとAI生成を使う。エージェントに素材探しを任せる",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-25",
+   "slot": "17",
+   "deadline": null,
+   "source": "Unity Blog",
+   "note": "試すなら：まず無料プレハブを1つ、言葉で探して取り込んでみる",
+   "reminded": []
+  },
+  {
+   "id": "6472d46168a44a41",
+   "url": "https://zenn.dev/peoplex_blog/articles/claude-code-ship",
+   "title": "Claude Codeの「/ship」を図解。コミットからPRの見張りまでを1セッションで",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-25",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（PeopleX）",
+   "note": "試すなら：小さなPRで、見張りの挙動と上限を確かめる",
+   "reminded": []
+  },
+  {
+   "id": "c92d8a01d9409c2f",
+   "url": "https://caseymuratori.com/blog_0015",
+   "title": "「Semantic Compression」。重複を減らして、コードを問題の形に近づける定番の考え方",
+   "category": "classic",
+   "importance": 4,
+   "date": "2026-11-25",
+   "slot": "17",
+   "deadline": null,
+   "source": "Casey Muratori（Computer, Enhance!）",
+   "note": "なぜ今も読まれる？ 「共通化はいつすべきか」に実例で答えている",
+   "reminded": []
   }
  ],
  "batches": [
@@ -3990,6 +4094,13 @@
    "slot": "10",
    "date": "2026-11-25",
    "count": 7,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261125-17-161601",
+   "slot": "17",
+   "date": "2026-11-25",
+   "count": 8,
    "status": "ok"
   }
  ],
@@ -4771,6 +4882,27 @@
    "level": "応用",
    "area": "cpp",
    "theme": "継承とポリモーフィズム",
+   "date": "2026-11-25"
+  },
+  {
+   "term": "タイムスタンプクエリ",
+   "level": "基礎",
+   "area": "dx12",
+   "theme": "GPUタイミング計測",
+   "date": "2026-11-25"
+  },
+  {
+   "term": "ResolveQueryDataとタイムスタンプ周波数",
+   "level": "発展",
+   "area": "dx12",
+   "theme": "GPUタイミング計測",
+   "date": "2026-11-25"
+  },
+  {
+   "term": "クロックキャリブレーション",
+   "level": "応用",
+   "area": "dx12",
+   "theme": "GPUタイミング計測",
    "date": "2026-11-25"
   }
  ],
