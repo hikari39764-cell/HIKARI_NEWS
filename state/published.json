@@ -3758,6 +3758,32 @@
    "source": "X で話題（Togetter）",
    "note": "ルールが簡単でも話題になる。反応の作り込みが「手触り」を生む例",
    "reminded": []
+  },
+  {
+   "id": "e14e4c0861eecaea",
+   "url": "https://zenn.dev/otinpan/articles/082f6178eb1472",
+   "title": "ファイバー製ジョブシステムが「Releaseでだけ」壊れた理由：スレッドローカル変数のアドレスが古いまま残る問題",
+   "category": "programmer",
+   "importance": 4,
+   "date": "2026-11-26",
+   "slot": "learn",
+   "deadline": null,
+   "source": "Zenn（otinpan）",
+   "note": "プログラマーとして押さえておきたい点：Releaseでだけ壊れるバグは、最適化の前提崩れを疑ってアセンブリを見る。",
+   "reminded": []
+  },
+  {
+   "id": "c7cf3f7ec1f4759b",
+   "url": "https://80.lv/articles/the-making-of-become-from-aaa-games-to-a-microscopic-platformer/",
+   "title": "『Become』の作り方：自由に泳ぐ操作を「ふわっとしたプラットフォーマー」に作り直した理由",
+   "category": "planner",
+   "importance": 4,
+   "date": "2026-11-26",
+   "slot": "learn",
+   "deadline": null,
+   "source": "80.lv",
+   "note": "企画に活かせる視点：題材に合う操作と、遊んで楽しい操作は別。動詞を絞って小さく検証する。",
+   "reminded": []
   }
  ],
  "batches": [
@@ -4193,6 +4219,13 @@
    "slot": "22",
    "date": "2026-11-25",
    "count": 6,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/learn-20261126-learn-063615",
+   "slot": "learn",
+   "date": "2026-11-26",
+   "count": 14,
    "status": "ok"
   }
  ],
@@ -6643,6 +6676,90 @@
    "track": "planner",
    "level": "応用",
    "q": "運営型ゲームのリテンションを日数ごとに見ると、D1 = 45%、D7 = 22%、D30 = 12%、D60 = 11%、D90 = 11% のように、30 日目以降はほぼ横ばいに"
+  },
+  {
+   "id": "ea0fad6f62b9",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "ゲームエンジンの「ジョブシステム」（タスクベースの並列処理）の主な目的として最も適切なのは？"
+  },
+  {
+   "id": "e3e240f89d11",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "発展",
+   "q": "ファイバー（fiber）を使うジョブシステムでは、中断したファイバーが「別の OS スレッド」で再開されることがある。このとき thread_local（スレッドローカル）変数につ"
+  },
+  {
+   "id": "640c46c1edd1",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "応用",
+   "q": "1 万体の敵の AI 更新が、1 フレームあたり合計 20 ms かかっており、フレームの予算を大きく超えている。敵を 10 グループに分け、1 フレームにつき 1 グループだけを"
+  },
+  {
+   "id": "7d29910e158a",
+   "topic": "math",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "敵の位置が E、プレイヤーの位置が P のとき、「敵からプレイヤーへ向かうベクトル」として正しいのは？"
+  },
+  {
+   "id": "3fe4a82b3e7b",
+   "topic": "math",
+   "track": "programmer",
+   "level": "発展",
+   "q": "長さ 1 の 2 つのベクトル a = (1, 0, 0) と b = (0, 1, 0) の中間の向きを、lerp(a, b, 0.5) を計算してから正規化して求めた。結果とし"
+  },
+  {
+   "id": "27f2268faff2",
+   "topic": "math",
+   "track": "programmer",
+   "level": "応用",
+   "q": "次の関数は、正規化済みの 2 つのベクトルのなす角を求める。a と b がほぼ同じ向きのとき、浮動小数点の誤差で Dot(a, b) が 1.0000001f になることがある。こ"
+  },
+  {
+   "id": "b1e60b927b0b",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "ゲームの処理が重いので、ビルド構成を「Debug」にしたまま Visual Studio のプロファイラで測り、いちばん時間がかかっていた関数を最適化した。この進め方の問題として最"
+  },
+  {
+   "id": "5f504c960ca9",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "発展",
+   "q": "100×100 マスのグリッド状の地形メッシュを描く（頂点は 101×101 = 10,201 個、三角形は 20,000 枚）。頂点 1 個は 32 バイト、インデックスは 16"
+  },
+  {
+   "id": "5f19226d549a",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "応用",
+   "q": "次のコンピュートシェーダーを、32 スレッドが 1 つのウェーブにまとまる GPU で実行する。1 つのウェーブの 32 スレッドのうち、Input[id.x] > 0.5f を満"
+  },
+  {
+   "id": "07b088488cd0",
+   "topic": "design",
+   "track": "planner",
+   "level": "基礎",
+   "q": "ゲームデザインでいう「創発（エマージェンス）」の説明として最も適切なのは？"
+  },
+  {
+   "id": "649b2dc51ca9",
+   "topic": "ux",
+   "track": "planner",
+   "level": "基礎",
+   "q": "ユーザビリティテストの手法「思考発話法（シンクアラウド）」の説明として正しいのは？"
+  },
+  {
+   "id": "f1c3349fb3ff",
+   "topic": "level",
+   "track": "planner",
+   "level": "基礎",
+   "q": "レベルデザインの「ハブ＆スポーク（ハブ型）」構造の説明として最も適切なのは？"
   }
  ],
  "themes": [
@@ -6697,16 +6814,20 @@
   {
    "date": "2026-11-25",
    "title": "音だけが頼り"
+  },
+  {
+   "date": "2026-11-26",
+   "title": "拾うたびに、少し変わる"
   }
  ],
  "reports": [],
  "idea_counts": {
-  "genre": 72,
-  "mechanic": 72,
-  "theme": 72,
-  "constraint": 72,
-  "feeling": 70,
-  "prompt": 70
+  "genre": 77,
+  "mechanic": 77,
+  "theme": 77,
+  "constraint": 77,
+  "feeling": 75,
+  "prompt": 75
  },
  "last_daily_mail": "2026-11-25",
  "specials": [
