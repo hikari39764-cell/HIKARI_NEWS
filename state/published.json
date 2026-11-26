@@ -3980,6 +3980,123 @@
    "source": "Sirlin.Net（David Sirlin）",
    "note": "「バランスが悪い」を具体的な言葉で語れるようになる、定番の入口",
    "reminded": []
+  },
+  {
+   "id": "c1ac9b2bec603d5f",
+   "url": "https://lemire.me/blog/2026/11/02/default-and-braces-are-not-the-same-constructor/",
+   "title": "C++の「= default」と「{}」は別物。GCC 15以降で約4.5倍遅くなる例",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-26",
+   "slot": "22",
+   "deadline": null,
+   "source": "Hacker News（119pt）／Daniel Lemire's blog",
+   "note": "同じに見える2行が、GCCの版によって約4.5倍の差になった実測例",
+   "reminded": []
+  },
+  {
+   "id": "136b273160019c4c",
+   "url": "https://aresluna.org/ui-style-guides/",
+   "title": "1980年代から今までのUIスタイルガイド69点が一か所に。設計思想の変遷を読める資料庫",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-26",
+   "slot": "22",
+   "deadline": null,
+   "source": "Hacker News（235pt）／Aresluna（Marcin Wichary）",
+   "note": "古いUIガイドを年代順に読める。自作ゲームのUIルール作りの参考に",
+   "reminded": []
+  },
+  {
+   "id": "e587834ac565a20b",
+   "url": "https://zenn.dev/romgameclient/articles/954bbd6294522e",
+   "title": "URPの深度は2種類ある。_CameraDepthAttachmentと_CameraDepthTextureの違い",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-26",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn",
+   "note": "Frame Debuggerで迷う「2つの深度」の違いが、実機の検証付きで分かる",
+   "reminded": []
+  },
+  {
+   "id": "d9f9dd182bfcb77a",
+   "url": "https://www.gamespark.jp/article/2026/11/26/175333.html",
+   "title": "インディー開発者を悩ませる「デバンキング」。売上を銀行に受け取ってもらえない問題とは",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-26",
+   "slot": "22",
+   "deadline": null,
+   "source": "はてブ／Game*Spark",
+   "note": "作った後の現実を知る。12/21のオンライン証言会の概要つき",
+   "reminded": []
+  },
+  {
+   "id": "4fe98a62dc9bfee7",
+   "url": "https://automaton-media.com/articles/newsjp/20261126-481134/",
+   "title": "『Slay the Spire 2』最高難度で勝率8割のAI。ゲームAIの学習のさせ方と限界",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-26",
+   "slot": "22",
+   "deadline": null,
+   "source": "AUTOMATON／研究論文「AlphaDefect」",
+   "note": "142億回の学習で見えた、ゲームAIの作り方と限界",
+   "reminded": []
+  },
+  {
+   "id": "291250d75ddf4895",
+   "url": "https://www.nintendo.co.jp/jobs/recruit/process/index.html",
+   "title": "任天堂の28卒向け選考日程が公開。プログラマーは12/15〜1/6、企画系は12/1〜1/7に提出",
+   "category": "chance",
+   "importance": 5,
+   "date": "2026-11-26",
+   "slot": "22",
+   "deadline": "2027-01-06",
+   "source": "任天堂 採用情報（公式）",
+   "note": "対象：28卒・理工系／制作企画系。ESは12/15〜1/6、12/1〜1/7",
+   "reminded": []
+  },
+  {
+   "id": "e26a890cbd7ad5af",
+   "url": "https://koubo.jp/contest/379041",
+   "title": "賞金最大500万円。学生限定の「CAPCOM GAMES COMPETITION 2027」は11/30締切",
+   "category": "chance",
+   "importance": 4,
+   "date": "2026-11-26",
+   "slot": "22",
+   "deadline": "2026-11-30",
+   "source": "公募ガイド（主催：カプコン）",
+   "note": "対象：国内の学生／個人〜20名／エントリー後に企画書を提出",
+   "reminded": []
+  },
+  {
+   "id": "7a1bddbd8143c504",
+   "url": "https://www.cyberagent.co.jp/careers/students/career_event/detail/id=33985",
+   "title": "サイバーエージェントのゲーム事業部が12/5に大阪で選考直結型の説明会。エントリーは11/30正午",
+   "category": "chance",
+   "importance": 4,
+   "date": "2026-11-26",
+   "slot": "22",
+   "deadline": "2026-11-30",
+   "source": "サイバーエージェント 採用情報（公式）",
+   "note": "対象：28卒ビジネスコース／大阪で対面のみ／11/30 12:00までに応募",
+   "reminded": []
+  },
+  {
+   "id": "00263a9a821c091b",
+   "url": "https://job.rikunabi.com/job_descriptions/459e0a2c48bb3568/",
+   "title": "バンダイナムコエンターテインメントが12/4にオンライン説明会。ESとエントリー動画の書き方も解説",
+   "category": "chance",
+   "importance": 3,
+   "date": "2026-11-26",
+   "slot": "22",
+   "deadline": "2026-12-04",
+   "source": "リクナビ（掲載企業：バンダイナムコエンターテインメント）",
+   "note": "対象：28卒（文理不問）／オンライン・先着／12/4開催",
+   "reminded": []
   }
  ],
  "batches": [
@@ -4443,6 +4560,13 @@
    "slot": "special",
    "date": "2026-11-26",
    "count": 6,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261126-22-211752",
+   "slot": "22",
+   "date": "2026-11-26",
+   "count": 9,
    "status": "ok"
   }
  ],
@@ -5308,6 +5432,27 @@
    "level": "応用",
    "area": "dx12",
    "theme": "ブレンドと深度テスト（出力マージャー）",
+   "date": "2026-11-26"
+  },
+  {
+   "term": "セマンティクス（TEXCOORD[n]）",
+   "level": "基礎",
+   "area": "shader",
+   "theme": "ステージ間のデータ受け渡し",
+   "date": "2026-11-26"
+  },
+  {
+   "term": "補間修飾子（nointerpolation）",
+   "level": "発展",
+   "area": "shader",
+   "theme": "ステージ間のデータ受け渡し",
+   "date": "2026-11-26"
+  },
+  {
+   "term": "SV_InstanceID とシステム値の引き継ぎ",
+   "level": "応用",
+   "area": "shader",
+   "theme": "ステージ間のデータ受け渡し",
    "date": "2026-11-26"
   }
  ],
@@ -7088,7 +7233,7 @@
   "feeling": 75,
   "prompt": 75
  },
- "last_daily_mail": "2026-11-25",
+ "last_daily_mail": "2026-11-26",
  "specials": [
   {
    "date": "2026-11-16",
