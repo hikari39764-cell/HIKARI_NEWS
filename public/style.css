@@ -398,7 +398,7 @@ mark { background: color-mix(in srgb, var(--lemon) 35%, transparent); color: inh
 .sx-banner:hover { transform: translate(-2px, -2px); }
 .sx-bt { grid-column: 1 / -1; justify-self: start; display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; background: var(--lemon);
   color: #0b0b0b; font: 900 12px/1.4 var(--f-display); transform: skewX(-12deg); }
-.sx-bn { font: 900 clamp(19px, 2.6vw, 24px)/1.35 var(--f-display); margin-top: 6px; }
+.sx-bn { grid-column: 1; font: 900 clamp(19px, 2.6vw, 24px)/1.35 var(--f-display); margin-top: 6px; }   /* 列を決めないと、画像つきのとき空いている矢印の列に入って崩れる */
 .sx-bh { grid-column: 1; color: #d6d0ef; font-size: 14px; }
 .sx-bk { grid-column: 1; color: #a99fd6; font: 700 12px var(--f-body); display: flex; gap: 4px; align-items: center; }
 .sx-ba { grid-column: 2; grid-row: 2 / span 3; font-size: 26px; color: var(--lemon); }
