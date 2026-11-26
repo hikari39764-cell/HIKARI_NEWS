@@ -4097,6 +4097,19 @@
    "source": "リクナビ（掲載企業：バンダイナムコエンターテインメント）",
    "note": "対象：28卒（文理不問）／オンライン・先着／12/4開催",
    "reminded": []
+  },
+  {
+   "id": "951f4370b16f5205",
+   "url": "https://automaton-media.com/articles/interviewsjp/monster-hunter-now-20261126-481197/",
+   "title": "『モンスターハンターNow』開発者に聞く：「外に出るきっかけ」を作る回遊型イベントと、電車でも遊べる設計",
+   "category": "planner",
+   "importance": 3,
+   "date": "2026-11-27",
+   "slot": "learn",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "企画に活かせる視点：ゲーム内の機能とリアルイベントを同じ「使命」でつなぐ",
+   "reminded": []
   }
  ],
  "batches": [
@@ -4567,6 +4580,13 @@
    "slot": "22",
    "date": "2026-11-26",
    "count": 9,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/learn-20261127-learn-063638",
+   "slot": "learn",
+   "date": "2026-11-27",
+   "count": 13,
    "status": "ok"
   }
  ],
@@ -7164,6 +7184,90 @@
    "track": "planner",
    "level": "基礎",
    "q": "レベルデザインの「ハブ＆スポーク（ハブ型）」構造の説明として最も適切なのは？"
+  },
+  {
+   "id": "a0afcd1ab73c",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "次のコードの (A) の行について正しいのは？"
+  },
+  {
+   "id": "f1d8b885364e",
+   "topic": "cpp",
+   "track": "programmer",
+   "level": "応用",
+   "q": "次のコードの (B) の行について正しいのは？（必要なヘッダーはインクルード済みで、C++17 以降とする）"
+  },
+  {
+   "id": "d94739e2925f",
+   "topic": "dx12",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "ディスクリプタヒープの先頭から i 番目のディスクリプタのハンドルを得るには、先頭ハンドルに何を足せばよい？"
+  },
+  {
+   "id": "c1e20824788c",
+   "topic": "hlsl",
+   "track": "programmer",
+   "level": "基礎",
+   "q": "次の HLSL コードの r の値として正しいのは？"
+  },
+  {
+   "id": "18aea22ac785",
+   "topic": "math",
+   "track": "programmer",
+   "level": "発展",
+   "q": "次の HLSL コードの v の値として正しいのは？"
+  },
+  {
+   "id": "d7f49473886c",
+   "topic": "math",
+   "track": "programmer",
+   "level": "応用",
+   "q": "2D のゲームで、壁を表す線分 AB（A = (0, 0)、B = (4, 0)）があり、プレイヤーは P = (6, 3) にいる。「線分上でプレイヤーに最も近い点」までの距離と"
+  },
+  {
+   "id": "2f90ee91e69d",
+   "topic": "opt",
+   "track": "programmer",
+   "level": "応用",
+   "q": "敵 100 万体の位置と速度（合計 24 バイト）を毎フレーム更新している。敵 1 体の構造体にはほかに名前やデバッグ用の情報など約 200 バイトが入っていて（合計約 224 バ"
+  },
+  {
+   "id": "d11f8075db87",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "発展",
+   "q": "レンダーグラフで、同じテクスチャをピクセルシェーダーの SRV として読むパスが 2 つ連続している（間にそのテクスチャへの書き込みはなく、どちらも同じ読み取り状態）。この 2 つ"
+  },
+  {
+   "id": "e512aaec61ed",
+   "topic": "engine",
+   "track": "programmer",
+   "level": "応用",
+   "q": "レンダーグラフが各パスを「依存が許す最も早い位置」へ並べ替えると、バリアの数は減らせる。一方で、一時テクスチャのメモリ共有（エイリアシング）による節約は小さくなることがある。主な理"
+  },
+  {
+   "id": "fa76545e3fdf",
+   "topic": "ux",
+   "track": "planner",
+   "level": "基礎",
+   "q": "UI の用語「ダイエジェティック（diegetic）UI」の説明として最も適切なのは？"
+  },
+  {
+   "id": "b9c6ddb1a3f0",
+   "topic": "design",
+   "track": "planner",
+   "level": "発展",
+   "q": "敵を倒したときのレアドロップを、「きっかり 10 体ごとに 1 個」ではなく、「平均 10 体に 1 個。ただし出るタイミングはランダム」にした。心理学の強化スケジュールでは、後者"
+  },
+  {
+   "id": "cc766b5acf5b",
+   "topic": "biz",
+   "track": "planner",
+   "level": "応用",
+   "q": "新規インストール 1 件を獲得するのに、広告費（CPI）が 100 円かかる。インストールした人の 2% が課金し、課金した人 1 人あたりの生涯課金額は平均 4,000 円である"
   }
  ],
  "themes": [
@@ -7222,16 +7326,20 @@
   {
    "date": "2026-11-26",
    "title": "拾うたびに、少し変わる"
+  },
+  {
+   "date": "2026-11-27",
+   "title": "ゆっくりが正解"
   }
  ],
  "reports": [],
  "idea_counts": {
-  "genre": 77,
-  "mechanic": 77,
-  "theme": 77,
-  "constraint": 77,
-  "feeling": 75,
-  "prompt": 75
+  "genre": 82,
+  "mechanic": 82,
+  "theme": 82,
+  "constraint": 82,
+  "feeling": 80,
+  "prompt": 80
  },
  "last_daily_mail": "2026-11-26",
  "specials": [
