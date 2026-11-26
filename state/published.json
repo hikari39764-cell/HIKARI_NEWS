@@ -3876,6 +3876,110 @@
    "source": "AUTOMATON",
    "note": "酔い対策は設定1つで始められる。小さな改善の手本",
    "reminded": []
+  },
+  {
+   "id": "2dec52be085ca4c5",
+   "url": "https://80.lv/articles/inside-retroengine-the-custom-engine-behind-the-king-s-surveyor/",
+   "title": "古いCRTの見た目を土台に作る自作エンジン『RetroEngine』の設計",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-26",
+   "slot": "17",
+   "deadline": null,
+   "source": "80.lv（開発者インタビュー）",
+   "note": "「見た目から逆算してエンジンを設計する」という考え方を学べる",
+   "reminded": []
+  },
+  {
+   "id": "86c877be411d85a8",
+   "url": "https://cgworld.jp/article/202611-capcom-re01.html",
+   "title": "『バイオRE』『プラグマタ』のキャラ表現：ストランドヘアと「やられ」の動きの作り方",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-26",
+   "slot": "17",
+   "deadline": null,
+   "source": "CGWORLD（CAPCOM オープンカンファレンス RE:2026）",
+   "note": "大作の現場が「見た目」と「動き」をどう切り分けて作るかが分かる",
+   "reminded": []
+  },
+  {
+   "id": "465787d809e40ee7",
+   "url": "https://bkaradzic.github.io/posts/memory-management/",
+   "title": "CPUとGPUのメモリを同じ「ブロック」で扱う。bgfxの作者が示した割り当ての設計",
+   "category": "tech",
+   "importance": 3,
+   "date": "2026-11-26",
+   "slot": "17",
+   "deadline": null,
+   "source": "bkaradzic（bgfx作者のブログ）",
+   "note": "自作エンジンで避けて通れないメモリ管理の考え方を一歩深く知れる",
+   "reminded": []
+  },
+  {
+   "id": "77f5ab8364320fde",
+   "url": "https://lisyarus.github.io/blog/posts/ratio-tracking-intuitively.html",
+   "title": "煙や雲の「透過率」をランダムに測る。レシオトラッキングを直感で理解する",
+   "category": "tech",
+   "importance": 3,
+   "date": "2026-11-26",
+   "slot": "17",
+   "deadline": null,
+   "source": "lisyarus.github.io（グラフィックス解説ブログ）",
+   "note": "煙や雲の描画の裏にある確率の考え方を、導出つきで追える",
+   "reminded": []
+  },
+  {
+   "id": "a3e0c1f40460c242",
+   "url": "https://qiita.com/yangon/items/4b0e3752764eb13f15be",
+   "title": "AIだけで約2日、ブラウザ製バトロワを作った記録。「やってはいけないこと」の書き方が効く",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-26",
+   "slot": "17",
+   "deadline": null,
+   "source": "Qiita（@yangon）",
+   "note": "試すなら、まず「作るAI」と「壊すAI」を別セッションに分けてみる",
+   "reminded": []
+  },
+  {
+   "id": "70a02feaceb6035f",
+   "url": "https://zenn.dev/visionarray/articles/26b316ff128513",
+   "title": "通常レビューの後に「壊す条件を探す」。敵対的検証のプロンプト設計",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-26",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（visionarray）",
+   "note": "試すなら、別セッションに差分だけ渡して「壊す条件」を挙げさせる",
+   "reminded": []
+  },
+  {
+   "id": "77d6937d82eb7d56",
+   "url": "https://zenn.dev/ruri/articles/distill-specs-after-implementation",
+   "title": "仕様書は実装後に8割捨てる。AIに読ませる文書の仕分けルール",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-26",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（ruri）",
+   "note": "試すなら、企画書を「目的・作らないもの・前提」の3項目に絞ってみる",
+   "reminded": []
+  },
+  {
+   "id": "87011e09daaa6faa",
+   "url": "https://www.sirlin.net/articles/balancing-multiplayer-games-part-1-definitions",
+   "title": "マルチプレイのバランスとは何か。Sirlinが定義する「バランス」と「深さ」",
+   "category": "classic",
+   "importance": 4,
+   "date": "2026-11-26",
+   "slot": "17",
+   "deadline": null,
+   "source": "Sirlin.Net（David Sirlin）",
+   "note": "「バランスが悪い」を具体的な言葉で語れるようになる、定番の入口",
+   "reminded": []
   }
  ],
  "batches": [
@@ -4325,6 +4429,13 @@
    "slot": "10",
    "date": "2026-11-26",
    "count": 7,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261126-17-161601",
+   "slot": "17",
+   "date": "2026-11-26",
+   "count": 8,
    "status": "ok"
   }
  ],
@@ -5169,6 +5280,27 @@
    "level": "応用",
    "area": "cpp",
    "theme": "初期化（デフォルト初期化・値初期化・集成体初期化）",
+   "date": "2026-11-26"
+  },
+  {
+   "term": "ブレンドステート",
+   "level": "基礎",
+   "area": "dx12",
+   "theme": "ブレンドと深度テスト（出力マージャー）",
+   "date": "2026-11-26"
+  },
+  {
+   "term": "深度ステンシルステート（深度書き込みと比較関数）",
+   "level": "発展",
+   "area": "dx12",
+   "theme": "ブレンドと深度テスト（出力マージャー）",
+   "date": "2026-11-26"
+  },
+  {
+   "term": "リバースZ",
+   "level": "応用",
+   "area": "dx12",
+   "theme": "ブレンドと深度テスト（出力マージャー）",
    "date": "2026-11-26"
   }
  ],
