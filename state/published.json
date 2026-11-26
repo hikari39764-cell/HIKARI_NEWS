@@ -1112,7 +1112,8 @@
    "source": "itch.io（Drozd Studios）",
    "note": "参加条件：誰でも参加可。個人・チーム・エンジン不問、期間中の新作に限る",
    "reminded": [
-    7
+    7,
+    3
    ]
   },
   {
@@ -3784,6 +3785,97 @@
    "source": "80.lv",
    "note": "企画に活かせる視点：題材に合う操作と、遊んで楽しい操作は別。動詞を絞って小さく検証する。",
    "reminded": []
+  },
+  {
+   "id": "9e640d54cb607240",
+   "url": "https://www.anthropic.com/research/migrating-api-to-rust",
+   "title": "AnthropicがAPI本体をPythonからRustへ。「本番を答え合わせ役」にした移行の進め方",
+   "category": "ai",
+   "importance": 5,
+   "date": "2026-11-26",
+   "slot": "10",
+   "deadline": null,
+   "source": "Anthropic Engineering",
+   "note": "AIにコードを書かせたあと「どう正しさを確かめるか」の実例",
+   "reminded": []
+  },
+  {
+   "id": "2309e9fe7f404c3a",
+   "url": "https://gori.me/it/172262",
+   "title": "甥の手描き企画書を、Claude Fable 5.2が一晩でベルトスクロールACTにした記録",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-26",
+   "slot": "10",
+   "deadline": null,
+   "source": "gori.me（Lex Toumbourou氏のブログの紹介）",
+   "note": "1回の指示で「遊べる出発点」を作り、約600回で磨いた実例",
+   "reminded": []
+  },
+  {
+   "id": "d8d6777ecf090783",
+   "url": "https://huggingface.co/blog/inkling-2-mini-inference-hillclimb",
+   "title": "AIに「推論速度のチューニング」を任せた半日。理論上限の95%まで詰めた手順",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-26",
+   "slot": "10",
+   "deadline": null,
+   "source": "Hugging Face Blog",
+   "note": "「1回に変えるのは1つ」の計測術は、ゲームの最適化にも使える",
+   "reminded": []
+  },
+  {
+   "id": "6762cd1577cb20a7",
+   "url": "https://www.publickey1.jp/blog/26/google_workspace_mcpgoogle_workspace_cli.html",
+   "title": "Google Workspace向けのMCPサーバーとCLIが正式版に。AIエージェントがGmailやDriveを触る入口",
+   "category": "ai",
+   "importance": 2,
+   "date": "2026-11-26",
+   "slot": "10",
+   "deadline": null,
+   "source": "Publickey",
+   "note": "企画書や進行表をAIに更新させる前に知っておきたい仕様と期限",
+   "reminded": []
+  },
+  {
+   "id": "712a4758e4f7c535",
+   "url": "https://www.gamedeveloper.com/programming/devs-can-now-utilize-high-end-ambient-occlusion-technique-seen-in-eve-frontier",
+   "title": "『EVE: Frontier』の影の技術が公開。MITライセンスの新しいSSAO「CORTAO」",
+   "category": "industry",
+   "importance": 4,
+   "date": "2026-11-26",
+   "slot": "10",
+   "deadline": null,
+   "source": "Game Developer / GitHub（theagentd/CORTAO）",
+   "note": "製品で使われた最新AOが、MITライセンスですぐ試せる",
+   "reminded": []
+  },
+  {
+   "id": "0412248310868f7d",
+   "url": "https://automaton-media.com/articles/newsjp/20261125-480833/",
+   "title": "『White Knuckle』大型アプデで同接が約10倍に。早期アクセスの「更新で再燃」の実例",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-26",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "大型更新1回で同接が約10倍。更新の山の作り方を学べる",
+   "reminded": []
+  },
+  {
+   "id": "fd0c8de956fdf78b",
+   "url": "https://automaton-media.com/articles/newsjp/20261125-480896/",
+   "title": "『めっちゃカメレオン』が3D酔い対策を追加。画面に固定の四角い枠を出すだけの工夫",
+   "category": "industry",
+   "importance": 2,
+   "date": "2026-11-26",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "酔い対策は設定1つで始められる。小さな改善の手本",
+   "reminded": []
   }
  ],
  "batches": [
@@ -4226,6 +4318,13 @@
    "slot": "learn",
    "date": "2026-11-26",
    "count": 14,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261126-10-091538",
+   "slot": "10",
+   "date": "2026-11-26",
+   "count": 7,
    "status": "ok"
   }
  ],
@@ -5050,6 +5149,27 @@
    "area": "shader",
    "theme": "法線マップ（ノーマルマッピング）",
    "date": "2026-11-25"
+  },
+  {
+   "term": "値初期化 T{}（と不定値）",
+   "level": "基礎",
+   "area": "cpp",
+   "theme": "初期化（デフォルト初期化・値初期化・集成体初期化）",
+   "date": "2026-11-26"
+  },
+  {
+   "term": "指定初期化子（C++20）",
+   "level": "発展",
+   "area": "cpp",
+   "theme": "初期化（デフォルト初期化・値初期化・集成体初期化）",
+   "date": "2026-11-26"
+  },
+  {
+   "term": "= default と {} の違い",
+   "level": "応用",
+   "area": "cpp",
+   "theme": "初期化（デフォルト初期化・値初期化・集成体初期化）",
+   "date": "2026-11-26"
   }
  ],
  "quiz": [
