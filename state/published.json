@@ -1082,7 +1082,8 @@
    "source": "JDN コンペ情報（主催：カプコン）",
    "note": "参加条件：日本の学生（18歳以上・最大20名のチーム可）。企画書で応募",
    "reminded": [
-    7
+    7,
+    3
    ]
   },
   {
@@ -1097,7 +1098,8 @@
    "source": "JDN コンペ情報（主催：iBAe）",
    "note": "参加条件：全国の学生（個人または2〜4名）。未発売のオリジナル作品に限る",
    "reminded": [
-    7
+    7,
+    3
    ]
   },
   {
@@ -4070,7 +4072,9 @@
    "deadline": "2026-11-30",
    "source": "公募ガイド（主催：カプコン）",
    "note": "対象：国内の学生／個人〜20名／エントリー後に企画書を提出",
-   "reminded": []
+   "reminded": [
+    3
+   ]
   },
   {
    "id": "7a1bddbd8143c504",
@@ -4083,7 +4087,9 @@
    "deadline": "2026-11-30",
    "source": "サイバーエージェント 採用情報（公式）",
    "note": "対象：28卒ビジネスコース／大阪で対面のみ／11/30 12:00までに応募",
-   "reminded": []
+   "reminded": [
+    3
+   ]
   },
   {
    "id": "00263a9a821c091b",
@@ -4096,7 +4102,9 @@
    "deadline": "2026-12-04",
    "source": "リクナビ（掲載企業：バンダイナムコエンターテインメント）",
    "note": "対象：28卒（文理不問）／オンライン・先着／12/4開催",
-   "reminded": []
+   "reminded": [
+    7
+   ]
   },
   {
    "id": "951f4370b16f5205",
@@ -4109,6 +4117,110 @@
    "deadline": null,
    "source": "AUTOMATON",
    "note": "企画に活かせる視点：ゲーム内の機能とリアルイベントを同じ「使命」でつなぐ",
+   "reminded": []
+  },
+  {
+   "id": "f61ab30fe11d8ac8",
+   "url": "https://atmarkit.itmedia.co.jp/ait/articles/2611/27/news035.html",
+   "title": "AIエージェントの評価は「最終回答」だけでは足りない。Googleが得た4つの教訓",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-27",
+   "slot": "10",
+   "deadline": null,
+   "source": "@IT（ITmedia）／Googleの検証を紹介",
+   "note": "AIの「完了しました」を信じる前に。検証のやり方が学べる",
+   "reminded": []
+  },
+  {
+   "id": "c01600d4160315a4",
+   "url": "https://huggingface.co/blog/training-swarms",
+   "title": "4体のAIがおしゃべりして協力する。小型モデルを「チーム」で鍛える実験",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-27",
+   "slot": "10",
+   "deadline": null,
+   "source": "Hugging Face Blog",
+   "note": "「AIを増やせば賢い？」を小さな実験で確かめる読み物",
+   "reminded": []
+  },
+  {
+   "id": "7e9fd8d1e027511d",
+   "url": "https://gihyo.jp/article/2026/11/skills-over-mcp",
+   "title": "MCPサーバーが「手順書（スキル）」を配れるように。Claudeの新機能3つ",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-27",
+   "slot": "10",
+   "deadline": null,
+   "source": "gihyo.jp",
+   "note": "AIに毎回の説明をやめさせる。手順書を配る新しい仕組み",
+   "reminded": []
+  },
+  {
+   "id": "19dd4641586dbe86",
+   "url": "https://janlukas.blog/posts/ai-self-hosting",
+   "title": "AIが面倒を減らして自宅サーバーがまた楽しくなった。「構成をGitに置く」運用",
+   "category": "ai",
+   "importance": 2,
+   "date": "2026-11-27",
+   "slot": "10",
+   "deadline": null,
+   "source": "janlukas.blog（Hacker Newsで話題）",
+   "note": "「設定をテキストで残す」ほどAIが頼れる、という実体験",
+   "reminded": []
+  },
+  {
+   "id": "54b4f101935b49ff",
+   "url": "https://automaton-media.com/articles/newsjp/20261126-481127/",
+   "title": "『GTA6』発売で『CoD』のプレイヤーが約41%減。ライブサービスの「時間の奪い合い」",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-27",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON（Alinea Analyticsの推計）",
+   "note": "競合は「同じジャンル」とは限らない。時間の奪い合いが数字で見える",
+   "reminded": []
+  },
+  {
+   "id": "dd584f6164b8a39a",
+   "url": "https://automaton-media.com/articles/newsjp/20261126-481217/",
+   "title": "Steamレビューを受けて『Phantom Blade Zero』が人名に「ふりがな」を実装",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-27",
+   "slot": "10",
+   "deadline": null,
+   "source": "AUTOMATON",
+   "note": "大ヒット作でも、読みやすさの小さな不満をレビューから拾って直す",
+   "reminded": []
+  },
+  {
+   "id": "c4b7d6578b4ad625",
+   "url": "https://www.famitsu.com/article/202611/95138",
+   "title": "『Silksong』と発売がぶつからないよう1年延期。『Aeterna Lucis』が選んだ発売日戦略",
+   "category": "industry",
+   "importance": 2,
+   "date": "2026-11-27",
+   "slot": "10",
+   "deadline": null,
+   "source": "ファミ通.com",
+   "note": "発売日は「ぶつからない」ことが戦略。延期後も予定は変わる",
+   "reminded": []
+  },
+  {
+   "id": "ec132d8532be38c9",
+   "url": "https://www.4gamer.net/games/999/G999904/20261121004/",
+   "title": "AIキャラチャットが韓国G-STARの主スポンサーに。クリエイター還元と会話データの扱い",
+   "category": "industry",
+   "importance": 2,
+   "date": "2026-11-27",
+   "slot": "10",
+   "deadline": null,
+   "source": "4Gamer.net",
+   "note": "AIとUGCを組み合わせた事業の、還元とデータ管理の考え方",
    "reminded": []
   }
  ],
@@ -4587,6 +4699,13 @@
    "slot": "learn",
    "date": "2026-11-27",
    "count": 13,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261127-10-091516",
+   "slot": "10",
+   "date": "2026-11-27",
+   "count": 8,
    "status": "ok"
   }
  ],
@@ -5474,6 +5593,27 @@
    "area": "shader",
    "theme": "ステージ間のデータ受け渡し",
    "date": "2026-11-26"
+  },
+  {
+   "term": "[[nodiscard]]",
+   "level": "基礎",
+   "area": "cpp",
+   "theme": "失敗を戻り値で扱う（エラー処理）",
+   "date": "2026-11-27"
+  },
+  {
+   "term": "std::expected",
+   "level": "発展",
+   "area": "cpp",
+   "theme": "失敗を戻り値で扱う（エラー処理）",
+   "date": "2026-11-27"
+  },
+  {
+   "term": "モナディック操作（and_then / transform / or_else）",
+   "level": "応用",
+   "area": "cpp",
+   "theme": "失敗を戻り値で扱う（エラー処理）",
+   "date": "2026-11-27"
   }
  ],
  "quiz": [
