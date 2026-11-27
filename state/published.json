@@ -4313,6 +4313,71 @@
    "source": "Emily Short's Interactive Storytelling",
    "note": "分岐が増えて破綻する前に読みたい。物語設計の選択肢が広がる定番",
    "reminded": []
+  },
+  {
+   "id": "7ded6184047860e1",
+   "url": "https://gigazine.net/news/20261127-android-app-developers-have-to-share-address-publicly/",
+   "title": "Google Playの開発者、2027年から電話番号と住所が公開に。申告期限は2/1",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-27",
+   "slot": "22",
+   "deadline": "2027-02-01",
+   "source": "GIGAZINE（はてブ IT 人気）",
+   "note": "Androidで公開する予定の人は、2/1の申告期限を知っておこう",
+   "reminded": []
+  },
+  {
+   "id": "7ca6c315cdce0e8e",
+   "url": "https://qiita.com/Tadataka_Takahashi/items/f47f216fb76fff654336",
+   "title": "AIが書いたコードを「自分のもの」にする7つの習慣。動いた時点で手を離さない",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-27",
+   "slot": "22",
+   "deadline": null,
+   "source": "Qiita（@Tadataka_Takahashi）",
+   "note": "AIコードに頼る人が、明日からやれる理解の習慣が7つ分かる",
+   "reminded": []
+  },
+  {
+   "id": "94bf528f2456eb3f",
+   "url": "https://zenn.dev/happy_elements/articles/27e14ff6754044",
+   "title": "Claude Codeの安全設定、2026年11月版。サンドボックスと権限は別物と心得る",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-27",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn（Happy Elements）",
+   "note": "AIにPCを触らせる前に知りたい、権限とサンドボックスの違い",
+   "reminded": []
+  },
+  {
+   "id": "f82e87e46bb211a5",
+   "url": "https://qiita.com/minorun365/items/4416bd940ca0cd3aaabc",
+   "title": "技術書典に初出展。部数をどう決め、いつ売れたか。398冊の実数と次回への反省",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-27",
+   "slot": "22",
+   "deadline": null,
+   "source": "Qiita（@minorun365）",
+   "note": "部数の決め方と売れた時間帯が実数で分かる、頒布の予習",
+   "reminded": []
+  },
+  {
+   "id": "d4c88bde6d7b5630",
+   "url": "https://qiita.com/sato07f-ui/items/f4047b28aa4d053d4eb5",
+   "title": "準備ゼロで初ハッカソンに出て学生賞。大学2年生が挙げた5つのコツ",
+   "category": "community",
+   "importance": 2,
+   "date": "2026-11-27",
+   "slot": "22",
+   "deadline": null,
+   "source": "Qiita（@sato07f-ui）",
+   "note": "初参加の不安をほどく、学生賞チームの具体的な進め方",
+   "reminded": []
   }
  ],
  "batches": [
@@ -4809,6 +4874,13 @@
   {
    "branch": "claude/special-20261127-special-181626",
    "slot": "special",
+   "date": "2026-11-27",
+   "count": 5,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261127-22-211451",
+   "slot": "22",
    "date": "2026-11-27",
    "count": 5,
    "status": "ok"
@@ -5739,6 +5811,27 @@
    "level": "応用",
    "area": "dx12",
    "theme": "レイトレーシング（DXR）の基本構造",
+   "date": "2026-11-27"
+  },
+  {
+   "term": "SV_Target（ピクセルシェーダーの出力）",
+   "level": "基礎",
+   "area": "shader",
+   "theme": "ピクセルシェーダーの出力とブレンド",
+   "date": "2026-11-27"
+  },
+  {
+   "term": "マルチレンダーターゲット（MRT）",
+   "level": "発展",
+   "area": "shader",
+   "theme": "ピクセルシェーダーの出力とブレンド",
+   "date": "2026-11-27"
+  },
+  {
+   "term": "デュアルソースブレンディング",
+   "level": "応用",
+   "area": "shader",
+   "theme": "ピクセルシェーダーの出力とブレンド",
    "date": "2026-11-27"
   }
  ],
@@ -7607,7 +7700,7 @@
   "feeling": 80,
   "prompt": 80
  },
- "last_daily_mail": "2026-11-26",
+ "last_daily_mail": "2026-11-27",
  "specials": [
   {
    "date": "2026-11-16",
