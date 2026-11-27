@@ -4222,6 +4222,97 @@
    "source": "4Gamer.net",
    "note": "AIとUGCを組み合わせた事業の、還元とデータ管理の考え方",
    "reminded": []
+  },
+  {
+   "id": "6de60473cef8e034",
+   "url": "https://80.lv/articles/creating-realistic-dismemberment-gore-effects-in-unity/",
+   "title": "『THE IRONY』の欠損・血しぶき表現の作り方。切断は事前ベイク、血はMarching Cubesでつなぐ",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-27",
+   "slot": "17",
+   "deadline": null,
+   "source": "80 Level（THE IRONY開発チーム）",
+   "note": "「事前に焼く」「粒子を面にする」。表現と軽さを両立する発想",
+   "reminded": []
+  },
+  {
+   "id": "904858a318e9d927",
+   "url": "https://zenn.dev/seikasan/articles/50c3f7b65bef7d",
+   "title": "Unity向けTweenライブラリ「MyMotion」。LitMotionの設計を土台に、6万4千件で0.58msへ",
+   "category": "tech",
+   "importance": 3,
+   "date": "2026-11-27",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（seikasan）",
+   "note": "性能比較の読み方も学べる。自分の作品でも一度測ってみたい",
+   "reminded": []
+  },
+  {
+   "id": "253d6d532a447f48",
+   "url": "https://zenn.dev/hitori_pm/articles/cc955887656339",
+   "title": "「日本語で」と書いても英語に戻るので、Stopフックで検査して書き直させた話",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-27",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（hitori_pm）",
+   "note": "試すなら：守られないルールを1つ選び、フックで検査してみる",
+   "reminded": []
+  },
+  {
+   "id": "a5319b56f1959dbe",
+   "url": "https://zenn.dev/nextbeat/articles/b0ccca979da06b",
+   "title": "Claude Codeの/btw・/fork・/rewind、作業を止めずに進める使い分け",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-27",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（nextbeat）",
+   "note": "試すなら：次の疑問は聞かずに/btwで。履歴が汚れず話がずれない",
+   "reminded": []
+  },
+  {
+   "id": "6ab26a3004fde828",
+   "url": "https://qiita.com/suwa_nobu/items/3bcba393673985c9b8ed",
+   "title": "AIエージェントは作業フォルダ外の鍵を読むか？3ツール・60回の検証と、守りの設定",
+   "category": "ai_howto",
+   "importance": 4,
+   "date": "2026-11-27",
+   "slot": "17",
+   "deadline": null,
+   "source": "Qiita（suwa_nobu）",
+   "note": "試すなら：~/.sshと.envの置き場所を確認し、外を読ませない設定を入れる",
+   "reminded": []
+  },
+  {
+   "id": "f8594c9451b2fd50",
+   "url": "https://speakerdeck.com/littlehands/umtp-suraido-20261125",
+   "title": "AIで作るなら先にモデリング。4つの図で始め、AIに実装させるための土台づくり",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-27",
+   "slot": "17",
+   "deadline": null,
+   "source": "Speaker Deck（UMTPモデリングフォーラム2026）",
+   "note": "試すなら：自分のゲームの具体例を1つ図に描き、その用語をコードに使う",
+   "reminded": []
+  },
+  {
+   "id": "f8aa673bd61d350b",
+   "url": "https://emshort.blog/2016/04/12/beyond-branching-quality-based-and-salience-based-narrative-structures/",
+   "title": "ストーリーを「分岐」で作らない。Emily Shortの『Beyond Branching』が示す3つの構造",
+   "category": "classic",
+   "importance": 4,
+   "date": "2026-11-27",
+   "slot": "17",
+   "deadline": null,
+   "source": "Emily Short's Interactive Storytelling",
+   "note": "分岐が増えて破綻する前に読みたい。物語設計の選択肢が広がる定番",
+   "reminded": []
   }
  ],
  "batches": [
@@ -4706,6 +4797,13 @@
    "slot": "10",
    "date": "2026-11-27",
    "count": 8,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261127-17-161508",
+   "slot": "17",
+   "date": "2026-11-27",
+   "count": 7,
    "status": "ok"
   }
  ],
@@ -5613,6 +5711,27 @@
    "level": "応用",
    "area": "cpp",
    "theme": "失敗を戻り値で扱う（エラー処理）",
+   "date": "2026-11-27"
+  },
+  {
+   "term": "加速構造（BLAS／TLAS）",
+   "level": "基礎",
+   "area": "dx12",
+   "theme": "レイトレーシング（DXR）の基本構造",
+   "date": "2026-11-27"
+  },
+  {
+   "term": "シェーダーテーブル",
+   "level": "発展",
+   "area": "dx12",
+   "theme": "レイトレーシング（DXR）の基本構造",
+   "date": "2026-11-27"
+  },
+  {
+   "term": "インラインレイトレーシング（RayQuery）",
+   "level": "応用",
+   "area": "dx12",
+   "theme": "レイトレーシング（DXR）の基本構造",
    "date": "2026-11-27"
   }
  ],
