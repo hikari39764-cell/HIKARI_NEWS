@@ -4575,6 +4575,71 @@
    "source": "Game Programming Patterns（Robert Nystrom）",
    "note": "DOTSやECSがなぜ速いのか、その土台の考え方が1章で分かる",
    "reminded": []
+  },
+  {
+   "id": "0e996cff4c25ac5b",
+   "url": "https://speakerdeck.com/ninjinkun/user-experience-validator",
+   "title": "UIの違和感を「4つの問い」で言葉にする。AIにも効くデザイン批評の型",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-28",
+   "slot": "22",
+   "deadline": null,
+   "source": "Speaker Deck（はてブで話題）",
+   "note": "「なんか変」を直せる意見に変える、4つの問いの使い方",
+   "reminded": []
+  },
+  {
+   "id": "0c95d94207fda0fe",
+   "url": "https://automaton-media.com/articles/newsjp/20261128-481500/",
+   "title": "Steam版がDLsite版の発売直後1時間の17倍に。10言語展開とAI翻訳から見る多言語化",
+   "category": "community",
+   "importance": 4,
+   "date": "2026-11-28",
+   "slot": "22",
+   "deadline": null,
+   "source": "AUTOMATON（X上の開発者投稿が話題）",
+   "note": "多言語化の効果と、倍率を読むときの落とし穴が分かる",
+   "reminded": []
+  },
+  {
+   "id": "21ede7aaad5d608c",
+   "url": "https://automaton-media.com/articles/newsjp/20261128-481441/",
+   "title": "マイクラで「地球を実寸大」に。2PBは事前生成せず、訪れた場所だけ作る",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-28",
+   "slot": "22",
+   "deadline": null,
+   "source": "AUTOMATON（海外SNSで話題）",
+   "note": "2PBを事前に作らない、オンデマンド生成という発想",
+   "reminded": []
+  },
+  {
+   "id": "71a768e59726ce28",
+   "url": "https://zenn.dev/nexta_/articles/a3ff76a9f98f1c",
+   "title": "Claude Codeを5〜8本並べる人の自作ダッシュボード。「誰の番か」で状態を分ける",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-28",
+   "slot": "22",
+   "deadline": null,
+   "source": "Zenn",
+   "note": "「誰の番か」で分ける、並行作業の見える化の発想",
+   "reminded": []
+  },
+  {
+   "id": "9120df6adbdef7db",
+   "url": "https://tjo.hatenablog.com/entry/2026/11/28/185602",
+   "title": "生成AIで「できた気」になる罠。BCGの実験が示した、能力が身につかない理由",
+   "category": "community",
+   "importance": 3,
+   "date": "2026-11-28",
+   "slot": "22",
+   "deadline": null,
+   "source": "はてなブログ（はてブIT人気）",
+   "note": "AIで成績は上がるのに身につかない。その理由と対策を考える",
+   "reminded": []
   }
  ],
  "batches": [
@@ -5106,6 +5171,13 @@
   {
    "branch": "claude/special-20261128-special-181533",
    "slot": "special",
+   "date": "2026-11-28",
+   "count": 5,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261128-22-211414",
+   "slot": "22",
    "date": "2026-11-28",
    "count": 5,
    "status": "ok"
@@ -6099,6 +6171,27 @@
    "level": "応用",
    "area": "dx12",
    "theme": "メッシュシェーダー（ジオメトリの新しいパイプライン）",
+   "date": "2026-11-28"
+  },
+  {
+   "term": "StructuredBuffer<T>",
+   "level": "基礎",
+   "area": "shader",
+   "theme": "構造化バッファ（StructuredBuffer系）",
+   "date": "2026-11-28"
+  },
+  {
+   "term": "RWStructuredBuffer と InterlockedAdd",
+   "level": "発展",
+   "area": "shader",
+   "theme": "構造化バッファ（StructuredBuffer系）",
+   "date": "2026-11-28"
+  },
+  {
+   "term": "AppendStructuredBuffer",
+   "level": "応用",
+   "area": "shader",
+   "theme": "構造化バッファ（StructuredBuffer系）",
    "date": "2026-11-28"
   }
  ],
@@ -8055,7 +8148,7 @@
   "feeling": 85,
   "prompt": 85
  },
- "last_daily_mail": "2026-11-27",
+ "last_daily_mail": "2026-11-28",
  "specials": [
   {
    "date": "2026-11-16",
