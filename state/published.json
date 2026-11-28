@@ -4497,6 +4497,84 @@
    "source": "ファミ通.com",
    "note": "「自社開発＋外部パートナー」への移行から、企業研究で見る点が学べる",
    "reminded": []
+  },
+  {
+   "id": "1bd75c10d6e86079",
+   "url": "https://cgworld.jp/article/202611-capcom-re02.html",
+   "title": "『モンハン ブリッジ』を支えた4GPU同時描画と、風・炎をGPUで動かすVORTEXEL",
+   "category": "tech",
+   "importance": 5,
+   "date": "2026-11-28",
+   "slot": "17",
+   "deadline": null,
+   "source": "CGWORLD（CAPCOM RE:2026 講演レポート）",
+   "note": "ゲーム1本分の12倍を描くとき、どこを測ってどう削ったかが分かる",
+   "reminded": []
+  },
+  {
+   "id": "8e6de92069c2340e",
+   "url": "https://80.lv/articles/breakdown-designing-large-scale-soviet-era-architectural-system-for-vr-game/",
+   "title": "窓1枚が18アクターに。UE5で集合住宅を作るときの「分け方」と軽量化の数字",
+   "category": "tech",
+   "importance": 4,
+   "date": "2026-11-28",
+   "slot": "17",
+   "deadline": null,
+   "source": "80 Level（Stanislav Petrushin氏のブレイクダウン）",
+   "note": "アクター数・命令数を数字で削る、環境アートの実践例",
+   "reminded": []
+  },
+  {
+   "id": "ab2256bbfb55314d",
+   "url": "https://godotengine.org/article/dev-snapshot-godot-4-8-beta-1/",
+   "title": "Godot 4.8がRC版に。ビジュアルシェーダーのノードグループやTrail3Dなど新機能一覧",
+   "category": "tech",
+   "importance": 3,
+   "date": "2026-11-28",
+   "slot": "17",
+   "deadline": null,
+   "source": "Godot Engine公式ブログ（RC1・beta 1）",
+   "note": "4.8の新機能を一覧で確認し、WebエディタでRCを試す",
+   "reminded": []
+  },
+  {
+   "id": "e7e89055fc8ef9db",
+   "url": "https://zenn.dev/rescuenow/articles/9d1e89a941f4f1",
+   "title": "AIが勝手に足す機能を「xfailテスト」に逃がすと、ゼロになった",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-28",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（レスキューナウ テックブログ）",
+   "note": "余計な改変を防ぐ指示の出し方を、数で比べて試せる",
+   "reminded": []
+  },
+  {
+   "id": "14cffc2d16693759",
+   "url": "https://zenn.dev/layerx/articles/65b4828efcaee2",
+   "title": "AIエージェントにWebを読ませる前に。見えない命令（プロンプトインジェクション）の5つの危険と対策",
+   "category": "ai_howto",
+   "importance": 3,
+   "date": "2026-11-28",
+   "slot": "17",
+   "deadline": null,
+   "source": "Zenn（LayerX）",
+   "note": "AIに資料を読ませる前に知っておきたい、5つの穴と塞ぎ方",
+   "reminded": []
+  },
+  {
+   "id": "e78152e4c29743d3",
+   "url": "https://gameprogrammingpatterns.com/data-locality.html",
+   "title": "ゲームのデータ配置を「CPUのキャッシュ」から考える。『Game Programming Patterns』のData Locality",
+   "category": "classic",
+   "importance": 5,
+   "date": "2026-11-28",
+   "slot": "17",
+   "deadline": null,
+   "source": "Game Programming Patterns（Robert Nystrom）",
+   "note": "DOTSやECSがなぜ速いのか、その土台の考え方が1章で分かる",
+   "reminded": []
   }
  ],
  "batches": [
@@ -5016,6 +5094,13 @@
    "slot": "10",
    "date": "2026-11-28",
    "count": 8,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261128-17-161558",
+   "slot": "17",
+   "date": "2026-11-28",
+   "count": 6,
    "status": "ok"
   }
  ],
@@ -5986,6 +6071,27 @@
    "level": "応用",
    "area": "cpp",
    "theme": "引数の渡し方（参照と転送）",
+   "date": "2026-11-28"
+  },
+  {
+   "term": "メッシュシェーダー",
+   "level": "基礎",
+   "area": "dx12",
+   "theme": "メッシュシェーダー（ジオメトリの新しいパイプライン）",
+   "date": "2026-11-28"
+  },
+  {
+   "term": "増幅シェーダーとDispatchMesh",
+   "level": "発展",
+   "area": "dx12",
+   "theme": "メッシュシェーダー（ジオメトリの新しいパイプライン）",
+   "date": "2026-11-28"
+  },
+  {
+   "term": "SV_CullPrimitiveとSetMeshOutputCounts",
+   "level": "応用",
+   "area": "dx12",
+   "theme": "メッシュシェーダー（ジオメトリの新しいパイプライン）",
    "date": "2026-11-28"
   }
  ],
