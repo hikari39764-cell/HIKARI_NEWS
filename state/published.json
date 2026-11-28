@@ -1261,7 +1261,8 @@
    "note": "学生券1,500円。メディア編集者が「話題になる条件」を語る貴重な場",
    "reminded": [
     7,
-    3
+    3,
+    0
    ]
   },
   {
@@ -3239,7 +3240,8 @@
    "source": "itch.io（Game Off 2026）",
    "note": "参加条件：個人・チーム可、エンジン自由。コードを公開して作る",
    "reminded": [
-    7
+    7,
+    3
    ]
   },
   {
@@ -4391,6 +4393,110 @@
    "source": "80 Level（IO Interactive のレベルデザイナーへのインタビュー）",
    "note": "企画に活かせる視点：空間ごとに「意図」を書き出してから配置を詰める",
    "reminded": []
+  },
+  {
+   "id": "e3fd524c3c50f8bc",
+   "url": "https://github.com/convex/convex-backend-skill/issues/64",
+   "title": "AIスキルが「アイデアを外部送信」？ Convexスキルへの指摘とHNでの議論",
+   "category": "ai",
+   "importance": 5,
+   "date": "2026-11-28",
+   "slot": "10",
+   "deadline": null,
+   "source": "GitHub Issue（convex-backend-skill）／Hacker News",
+   "note": "AIに渡す「スキル」の中身、確認していますか？ 入れる前の3点チェックが分かる",
+   "reminded": []
+  },
+  {
+   "id": "4442ddc02d12a9a5",
+   "url": "https://www.ryuzee.com/contents/blog/14629",
+   "title": "コードはAIが書く時代、構造を決めるのは人と組織。「チーム境界」が設計を左右する",
+   "category": "ai",
+   "importance": 4,
+   "date": "2026-11-28",
+   "slot": "10",
+   "deadline": null,
+   "source": "ryuzee.com（アーキテクチャConference 2026 登壇資料）",
+   "note": "AIに任せるほど効いてくる「境界を仕組みで守る」考え方を学べる",
+   "reminded": []
+  },
+  {
+   "id": "431cf3c5c3e851f6",
+   "url": "https://www.itmedia.co.jp/aiplus/article/2611/26/2000003494/",
+   "title": "Gemini 4 Neonの公式デモを整理。標高データのスキーシミュ、複数エージェントでBlender操作",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-28",
+   "slot": "10",
+   "deadline": null,
+   "source": "ITmedia AI+（Google公式ブログのデモをまとめた記事）",
+   "note": "実標高データでスキー場を作る例から、AIへの任せ方のヒントが得られる",
+   "reminded": []
+  },
+  {
+   "id": "02a088434703556c",
+   "url": "https://huggingface.co/blog/ggml-org/llamacpp-amd-bench",
+   "title": "ローカルLLMの速度を比べる「llama.cpp×AMDベンチマーク」。PP512とTG128の読み方",
+   "category": "ai",
+   "importance": 3,
+   "date": "2026-11-28",
+   "slot": "10",
+   "deadline": null,
+   "source": "Hugging Face Blog（ggml-org）",
+   "note": "ローカルAIが自分のPCで実用的な速さか、数字で見積もる方法が分かる",
+   "reminded": []
+  },
+  {
+   "id": "d4a5f735b4991fde",
+   "url": "https://www.4gamer.net/games/062/G106225/20261127044/",
+   "title": "持てる記憶は6つだけ。何かを思い出すには別の記憶を手放す『Welcome Home, Toru』",
+   "category": "industry",
+   "importance": 4,
+   "date": "2026-11-28",
+   "slot": "10",
+   "deadline": null,
+   "source": "4Gamer.net",
+   "note": "「持てる数の上限」1つで遊びを組み立てる好例。ジャム企画の参考に",
+   "reminded": []
+  },
+  {
+   "id": "d5f233ac25f880b8",
+   "url": "https://www.4gamer.net/games/966/G096663/20261128001/",
+   "title": "『Windrose』Ashlands開発ブログ。敵船に「役割」を持たせ、同じ船でも戦い方を変える",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-28",
+   "slot": "10",
+   "deadline": null,
+   "source": "4Gamer.net（ポケットペア開発ブログの紹介）",
+   "note": "敵船の「役割」を付け替えて遭遇を変える発想が、自作ゲームにも使える",
+   "reminded": []
+  },
+  {
+   "id": "1929938bcfab511a",
+   "url": "https://www.famitsu.com/article/202611/95314",
+   "title": "相方を扉や岩に変えて解く、2人専用の言葉パズル『Me and You』",
+   "category": "industry",
+   "importance": 3,
+   "date": "2026-11-28",
+   "slot": "10",
+   "deadline": null,
+   "source": "ファミ通.com",
+   "note": "有名ルールに「2人」を足すと新作になる、という企画の作り方の参考に",
+   "reminded": []
+  },
+  {
+   "id": "4488398f99c111e5",
+   "url": "https://www.famitsu.com/article/202611/95304",
+   "title": "『ストーリー オブ シーズンズ』のマーベラス、家庭用事業で約65人の希望退職を募集",
+   "category": "industry",
+   "importance": 2,
+   "date": "2026-11-28",
+   "slot": "10",
+   "deadline": null,
+   "source": "ファミ通.com",
+   "note": "「自社開発＋外部パートナー」への移行から、企業研究で見る点が学べる",
+   "reminded": []
   }
  ],
  "batches": [
@@ -4903,6 +5009,13 @@
    "slot": "learn",
    "date": "2026-11-28",
    "count": 13,
+   "status": "ok"
+  },
+  {
+   "branch": "claude/inbox-20261128-10-091530",
+   "slot": "10",
+   "date": "2026-11-28",
+   "count": 8,
    "status": "ok"
   }
  ],
@@ -5853,6 +5966,27 @@
    "area": "shader",
    "theme": "ピクセルシェーダーの出力とブレンド",
    "date": "2026-11-27"
+  },
+  {
+   "term": "const参照渡し（const T&）",
+   "level": "基礎",
+   "area": "cpp",
+   "theme": "引数の渡し方（参照と転送）",
+   "date": "2026-11-28"
+  },
+  {
+   "term": "const参照と右辺値参照のオーバーロード",
+   "level": "発展",
+   "area": "cpp",
+   "theme": "引数の渡し方（参照と転送）",
+   "date": "2026-11-28"
+  },
+  {
+   "term": "転送参照とstd::forward（完全転送）",
+   "level": "応用",
+   "area": "cpp",
+   "theme": "引数の渡し方（参照と転送）",
+   "date": "2026-11-28"
   }
  ],
  "quiz": [
